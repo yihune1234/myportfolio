@@ -28,7 +28,7 @@ export default function Navigation() {
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20 py-2">
+        <div className="flex justify-between items-center h-20 py-2 gap-8">
           {/* Logo with Icon */}
           <div className="flex-shrink-0">
             <button
@@ -56,12 +56,12 @@ export default function Navigation() {
           </div>
 
           {/* Desktop Menu with enhanced styling */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1 flex-1 justify-center">
             {navItems.map((item, index) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="relative px-4 py-2 text-sm font-semibold text-foreground/80 hover:text-primary transition-colors duration-200 group"
+                className="relative px-3 py-2 text-xs md:text-sm font-semibold text-foreground/80 hover:text-primary transition-colors duration-200 group whitespace-nowrap"
                 style={{
                   transitionDelay: `${index * 50}ms`,
                 }}
@@ -73,26 +73,26 @@ export default function Navigation() {
                 <span className="relative z-10">{item.name}</span>
 
                 {/* Bottom line animation */}
-                <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-primary to-secondary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full"></span>
+                <span className="absolute bottom-0.5 left-2 right-2 h-0.5 bg-gradient-to-r from-primary to-secondary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full"></span>
               </button>
             ))}
           </div>
 
-          {/* Right Side - CTA Button */}
-          <div className="flex items-center gap-4">
+          {/* Right Side - CTA Button & Mobile Menu */}
+          <div className="flex items-center gap-3 md:gap-4 ml-auto">
             {/* Desktop CTA */}
             <button
               onClick={() => scrollToSection("contact")}
-              className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold hover:shadow-xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300 border border-white/10"
+              className="hidden lg:flex items-center gap-2 px-5 md:px-6 py-2 md:py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold text-sm hover:shadow-xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300 border border-white/10 flex-shrink-0"
             >
               <span>Let's Talk</span>
               <span className="text-lg">→</span>
             </button>
 
-            {/* Mobile Menu Button */}
+            {/* Tablet/Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-foreground hover:bg-primary/10 transition-all duration-300 border border-primary/20"
+              className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-foreground hover:bg-primary/10 transition-all duration-300 border border-primary/20 flex-shrink-0"
             >
               {isOpen ? (
                 <X className="h-6 w-6 text-primary" />
@@ -103,9 +103,9 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Menu - Enhanced */}
+        {/* Mobile & Tablet Menu - Enhanced */}
         {isOpen && (
-          <div className="md:hidden border-t border-border/50 bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-lg animate-slideInRight">
+          <div className="lg:hidden border-t border-border/50 bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-lg animate-slideInRight">
             <div className="px-2 pt-3 pb-4 space-y-2">
               {navItems.map((item) => (
                 <button
