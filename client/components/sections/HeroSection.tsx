@@ -87,15 +87,20 @@ export default function HeroSection({
           {/* Profile Image */}
           <div className="animate-fadeInUp flex justify-center lg:justify-end">
             <div className="relative">
-              {/* Animated background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl blur-3xl animate-pulse"></div>
+              {/* Animated background with 360 rotation */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-2xl blur-3xl animate-rotate360-slow"></div>
 
-              {/* Image container */}
-              <div className="relative bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-1 overflow-hidden">
+              {/* Image container with 360 rotation */}
+              <div className="relative bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-1 overflow-hidden animate-rotate360" style={{
+                transformStyle: "preserve-3d",
+              }}>
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F729ed1e6158f4fddaa5c79dd9410d623%2F1fd6f14adfa546439d0e1614fe59db76?format=webp&width=800&height=1200"
                   alt="Yihune Belay - Full Stack Software Developer"
-                  className="w-full max-w-sm rounded-xl shadow-2xl animate-float"
+                  className="w-full max-w-sm rounded-xl shadow-2xl"
+                  style={{
+                    backfaceVisibility: "hidden",
+                  }}
                 />
               </div>
 

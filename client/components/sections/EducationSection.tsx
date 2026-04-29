@@ -4,9 +4,9 @@ export default function EducationSection() {
   return (
     <section
       id="education"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30"
+      className="py-20 px-4 sm:px-6 lg:px-8"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="gradient-text">Education</span>
@@ -14,20 +14,71 @@ export default function EducationSection() {
           <div className="h-1 w-20 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
         </div>
 
-        <div className="p-6 rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300">
-          <div className="flex items-start justify-between gap-4">
+        <p className="text-lg text-foreground/80 leading-relaxed mb-12">
+          Pursuing a degree in Computer Science with a focus on software engineering, systems design, and modern development practices. Continuous learning drives my professional growth.
+        </p>
+
+        <div className="group p-8 rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300 hover:shadow-lg">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
-              <h3 className="text-2xl font-bold text-foreground mb-2">
+              <h3 className="text-2xl md:text-3xl font-bold text-foreground group-hover:text-primary transition-colors mb-2">
                 Bachelor of Science in Computer Science
               </h3>
               <p className="text-lg text-primary font-semibold">
                 Haramaya University
               </p>
-              <p className="text-foreground/60 mt-2">In Progress</p>
             </div>
-            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-              <span className="text-primary font-bold text-lg">🎓</span>
+            <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:shadow-lg transition-all">
+              <span className="text-2xl">🎓</span>
             </div>
+          </div>
+
+          <div className="border-t border-border pt-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Status</p>
+                <p className="font-bold text-foreground">In Progress</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Field</p>
+                <p className="font-bold text-foreground">Software Eng.</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Focus</p>
+                <p className="font-bold text-foreground">Backend Systems</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Location</p>
+                <p className="font-bold text-foreground">Addis Ababa</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Learning Paths */}
+        <div className="mt-12 p-8 rounded-xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5">
+          <h3 className="text-2xl font-bold text-foreground mb-6">
+            Areas of Study
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              "Data Structures & Algorithms",
+              "Database Systems",
+              "Web Development",
+              "Mobile Application Dev",
+              "Network Security",
+              "Software Architecture",
+              "Cloud Computing",
+              "System Design",
+              "Software Testing",
+            ].map((area, idx) => (
+              <div
+                key={idx}
+                className="p-3 rounded-lg bg-card border border-primary/20 hover:border-primary/50 transition-all"
+              >
+                <p className="font-semibold text-foreground">{area}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
