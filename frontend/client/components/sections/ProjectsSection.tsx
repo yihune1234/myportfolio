@@ -33,36 +33,39 @@ export default function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-blue-50 to-white">
+    <section id="projects" className="section-padding bg-background relative overflow-hidden">
+      {/* Background Glows */}
+      <div className="absolute top-[20%] right-0 w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-[10%] left-0 w-[30%] h-[30%] bg-secondary/5 rounded-full blur-[100px] -z-10" />
+
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-16 text-center lg:text-left"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
             Featured Projects
           </h2>
-          <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-6"></div>
-          <p className="text-lg text-slate-600 max-w-3xl leading-relaxed">
+          <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full mb-8 mx-auto lg:mx-0"></div>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto lg:mx-0 leading-relaxed">
             A selection of projects I've built, showcasing my expertise in backend systems, API design, mobile development, and full-stack solutions.
           </p>
         </motion.div>
 
         {loading ? (
           <div className="flex items-center justify-center py-32">
-            <Loader className="w-12 h-12 animate-spin text-blue-600" />
+            <Loader className="w-12 h-12 animate-spin text-primary" />
           </div>
         ) : projects.length === 0 ? (
-          <div className="text-center py-32 bg-slate-50 rounded-xl border border-slate-200">
-            <p className="text-xl text-slate-600">No projects yet. Check back soon!</p>
+          <div className="text-center py-32 glass-card rounded-3xl border border-white/5">
+            <p className="text-xl text-muted-foreground">No projects yet. Check back soon!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project: any, index: number) => {
               const Icon = getIconForTech(project.technologies?.[0] || 'Layout');
-              const theme = getColorForProject(index);
               return (
                 <motion.div
                   key={project._id || index}
@@ -70,64 +73,65 @@ export default function ProjectsSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`group rounded-xl overflow-hidden flex flex-col h-full border-2 ${theme.border} bg-white hover:shadow-2xl hover:shadow-blue-500/20 transition-all hover:-translate-y-1`}
+                  className="glass-card group flex flex-col h-full rounded-[2rem] overflow-hidden"
                 >
                   {/* Image/Visual Section */}
-                  <div className="relative h-56 overflow-hidden bg-slate-100">
+                  <div className="relative h-64 overflow-hidden bg-white/5">
                     {project.image ? (
-                      <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     ) : (
-                      <div className={`w-full h-full flex items-center justify-center ${theme.bg}`}>
-                        <Icon className={`w-20 h-20 opacity-30 ${theme.text}`} />
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
+                        <Icon className="w-20 h-20 opacity-20 text-primary" />
                       </div>
                     )}
-                    <div className="absolute top-4 left-4">
-                      <div className={`p-2 rounded-lg ${theme.icon}`}>
-                        <Icon className={`w-5 h-5 ${theme.text}`} />
+                    <div className="absolute top-6 left-6">
+                      <div className="p-3 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 group-hover:scale-110 transition-transform duration-500">
+                        <Icon className="w-5 h-5 text-primary" />
                       </div>
                     </div>
                   </div>
 
                   {/* Content Section */}
-                  <div className="p-6 flex flex-col flex-1">
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies?.slice(0, 2).map((tech: string, tIdx: number) => (
-                        <span key={tIdx} className={`px-2 py-1 rounded text-xs font-bold bg-gradient-to-r ${theme.accent} text-white`}>
+                  <div className="p-8 flex flex-col flex-1">
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.technologies?.slice(0, 3).map((tech: string, tIdx: number) => (
+                        <span key={tIdx} className="px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-white/5 border border-white/5 text-primary hover:bg-primary/20 hover:border-primary/30 transition-all">
                           {tech}
                         </span>
                       ))}
-                      {project.technologies?.length > 2 && (
-                        <span className="px-2 py-1 rounded text-xs font-bold bg-slate-100 text-slate-600">
-                          +{project.technologies.length - 2}
+                      {project.technologies?.length > 3 && (
+                        <span className="px-3 py-1 rounded-xl text-[10px] font-bold bg-white/5 border border-white/5 text-muted-foreground">
+                          +{project.technologies.length - 3}
                         </span>
                       )}
                     </div>
 
-                    <h3 className={`text-xl font-black text-slate-900 mb-3 group-hover:${theme.text} transition-colors`}>
+                    <h3 className="text-2xl font-black text-white mb-4 group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
 
-                    <p className="text-slate-600 text-sm line-clamp-2 mb-6 leading-relaxed flex-1">
+                    <p className="text-muted-foreground text-sm line-clamp-2 mb-8 leading-relaxed flex-1">
                       {project.description}
                     </p>
 
-                    <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
+                    <div className="pt-6 border-t border-white/5 flex items-center justify-between">
                       <button
                         onClick={() => setSelectedProject(project)}
-                        className={`flex items-center gap-2 text-sm font-bold ${theme.text} hover:opacity-80 transition-opacity`}
+                        className="flex items-center gap-2 text-sm font-bold text-white hover:text-primary transition-colors group/btn"
                       >
                         <Eye className="w-4 h-4" />
-                        View Details
+                        Details
+                        <ArrowUpRight className="w-4 h-4 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-all" />
                       </button>
-                      <div className="flex gap-2">
+                      <div className="flex gap-3">
                         {project.githubUrl && (
-                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={`p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-gradient-to-r hover:${theme.accent} hover:text-white transition-all`}>
-                            <Github className="w-4 h-4" />
+                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 text-muted-foreground hover:text-white hover:bg-primary/20 hover:border-primary/30 border border-transparent transition-all">
+                            <Github className="w-5 h-5" />
                           </a>
                         )}
                         {project.demoUrl && (
-                          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className={`p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-gradient-to-r hover:${theme.accent} hover:text-white transition-all`}>
-                            <ExternalLink className="w-4 h-4" />
+                          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 text-muted-foreground hover:text-white hover:bg-primary/20 hover:border-primary/30 border border-transparent transition-all">
+                            <ExternalLink className="w-5 h-5" />
                           </a>
                         )}
                       </div>
@@ -143,55 +147,55 @@ export default function ProjectsSection() {
         <AnimatePresence>
           {selectedProject && (
             <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-              <DialogContent className="max-w-4xl p-0 overflow-hidden border-none bg-white rounded-xl">
-                <div className="grid grid-cols-1 md:grid-cols-2">
-                  <div className="relative h-64 md:h-full overflow-hidden bg-slate-100">
+              <DialogContent className="max-w-4xl p-0 overflow-hidden border border-white/10 bg-[#030712]/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+                  <div className="relative h-64 md:h-full overflow-hidden bg-white/5">
                     {selectedProject.image ? (
                       <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-slate-100">
-                        <Database className="w-32 h-32 opacity-20 text-slate-400" />
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
+                        <Database className="w-32 h-32 opacity-10 text-primary" />
                       </div>
                     )}
                   </div>
 
-                  <div className="p-8 md:p-12 overflow-y-auto max-h-[80vh]">
-                    <DialogHeader className="mb-8">
-                      <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="p-8 md:p-12 overflow-y-auto max-h-[85vh] custom-scrollbar">
+                    <DialogHeader className="mb-10">
+                      <div className="flex flex-wrap gap-2 mb-6">
                         {selectedProject.technologies?.map((tech: string, idx: number) => (
-                          <span key={idx} className="px-3 py-1 rounded text-xs font-bold bg-blue-50 text-blue-600">
+                          <span key={idx} className="px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-primary/10 border border-primary/20 text-primary">
                             {tech}
                           </span>
                         ))}
                       </div>
-                      <DialogTitle className="text-3xl font-black text-slate-900 mb-4">
+                      <DialogTitle className="text-4xl font-black text-white mb-6 leading-tight">
                         {selectedProject.title}
                       </DialogTitle>
-                      <DialogDescription className="text-base text-slate-600 leading-relaxed">
+                      <DialogDescription className="text-lg text-muted-foreground leading-relaxed">
                         {selectedProject.description}
                       </DialogDescription>
                     </DialogHeader>
 
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       {selectedProject.challenges && (
-                        <div>
-                          <h4 className="text-lg font-bold text-slate-900 mb-2">Key Challenges</h4>
-                          <p className="text-slate-600 leading-relaxed">
+                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+                          <h4 className="text-sm font-bold text-white uppercase tracking-[0.2em] mb-4">Key Challenges</h4>
+                          <p className="text-muted-foreground leading-relaxed">
                             {selectedProject.challenges}
                           </p>
                         </div>
                       )}
 
-                      <div className="flex flex-wrap gap-3 pt-6 border-t border-slate-200">
+                      <div className="flex flex-col sm:flex-row gap-4 pt-6">
                         {selectedProject.githubUrl && (
                           <a
                             href={selectedProject.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 text-slate-900 rounded-lg font-bold hover:bg-slate-200 transition-all"
+                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-bold hover:bg-white/10 transition-all"
                           >
-                            <Github className="w-4 h-4" />
-                            GitHub
+                            <Github className="w-5 h-5" />
+                            Source Code
                           </a>
                         )}
                         {selectedProject.demoUrl && (
@@ -199,10 +203,10 @@ export default function ProjectsSection() {
                             href={selectedProject.demoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-bold hover:shadow-lg transition-all"
+                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-2xl font-bold hover:opacity-90 hover:scale-[1.02] transition-all shadow-xl shadow-primary/20"
                           >
-                            <ExternalLink className="w-4 h-4" />
-                            Demo
+                            <ExternalLink className="w-5 h-5" />
+                            Live Demo
                           </a>
                         )}
                       </div>

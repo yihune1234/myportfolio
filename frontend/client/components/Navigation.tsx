@@ -43,7 +43,7 @@ export default function Navigation() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-2xl py-2"
+          ? "bg-background/60 backdrop-blur-2xl border-b border-white/5 shadow-2xl py-2"
           : "bg-transparent py-4"
       }`}
     >
@@ -60,17 +60,17 @@ export default function Navigation() {
               className="flex items-center gap-3 group"
             >
               <div className="relative flex-shrink-0">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/40 to-secondary/40 rounded-xl blur-lg group-hover:blur-xl transition-all duration-300 opacity-75"></div>
-                <div className="relative w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center group-hover:shadow-2xl group-hover:shadow-primary/50 group-hover:scale-110 transition-all duration-300 border border-white/10">
+                <div className="absolute inset-0 bg-primary/20 rounded-xl blur-lg group-hover:blur-xl transition-all duration-300 opacity-75"></div>
+                <div className="relative w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300 border border-white/10 shadow-lg">
                   <Code2 className="w-5 h-5 text-white" />
                 </div>
               </div>
 
-              <div className="hidden sm:flex flex-col gap-0.5 text-left">
-                <span className="font-black text-lg leading-tight gradient-text">
+              <div className="flex flex-col gap-0.5 text-left">
+                <span className="font-black text-lg leading-tight text-white tracking-tight font-heading">
                   Yihune
                 </span>
-                <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+                <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase opacity-80">
                   Software Engineer
                 </span>
               </div>
@@ -78,20 +78,21 @@ export default function Navigation() {
           </motion.div>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-1 flex-1 justify-center">
-            {navItems.map((item, index) => (
-              <motion.button
-                key={item.id}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => scrollToSection(item.id)}
-                className="relative px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 group"
-              >
-                <span className="relative z-10">{item.name}</span>
-                <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-primary to-secondary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full"></span>
-              </motion.button>
-            ))}
+          <div className="hidden lg:flex items-center gap-2 flex-1 justify-center">
+            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/5 backdrop-blur-md">
+              {navItems.map((item, index) => (
+                <motion.button
+                  key={item.id}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  onClick={() => scrollToSection(item.id)}
+                  className="relative px-5 py-2 text-sm font-medium text-foreground/60 hover:text-white transition-colors duration-300 group rounded-full hover:bg-white/5"
+                >
+                  <span className="relative z-10">{item.name}</span>
+                </motion.button>
+              ))}
+            </div>
           </div>
 
           {/* Action Button */}
@@ -102,7 +103,7 @@ export default function Navigation() {
           >
             <button
               onClick={() => scrollToSection("contact")}
-              className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground rounded-full font-bold text-sm hover:shadow-[0_0_20px_rgba(var(--primary),0.4)] hover:scale-105 transition-all duration-300"
+              className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-full font-bold text-sm hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-xl shadow-primary/20"
             >
               Contact Me
               <ArrowRight className="w-4 h-4" />
@@ -110,7 +111,7 @@ export default function Navigation() {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 rounded-xl bg-muted/50 text-foreground hover:bg-primary/10 transition-all"
+              className="lg:hidden p-3 rounded-xl bg-white/5 text-foreground hover:bg-white/10 transition-all border border-white/5"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -122,28 +123,30 @@ export default function Navigation() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-2xl overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-white/10 bg-background/95 backdrop-blur-2xl rounded-3xl overflow-hidden shadow-2xl z-50"
           >
-            <div className="px-4 py-6 space-y-2">
+            <div className="p-6 space-y-2">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="block w-full text-left px-4 py-4 text-lg font-bold text-foreground hover:text-primary hover:bg-primary/5 rounded-2xl transition-all"
+                  className="block w-full text-left px-5 py-4 text-lg font-bold text-foreground/80 hover:text-white hover:bg-white/5 rounded-2xl transition-all"
                 >
                   {item.name}
                 </button>
               ))}
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="w-full mt-4 px-6 py-4 bg-gradient-to-r from-primary to-secondary text-white rounded-2xl font-bold flex items-center justify-center gap-2"
-              >
-                Let's Talk
-                <ArrowRight className="w-5 h-5" />
-              </button>
+              <div className="pt-4">
+                <button
+                  onClick={() => scrollToSection("contact")}
+                  className="w-full px-6 py-4 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-primary/20"
+                >
+                  Let's Talk
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

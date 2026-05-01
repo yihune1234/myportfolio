@@ -10,8 +10,12 @@ export default function AboutSection() {
   ];
 
   return (
-    <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-blue-50 to-white">
-      <div className="max-w-6xl mx-auto">
+    <section id="about" className="section-padding bg-background relative overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[30%] h-[30%] bg-primary/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-0 right-0 w-[20%] h-[20%] bg-secondary/5 rounded-full blur-[80px] -z-10" />
+
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left Column: Text Content */}
           <motion.div
@@ -21,13 +25,13 @@ export default function AboutSection() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-8">
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
                 About Me
               </h2>
-              <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
+              <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
             </div>
 
-            <div className="space-y-6 text-lg text-slate-700 leading-relaxed">
+            <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
               <p>
                 I am a Software Developer based in Addis Ababa, Ethiopia, currently
                 pursuing a Bachelor's degree in Computer Science at Haramaya
@@ -55,7 +59,7 @@ export default function AboutSection() {
           </motion.div>
 
           {/* Right Column: Stats Grid */}
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
@@ -63,16 +67,22 @@ export default function AboutSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`p-6 md:p-8 rounded-xl border-2 ${stat.border} bg-white hover:shadow-lg transition-all group`}
+                className="glass-card p-8 group relative overflow-hidden"
               >
-                <div className={`p-3 rounded-lg w-fit mb-4 group-hover:scale-110 transition-transform ${stat.color}`}>
-                  <stat.icon className="w-6 h-6" />
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <stat.icon className="w-12 h-12" />
                 </div>
-                <div className="text-3xl md:text-4xl font-black text-slate-900 mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm font-bold text-slate-600 uppercase tracking-widest">
-                  {stat.label}
+                
+                <div className="relative z-10">
+                  <div className={`p-3 rounded-2xl w-fit mb-6 group-hover:scale-110 transition-all duration-500 bg-white/5 border border-white/10`}>
+                    <stat.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="text-4xl font-black text-white mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">
+                    {stat.label}
+                  </div>
                 </div>
               </motion.div>
             ))}

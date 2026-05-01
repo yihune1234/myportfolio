@@ -1,120 +1,71 @@
 /** @import must precede all other statements */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /**
-   * Tailwind CSS theme
-   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
-   * A different format will require also updating the theme in tailwind.config.ts.
-  */
   :root {
-    /* Portfolio Color Scheme - Modern & Professional */
-    --background: 210 40% 98%; /* #f8fafc */
-    --foreground: 222 47% 11%; /* #0f172a */
+    --background: 220 33% 98%;
+    --foreground: 224 71% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 224 71% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 224 71% 4%;
 
-    --primary: 217 100% 55%; /* Vibrant Blue - Portfolio Primary */
+    --primary: 221 83% 53%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 262 80% 50%; /* Purple - Portfolio Secondary */
+    --secondary: 262 83% 58%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 94%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 46 100% 55%; /* Golden Yellow - Portfolio Accent */
-    --accent-foreground: 222 47% 11%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 100% 55%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221 83% 53%;
 
     --radius: 1rem;
-
-    /* Admin Color Scheme - Professional & Trustworthy */
-    --admin-background: 210 20% 96%; /* Subtle gray-blue */
-    --admin-foreground: 220 13% 20%; /* Deep slate */
-
-    --admin-card: 0 0% 100%;
-    --admin-card-foreground: 220 13% 20%;
-
-    --admin-primary: 220 90% 45%; /* Deep Professional Blue */
-    --admin-primary-foreground: 0 0% 100%;
-
-    --admin-secondary: 220 13% 20%; /* Slate */
-    --admin-secondary-foreground: 0 0% 100%;
-
-    --admin-accent: 220 90% 45%; /* Matching Primary */
-    --admin-accent-foreground: 0 0% 100%;
-
-    --admin-border: 220 20% 88%;
-    --admin-input: 220 20% 88%;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 210 14% 10%;
-    --foreground: 0 0% 98%;
+    --background: 230 45% 3%;
+    --foreground: 210 40% 98%;
 
-    --card: 210 12% 16%;
-    --card-foreground: 0 0% 98%;
+    --card: 230 45% 5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 210 12% 16%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 230 45% 3%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 217 100% 55%; /* Vibrant Blue */
-    --primary-foreground: 210 14% 10%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 262 80% 50%; /* Purple */
-    --secondary-foreground: 210 14% 10%;
+    --secondary: 270 91% 65%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 10% 35%;
-    --muted-foreground: 210 10% 70%;
+    --muted: 222 47% 11%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 46 100% 55%; /* Golden Yellow */
-    --accent-foreground: 210 10% 12%;
+    --accent: 217 32% 17%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 210 12% 25%;
-    --input: 210 12% 22%;
-    --ring: 217 100% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 224 76% 48%;
   }
 }
 
@@ -124,176 +75,70 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-  }
-
-  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-
-  pre,
-  code {
-    overflow-x: auto;
-    white-space: pre;
+    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary-foreground;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold;
-  }
-
-  h1 {
-    @apply text-4xl md:text-5xl;
-  }
-
-  h2 {
-    @apply text-3xl md:text-4xl;
-  }
-
-  h3 {
-    @apply text-xl md:text-2xl;
+    font-family: 'Outfit', sans-serif;
+    @apply font-bold tracking-tight;
   }
 }
 
 @layer components {
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent bg-size-200 animate-gradient-shift;
-  }
-
-  .glass-effect {
-    @apply bg-background/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+  .glass-morphism {
+    @apply bg-white/[0.02] backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)];
   }
 
   .glass-card {
-    @apply bg-card/40 backdrop-blur-md border border-border/50 hover:border-primary/50 transition-all duration-500;
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/5 shadow-2xl hover:bg-white/[0.06] hover:border-white/20 transition-all duration-500;
   }
 
-  .card-hover {
-    @apply transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2;
+  .glass-panel {
+    @apply bg-background/40 backdrop-blur-3xl border border-white/5;
   }
 
-  .bg-size-200 {
-    background-size: 200% 200%;
+  .premium-gradient {
+    @apply bg-gradient-to-br from-primary via-secondary to-purple-600;
   }
 
-  /* Admin-specific styles */
-  .admin-container {
-    @apply bg-slate-50;
+  .gradient-text {
+    @apply bg-gradient-to-br from-white via-white/90 to-white/60 bg-clip-text text-transparent;
   }
 
-  .admin-card {
-    @apply bg-white border border-slate-200 rounded-xl;
+  .gradient-border {
+    @apply relative p-[1px] overflow-hidden rounded-[inherit];
   }
 
-  .admin-button-primary {
-    @apply px-4 py-2 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 transition-all;
+  .gradient-border::before {
+    content: "";
+    @apply absolute inset-0 -z-10 bg-gradient-to-br from-primary/50 via-secondary/50 to-purple-500/50;
   }
 
-  .admin-button-secondary {
-    @apply px-4 py-2 border border-slate-200 text-slate-700 rounded-lg font-bold text-sm hover:bg-slate-50 transition-all;
+  .section-padding {
+    @apply py-20 px-4 sm:px-8 md:px-12 lg:px-24;
   }
 
-  .admin-input {
-    @apply w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:border-blue-500 focus:bg-white focus:outline-none transition-colors text-sm;
-  }
-
-  .admin-header {
-    @apply sticky top-0 z-40 border-b border-slate-200 bg-white;
-  }
-
-  .admin-nav-item {
-    @apply w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all;
-  }
-
-  .admin-nav-item-active {
-    @apply bg-blue-600 text-white;
-  }
-
-  .admin-nav-item-inactive {
-    @apply text-slate-700 hover:text-slate-900 hover:bg-slate-100;
-  }
-
-  /* Portfolio-specific styles */
-  .portfolio-section {
-    @apply py-24 px-4 sm:px-6 lg:px-8;
-  }
-
-  .portfolio-heading {
-    @apply text-4xl md:text-5xl font-black text-slate-900;
-  }
-
-  .portfolio-accent-line {
-    @apply h-1 w-16 bg-gradient-to-r from-primary to-secondary rounded-full;
-  }
-
-  .portfolio-card {
-    @apply rounded-xl overflow-hidden flex flex-col h-full border border-slate-200 bg-white hover:border-primary/50 hover:shadow-lg transition-all;
-  }
-
-  .portfolio-button-primary {
-    @apply px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2 group;
-  }
-
-  .portfolio-button-secondary {
-    @apply px-8 py-3 border-2 border-primary text-primary rounded-lg font-bold hover:bg-primary/5 transition-all;
+  .nav-blur {
+    @apply sticky top-0 z-50 bg-background/60 backdrop-blur-2xl border-b border-white/5;
   }
 }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes border-glow {
-  0%, 100% { border-color: rgba(var(--primary), 0.3); }
-  50% { border-color: rgba(var(--primary), 0.6); }
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-gradient-shift {
-  animation: gradient-shift 8s ease infinite;
-}
-
-.animate-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.animate-shimmer::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.05),
-    transparent
-  );
-  animation: shimmer 2s infinite;
-}
-
-@keyframes float-slow {
+/* Animations */
+@keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  50% { transform: translateY(-10px); }
 }
 
-.animate-float-slow {
-  animation: float-slow 6s ease-in-out infinite;
+.animate-float {
+  animation: float 5s ease-in-out infinite;
 }
 
-@keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+.glow-shadow-primary {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
 }
 
-.animate-pulse-soft {
-  animation: pulse-soft 3s ease-in-out infinite;
+.glow-shadow-secondary {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
 }

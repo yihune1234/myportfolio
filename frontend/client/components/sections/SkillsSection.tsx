@@ -34,26 +34,30 @@ export default function SkillsSection() {
   ];
 
   return (
-    <section id="skills" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-50 via-white to-blue-50">
-      <div className="max-w-6xl mx-auto">
+    <section id="skills" className="section-padding bg-background relative overflow-hidden">
+      {/* Decorative Circles */}
+      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 left-0 w-[30%] h-[30%] bg-secondary/5 rounded-full blur-[100px] -z-10" />
+
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-12 sm:mb-16"
+          className="mb-16 text-center lg:text-left"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-4">
+          <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
             Skills & Expertise
           </h2>
-          <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-6"></div>
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl">
+          <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full mb-8 mx-auto lg:mx-0"></div>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto lg:mx-0">
             Technologies and tools I use to build modern, scalable solutions.
           </p>
         </motion.div>
 
         {/* Skills Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {skillCategories.map((category, index) => (
             <motion.div
               key={index}
@@ -61,21 +65,23 @@ export default function SkillsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`p-6 sm:p-8 rounded-xl border-2 ${category.border} ${category.color} bg-white hover:shadow-lg transition-all duration-300 group`}
+              className="glass-card p-8 group relative overflow-hidden"
             >
-              <div className="flex items-start gap-4 mb-6">
-                <div className={`p-3 rounded-lg ${category.color}`}>
-                  <category.icon className="w-6 h-6" />
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 group-hover:scale-110 group-hover:border-primary/50 transition-all duration-500">
+                  <category.icon className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900">{category.title}</h3>
+                <h3 className="text-xl font-bold text-white">{category.title}</h3>
               </div>
 
-              <div className="space-y-2">
+              <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-600 to-purple-600" />
-                    <span className="text-sm text-slate-700">{skill}</span>
-                  </div>
+                  <span 
+                    key={idx} 
+                    className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-xs font-semibold text-muted-foreground hover:text-white hover:bg-primary/20 hover:border-primary/30 transition-all duration-300"
+                  >
+                    {skill}
+                  </span>
                 ))}
               </div>
             </motion.div>

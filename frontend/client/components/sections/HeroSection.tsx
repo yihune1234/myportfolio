@@ -1,4 +1,5 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface HeroSectionProps {
   onContactClick: () => void;
@@ -12,114 +13,124 @@ export default function HeroSection({
   return (
     <section
       id="home"
-      className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 flex items-center bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50"
+      className="relative min-h-screen pt-28 pb-12 overflow-hidden bg-background"
     >
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-[10%] -left-[10%] w-[80%] md:w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px]"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+          className="absolute top-[20%] -right-[10%] w-[60%] md:w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[100px]"
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
           {/* Content */}
-          <div className="animate-fadeInDown">
-            <div className="mb-6">
-              <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-slate-900 via-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-                Yihune Belay
+          <div className="relative z-10 text-center lg:text-left order-2 lg:order-1">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-primary text-[10px] sm:text-xs font-bold mb-6 backdrop-blur-md">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                Available for new opportunities
+              </div>
+
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tighter leading-[0.9]">
+                Building <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-purple-400">
+                  Digital Future.
+                </span>
               </h1>
-              <p className="text-xl md:text-2xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
-                Full Stack Software Developer
+
+              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-lg mb-10 font-medium mx-auto lg:mx-0">
+                I am <span className="text-white font-bold">Yihune Belay</span>, a Full Stack Developer specializing in crafting high-performance backend systems and elegant user experiences.
               </p>
-              <p className="text-lg md:text-xl text-slate-600 mt-2">
-                Backend & Mobile Systems Specialist
-              </p>
-            </div>
 
-            <p className="text-base md:text-lg text-slate-700 leading-relaxed max-w-lg mb-8">
-              I design and build scalable, secure, and high-performance web and
-              mobile applications. With a strong foundation in backend
-              development and API architecture, I focus on delivering reliable
-              solutions that solve real-world problems.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <button
-                onClick={onContactClick}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-bold hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg"
-              >
-                Let's Work Together
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button
-                onClick={onProjectsClick}
-                className="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg font-bold hover:bg-blue-50 hover:border-purple-600 hover:text-purple-600 transition-all duration-300"
-              >
-                View My Work
-              </button>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <a
-                href="#"
-                className="text-slate-600 hover:text-blue-600 transition-colors"
-                title="GitHub"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                className="text-slate-600 hover:text-blue-600 transition-colors"
-                title="LinkedIn"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.475-2.236-1.986-2.236-1.081 0-1.722.722-2.004 1.418-.103.249-.129.597-.129.946v5.441h-3.554v-11h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 8.855c-1.144 0-2.083-.931-2.083-2.076 0-1.144.92-2.083 2.083-2.083 1.144 0 2.084.92 2.084 2.083 0 1.144-.94 2.076-2.084 2.076zm1.782 11.597H3.555v-11h3.564v11zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                </svg>
-              </a>
-              <a
-                href="mailto:your-email@example.com"
-                className="text-slate-600 hover:text-blue-600 transition-colors"
-                title="Email"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-              </a>
-            </div>
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                <button
+                  onClick={onContactClick}
+                  className="px-8 py-4 bg-primary text-white rounded-full font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+                >
+                  Start a Project
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button
+                  onClick={onProjectsClick}
+                  className="px-8 py-4 bg-white/5 text-white border border-white/10 rounded-full font-bold hover:bg-white/10 transition-all duration-300 backdrop-blur-md flex items-center justify-center gap-2 group"
+                >
+                  View Work
+                  <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform opacity-50" />
+                </button>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Profile Image */}
-          <div className="animate-fadeInUp flex justify-center lg:justify-end">
-            <div className="relative">
-              {/* Animated background with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-200 via-purple-200 to-slate-100 rounded-2xl blur-3xl opacity-60"></div>
-
-              {/* Image container with gradient border effect */}
-              <div className="relative bg-white rounded-2xl p-1 overflow-hidden shadow-2xl border-2 border-transparent bg-gradient-to-br from-blue-400 to-purple-400 bg-clip-border">
-                <div className="bg-white rounded-xl overflow-hidden">
+          {/* Profile Image with Glass Effect */}
+          <div className="relative flex justify-center lg:justify-end order-1 lg:order-2">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+              className="relative w-full max-w-[280px] sm:max-w-md aspect-[4/5] group"
+            >
+              {/* Animated Border */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-purple-600 rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+              
+              <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm p-3">
+                <div className="h-full w-full rounded-[2rem] overflow-hidden grayscale-[0.2] hover:grayscale-0 transition-all duration-700">
                   <img
                     src="https://cdn.builder.io/api/v1/image/assets%2F729ed1e6158f4fddaa5c79dd9410d623%2F1fd6f14adfa546439d0e1614fe59db76?format=webp&width=800&height=1200"
-                    alt="Yihune Belay - Full Stack Software Developer"
-                    className="w-full max-w-sm rounded-lg"
+                    alt="Yihune Belay"
+                    className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-700"
                   />
                 </div>
-              </div>
 
-              {/* Floating badges with gradient */}
-              <div className="absolute -bottom-4 -left-4 bg-gradient-to-br from-blue-600 to-purple-600 text-white p-4 rounded-xl shadow-lg border border-white/20">
-                <p className="text-sm font-bold">
-                  3+ Years Experience
-                </p>
-                <p className="text-xs opacity-90">
-                  Full Stack Development
-                </p>
-              </div>
+                {/* Floating Stats Glassmorphism */}
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 p-4 sm:p-6 rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl"
+                >
+                  <p className="text-2xl sm:text-3xl font-black text-white">3+</p>
+                  <p className="text-[8px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Years Experience</p>
+                </motion.div>
 
-              <div className="absolute -top-4 -right-4 bg-gradient-to-br from-purple-600 to-blue-600 text-white p-4 rounded-xl shadow-lg border border-white/20">
-                <p className="text-sm font-bold">
-                  Backend Specialist
-                </p>
-                <p className="text-xs opacity-90">
-                  API & System Design
-                </p>
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 p-4 sm:p-6 rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl"
+                >
+                  <p className="text-lg sm:text-xl font-bold text-white leading-tight">Backend<br/>Mastery</p>
+                  <p className="text-[8px] sm:text-[10px] font-bold text-primary uppercase tracking-wider mt-1">Specialist</p>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
