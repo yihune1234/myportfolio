@@ -5,11 +5,25 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
+
+      // Track active section
+      const sections = ["home", "about", "skills", "projects", "experience", "education", "contact"];
+      const current = sections.find(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+      if (current) setActiveSection(current);
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -43,7 +57,7 @@ export default function Navigation() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-background/60 backdrop-blur-2xl border-b border-white/5 shadow-2xl py-2"
+          ? "bg-white/80 backdrop-blur-2xl border-b border-slate-100 shadow-xl py-2"
           : "bg-transparent py-4"
       }`}
     >
@@ -61,16 +75,16 @@ export default function Navigation() {
             >
               <div className="relative flex-shrink-0">
                 <div className="absolute inset-0 bg-primary/20 rounded-xl blur-lg group-hover:blur-xl transition-all duration-300 opacity-75"></div>
-                <div className="relative w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300 border border-white/10 shadow-lg">
+                <div className="relative w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300 border border-white/20 shadow-lg">
                   <Code2 className="w-5 h-5 text-white" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-0.5 text-left">
-                <span className="font-black text-lg leading-tight text-white tracking-tight font-heading">
+                <span className={`font-black text-lg leading-tight transition-colors duration-300 ${scrolled ? 'text-slate-900' : 'text-slate-900'} tracking-tight font-heading`}>
                   Yihune
                 </span>
-                <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase opacity-80">
+                <span className="text-[10px] font-bold tracking-[0.2em] text-slate-500 uppercase opacity-80">
                   Software Engineer
                 </span>
               </div>
@@ -79,7 +93,7 @@ export default function Navigation() {
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-2 flex-1 justify-center">
-            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/5 backdrop-blur-md">
+            <div className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-slate-50 border border-slate-100 backdrop-blur-md">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.id}
@@ -87,7 +101,11 @@ export default function Navigation() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => scrollToSection(item.id)}
-                  className="relative px-5 py-2 text-sm font-medium text-foreground/60 hover:text-white transition-colors duration-300 group rounded-full hover:bg-white/5"
+                  className={`relative px-5 py-2 text-sm font-bold transition-all duration-300 group rounded-full ${
+                    activeSection === item.id 
+                      ? "text-white bg-primary shadow-lg shadow-primary/30" 
+                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                  }`}
                 >
                   <span className="relative z-10">{item.name}</span>
                 </motion.button>
@@ -103,7 +121,7 @@ export default function Navigation() {
           >
             <button
               onClick={() => scrollToSection("contact")}
-              className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-full font-bold text-sm hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-xl shadow-primary/20"
+              className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-slate-900 text-white rounded-full font-bold text-sm hover:bg-slate-800 hover:scale-105 transition-all duration-300 shadow-xl shadow-slate-200"
             >
               Contact Me
               <ArrowRight className="w-4 h-4" />
@@ -111,7 +129,7 @@ export default function Navigation() {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-3 rounded-xl bg-white/5 text-foreground hover:bg-white/10 transition-all border border-white/5"
+              className="lg:hidden p-3 rounded-xl bg-slate-50 text-slate-900 hover:bg-slate-100 transition-all border border-slate-100"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -126,14 +144,18 @@ export default function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-white/10 bg-background/95 backdrop-blur-2xl rounded-3xl overflow-hidden shadow-2xl z-50"
+            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-slate-100 bg-white/95 backdrop-blur-2xl rounded-3xl overflow-hidden shadow-2xl z-50"
           >
             <div className="p-6 space-y-2">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="block w-full text-left px-5 py-4 text-lg font-bold text-foreground/80 hover:text-white hover:bg-white/5 rounded-2xl transition-all"
+                  className={`block w-full text-left px-5 py-4 text-lg font-bold rounded-2xl transition-all ${
+                    activeSection === item.id
+                      ? "text-white bg-primary shadow-lg shadow-primary/20"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
                 >
                   {item.name}
                 </button>
@@ -141,7 +163,7 @@ export default function Navigation() {
               <div className="pt-4">
                 <button
                   onClick={() => scrollToSection("contact")}
-                  className="w-full px-6 py-4 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-primary/20"
+                  className="w-full px-6 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-slate-200"
                 >
                   Let's Talk
                   <ArrowRight className="w-5 h-5" />
