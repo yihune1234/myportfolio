@@ -3,7 +3,7 @@
  * Centralized API endpoint management
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_URL = import.meta.env.VITE_API_URL
 
 export const API_ENDPOINTS = {
   // Admin
@@ -52,7 +52,18 @@ export const apiFetch = async (
       },
     });
 
-    const data = await response.json();
+    // Check if the response is empty
+    const contentType = response.headers.get('content-type');
+    let data: any = null;
+    
+    if (contentType && contentType.includes('application/json')) {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } else {
+      // For non-JSON responses, just get the text or assume success if it's a 204
+      const text = await response.text();
+      data = { message: text || `API Error: ${response.status}` };
+    }
 
     if (!response.ok) {
       throw new Error(data.message || `API Error: ${response.status}`);
@@ -61,6 +72,7 @@ export const apiFetch = async (
     return { success: true, data, status: response.status };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('API Fetch Error:', message);
     return { success: false, error: message, status: 500 };
   }
 };
@@ -80,7 +92,16 @@ export const apiFetchFormData = async (
       body: formData,
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get('content-type');
+    let data: any = null;
+
+    if (contentType && contentType.includes('application/json')) {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } else {
+      const text = await response.text();
+      data = { message: text || `API Error: ${response.status}` };
+    }
 
     if (!response.ok) {
       throw new Error(data.message || `API Error: ${response.status}`);
@@ -89,6 +110,7 @@ export const apiFetchFormData = async (
     return { success: true, data, status: response.status };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('API Fetch Form Data Error:', message);
     return { success: false, error: message, status: 500 };
   }
 };

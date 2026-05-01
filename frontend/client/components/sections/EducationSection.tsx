@@ -160,8 +160,8 @@ export function ContactSection() {
 
   const contactInfo = [
     { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia" },
-    { icon: Mail, label: "Email", value: "your-email@example.com", href: "mailto:your-email@example.com" },
-    { icon: Phone, label: "Phone", value: "+251 XXX XXX XXX", href: "tel:+251900000000" },
+    { icon: Mail, label: "Email", value: "yihunebelay859@gmail.com", href: "mailto:yihunebelay859@gmail.com" },
+    { icon: Phone, label: "Phone", value: "+251 987 414 282 / +251 723 874 282", href: "tel:+251987414282" },
   ];
 
   return (
