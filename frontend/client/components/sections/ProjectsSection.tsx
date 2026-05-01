@@ -73,7 +73,8 @@ export default function ProjectsSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white group flex flex-col h-full rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                  onClick={() => setSelectedProject(project)}
+                  className="bg-white group flex flex-col h-full rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer"
                 >
                   {/* Image/Visual Section */}
                   <div className="relative h-64 overflow-hidden bg-slate-50">
@@ -110,15 +111,12 @@ export default function ProjectsSection() {
                     </p>
 
                     <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
-                      <button
-                        onClick={() => setSelectedProject(project)}
-                        className="flex items-center gap-2 text-sm font-bold text-slate-900 hover:text-primary transition-colors group/btn"
-                      >
+                      <div className="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:text-primary transition-colors group/btn">
                         <Eye className="w-4 h-4" />
                         Details
                         <ArrowUpRight className="w-4 h-4 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-all" />
-                      </button>
-                      <div className="flex gap-3">
+                      </div>
+                      <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
                         {project.githubUrl && (
                           <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-slate-50 text-slate-500 hover:text-slate-900 hover:bg-white hover:shadow-lg hover:border-slate-100 border border-transparent transition-all">
                             <Github className="w-5 h-5" />
