@@ -34,10 +34,10 @@ export default function SkillsSection() {
   ];
 
   return (
-    <section id="skills" className="section-padding bg-background relative overflow-hidden">
+    <section id="skills" className="section-padding bg-slate-50 relative overflow-hidden">
       {/* Decorative Circles */}
-      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-[30%] h-[30%] bg-secondary/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 left-0 w-[30%] h-[30%] bg-secondary/10 rounded-full blur-[100px] -z-10" />
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -47,11 +47,11 @@ export default function SkillsSection() {
           viewport={{ once: true }}
           className="mb-16 text-center lg:text-left"
         >
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
-            Skills & Expertise
+          <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6">
+            Technical Expertise
           </h2>
           <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full mb-8 mx-auto lg:mx-0"></div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto lg:mx-0">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0">
             Technologies and tools I use to build modern, scalable solutions.
           </p>
         </motion.div>
@@ -65,20 +65,20 @@ export default function SkillsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="glass-card p-8 group relative overflow-hidden"
+              className="p-8 rounded-[2rem] bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-slate-100 group relative overflow-hidden hover:shadow-xl transition-all duration-500"
             >
               <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 group-hover:scale-110 group-hover:border-primary/50 transition-all duration-500">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 group-hover:scale-110 group-hover:border-primary/50 transition-all duration-500">
                   <category.icon className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-white">{category.title}</h3>
+                <h3 className="text-xl font-bold text-slate-900">{category.title}</h3>
               </div>
 
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, idx) => (
                   <span 
                     key={idx} 
-                    className="px-4 py-2 rounded-2xl bg-white/5 border border-white/5 text-[11px] font-bold text-muted-foreground hover:text-white hover:bg-primary/20 hover:border-primary/40 transition-all duration-300"
+                    className="px-4 py-2 rounded-2xl bg-slate-50 border border-slate-100 text-[11px] font-bold text-slate-600 hover:text-white hover:bg-primary hover:border-primary transition-all duration-300"
                   >
                     {skill}
                   </span>
