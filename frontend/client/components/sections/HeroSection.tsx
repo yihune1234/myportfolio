@@ -112,23 +112,10 @@ export default function HeroSection({
                 </div>
 
                 {/* Floating Stats Glassmorphism */}
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 p-4 sm:p-6 rounded-3xl bg-white shadow-2xl border border-slate-100"
-                >
-                  <p className="text-2xl sm:text-3xl font-black text-slate-900">3+</p>
-                  <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider">Years Experience</p>
-                </motion.div>
+               
+                
 
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 p-4 sm:p-6 rounded-3xl bg-white shadow-2xl border border-slate-100"
-                >
-                  <p className="text-lg sm:text-xl font-bold text-slate-900 leading-tight">Backend<br/>Mastery</p>
-                  <p className="text-[8px] sm:text-[10px] font-bold text-primary uppercase tracking-wider mt-1">Specialist</p>
-                </motion.div>
+               
               </div>
             </motion.div>
           </div>
