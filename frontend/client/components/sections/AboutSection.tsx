@@ -3,10 +3,10 @@ import { User, Award, Briefcase, Heart } from "lucide-react";
 
 export default function AboutSection() {
   const stats = [
-    { label: "Years Experience", value: "3+", icon: Award, color: "bg-gradient-to-br from-blue-100 to-blue-50 text-blue-600", border: "border-blue-200" },
-    { label: "Major Projects", value: "10+", icon: Briefcase, color: "bg-gradient-to-br from-purple-100 to-purple-50 text-purple-600", border: "border-purple-200" },
-    { label: "Professional Exp.", value: "2+", icon: Heart, color: "bg-gradient-to-br from-pink-100 to-pink-50 text-pink-600", border: "border-pink-200" },
-    { label: "Commitment", value: "100%", icon: User, color: "bg-gradient-to-br from-orange-100 to-orange-50 text-orange-600", border: "border-orange-200" },
+    { label: "Years Experience", value: "3+", icon: Award },
+    { label: "Major Projects", value: "10+", icon: Briefcase },
+    { label: "Professional Exp.", value: "2+", icon: Heart },
+    { label: "Commitment", value: "100%", icon: User },
   ];
 
   return (
@@ -77,10 +77,10 @@ export default function AboutSection() {
                   <div className={`p-3 rounded-2xl w-fit mb-6 group-hover:scale-110 transition-all duration-500 bg-white/5 border border-white/10`}>
                     <stat.icon className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="text-4xl font-black text-white mb-2">
+                  <div className="text-4xl font-black gradient-text mb-2 group-hover:text-primary transition-colors">
                     {stat.value}
                   </div>
-                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">
+                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.25em]">
                     {stat.label}
                   </div>
                 </div>

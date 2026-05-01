@@ -92,7 +92,7 @@
   }
 
   .glass-card {
-    @apply bg-white/[0.03] backdrop-blur-md border border-white/5 shadow-2xl hover:bg-white/[0.06] hover:border-white/20 transition-all duration-500;
+    @apply bg-white/[0.01] backdrop-blur-xl border border-white/10 shadow-2xl hover:bg-white/[0.05] hover:border-primary/50 transition-all duration-700;
   }
 
   .glass-panel {
