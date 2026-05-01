@@ -32,7 +32,6 @@ export default function ExperienceSection() {
   ];
 
   return (
-  return (
     <section id="experience" className="section-padding bg-white relative overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute top-1/4 left-1/4 w-[35%] h-[35%] bg-primary/10 rounded-full blur-[110px] -z-10" />
