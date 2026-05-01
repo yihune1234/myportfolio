@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ProjectsSection() {
-  const { projects, loading } = useProjects();
+  const { projects, loading, error, refetch } = useProjects();
   const [selectedProject, setSelectedProject] = useState<any>(null);
 
   const getIconForTech = (tech: string) => {
