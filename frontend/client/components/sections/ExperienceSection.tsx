@@ -32,10 +32,11 @@ export default function ExperienceSection() {
   ];
 
   return (
-    <section id="experience" className="section-padding bg-background relative overflow-hidden">
+  return (
+    <section id="experience" className="section-padding bg-white relative overflow-hidden">
       {/* Background Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-[35%] h-[35%] bg-primary/5 rounded-full blur-[110px] -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-[25%] h-[25%] bg-secondary/5 rounded-full blur-[90px] -z-10" />
+      <div className="absolute top-1/4 left-1/4 w-[35%] h-[35%] bg-primary/10 rounded-full blur-[110px] -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[25%] h-[25%] bg-secondary/10 rounded-full blur-[90px] -z-10" />
 
       <div className="max-w-7xl mx-auto">
         <motion.div
@@ -44,11 +45,11 @@ export default function ExperienceSection() {
           viewport={{ once: true }}
           className="mb-16 text-center lg:text-left"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6">
             Professional Journey
           </h2>
           <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full mb-8 mx-auto lg:mx-0"></div>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto lg:mx-0 leading-relaxed">
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto lg:mx-0 leading-relaxed">
             I've had the opportunity to work with innovative teams and organizations, gaining hands-on experience in full stack development and backend systems architecture.
           </p>
         </motion.div>
@@ -61,25 +62,25 @@ export default function ExperienceSection() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="glass-card p-8 md:p-12 rounded-[2.5rem] group relative overflow-hidden"
+              className="bg-white p-8 md:p-12 rounded-[2.5rem] group relative overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-slate-100"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div className="flex items-center gap-6">
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 group-hover:scale-110 group-hover:border-primary/50 transition-all duration-500">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 group-hover:scale-110 group-hover:border-primary/50 transition-all duration-500">
                     <Briefcase className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-black text-white group-hover:text-primary transition-colors">
+                    <h3 className="text-2xl md:text-3xl font-black text-slate-900 group-hover:text-primary transition-colors">
                       {exp.position}
                     </h3>
-                    <p className="text-lg font-bold text-muted-foreground mt-1">
+                    <p className="text-lg font-bold text-slate-500 mt-1">
                       {exp.company}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/5 border border-white/10 w-fit">
+                <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-50 border border-slate-100 w-fit">
                   <Calendar className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-bold text-white tracking-wide">
+                  <span className="text-sm font-bold text-slate-600 tracking-wide">
                     {exp.period}
                   </span>
                 </div>
@@ -87,9 +88,9 @@ export default function ExperienceSection() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {exp.responsibilities.map((resp, rIdx) => (
-                  <div key={rIdx} className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/[0.07] transition-all">
+                  <div key={rIdx} className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/30 hover:bg-white hover:shadow-lg transition-all">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-muted-foreground leading-relaxed text-sm font-medium">
+                    <p className="text-slate-600 leading-relaxed text-sm font-medium">
                       {resp}
                     </p>
                   </div>
