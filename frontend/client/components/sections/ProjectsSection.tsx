@@ -140,70 +140,87 @@ export default function ProjectsSection() {
         <AnimatePresence>
           {selectedProject && (
             <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-              <DialogContent className="max-w-4xl p-0 overflow-hidden border border-slate-100 bg-white rounded-[2.5rem] shadow-2xl">
-                <div className="grid grid-cols-1 md:grid-cols-2 h-full">
-                  <div className="relative h-64 md:h-full overflow-hidden bg-slate-50">
+              <DialogContent className="max-w-5xl p-0 overflow-hidden border border-slate-100 bg-white rounded-[2.5rem] shadow-2xl sm:max-h-[90vh]">
+                <div className="flex flex-col md:flex-row h-full">
+                  {/* Left Side: Visual */}
+                  <div className="relative w-full md:w-1/2 h-64 md:h-auto overflow-hidden bg-slate-50 group">
                     {selectedProject.image ? (
-                      <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
+                      <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
-                        <Database className="w-32 h-32 opacity-10 text-primary" />
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 via-secondary/10 to-purple-100">
+                        <Database className="w-32 h-32 opacity-10 text-primary animate-pulse" />
                       </div>
                     )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-white/10" />
                   </div>
 
-                  <div className="p-8 md:p-12 overflow-y-auto max-h-[85vh] custom-scrollbar">
-                    <DialogHeader className="mb-10 text-left">
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {selectedProject.technologies?.map((tech: string, idx: number) => (
-                          <span key={idx} className="px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-slate-50 border border-slate-100 text-slate-600">
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      <DialogTitle className="text-4xl font-black text-slate-900 mb-6 leading-tight">
-                        {selectedProject.title}
-                      </DialogTitle>
-                      <DialogDescription className="text-lg text-slate-600 leading-relaxed">
-                        {selectedProject.description}
-                      </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="space-y-8">
-                      {selectedProject.challenges && (
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Key Challenges</h4>
-                          <p className="text-slate-700 leading-relaxed text-sm">
-                            {selectedProject.challenges}
-                          </p>
+                  {/* Right Side: Content */}
+                  <div className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto max-h-[70vh] md:max-h-none custom-scrollbar">
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <DialogHeader className="mb-10 text-left">
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {selectedProject.technologies?.map((tech: string, idx: number) => (
+                            <span key={idx} className="px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-primary/5 border border-primary/10 text-primary shadow-sm">
+                              {tech}
+                            </span>
+                          ))}
                         </div>
-                      )}
+                        <DialogTitle className="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-[1.1] tracking-tight">
+                          {selectedProject.title}
+                        </DialogTitle>
+                        <DialogDescription className="text-lg text-slate-600 leading-relaxed font-medium">
+                          {selectedProject.description}
+                        </DialogDescription>
+                      </DialogHeader>
 
-                      <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                        {selectedProject.githubUrl && (
-                          <a
-                            href={selectedProject.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold hover:bg-slate-50 transition-all"
+                      <div className="space-y-8">
+                        {selectedProject.challenges && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 relative overflow-hidden group"
                           >
-                            <Github className="w-5 h-5" />
-                            Source Code
-                          </a>
+                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                              <Code2 className="w-16 h-16 text-primary" />
+                            </div>
+                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4">Key Challenges & Solutions</h4>
+                            <p className="text-slate-700 leading-relaxed text-sm font-medium relative z-10">
+                              {selectedProject.challenges}
+                            </p>
+                          </motion.div>
                         )}
-                        {selectedProject.demoUrl && (
-                          <a
-                            href={selectedProject.demoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 hover:scale-[1.02] transition-all shadow-xl shadow-slate-200"
-                          >
-                            <ExternalLink className="w-5 h-5" />
-                            Live Demo
-                          </a>
-                        )}
+
+                        <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                          {selectedProject.githubUrl && (
+                            <a
+                              href={selectedProject.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 flex items-center justify-center gap-3 px-6 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95"
+                            >
+                              <Github className="w-5 h-5" />
+                              View Source
+                            </a>
+                          )}
+                          {selectedProject.demoUrl && (
+                            <a
+                              href={selectedProject.demoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 flex items-center justify-center gap-3 px-6 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 hover:scale-[1.02] transition-all shadow-xl shadow-slate-200 active:scale-95"
+                            >
+                              <ExternalLink className="w-5 h-5" />
+                              Live Demo
+                            </a>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               </DialogContent>
