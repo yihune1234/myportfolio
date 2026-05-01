@@ -23,7 +23,7 @@ const corsOptions = {
             'http://localhost:3000',
             'http://localhost:8080',
             'http://localhost:5173',
-            'https://portfoliobackend-a6ah.onrender.com',
+            'https://myportfolio-frontend-ig3d.onrender.com/',
             process.env.FRONTEND_URL || ''
         ].filter(Boolean);
 
