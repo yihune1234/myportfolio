@@ -19,18 +19,21 @@ if (missingEnvVars.length > 0) {
 // CORS Configuration - Restrict to specific origins
 const corsOptions = {
     origin: function (origin, callback) {
+        const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : '';
         const allowedOrigins = [
             'http://localhost:3000',
             'http://localhost:8080',
             'http://localhost:5173',
-            'https://myportfolio-frontend-ig3d.onrender.com/',
-            process.env.FRONTEND_URL || ''
+            'http://localhost:5174',
+            'https://portfoliobackend-a6ah.onrender.com',
+            frontendUrl
         ].filter(Boolean);
 
         // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
             callback(null, true);
         } else {
+            console.error(`CORS Blocked origin: ${origin}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
