@@ -83,27 +83,27 @@ export default function Index() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 bg-background relative overflow-hidden">
+      <footer className="border-t border-slate-100 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[100%] bg-primary/5 rounded-full blur-[100px] -z-10" />
         
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
             <div className="text-center md:text-left">
-              <h3 className="font-black text-2xl mb-6 text-white tracking-tight">Yihune Belay</h3>
-              <p className="text-muted-foreground text-base leading-relaxed max-w-xs mx-auto md:mx-0">
+              <h3 className="font-black text-2xl mb-6 text-slate-900 tracking-tight">Yihune Belay</h3>
+              <p className="text-slate-600 text-base leading-relaxed max-w-xs mx-auto md:mx-0">
                 Full Stack Software Developer specializing in backend systems and
                 API architecture.
               </p>
             </div>
             <div className="text-center md:text-left">
-              <h4 className="font-bold text-white uppercase tracking-widest text-xs mb-8">Quick Links</h4>
+              <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs mb-8">Quick Links</h4>
               <ul className="space-y-4 text-base">
                 <li>
                   <button
                     onClick={() =>
                       document.getElementById("home")?.scrollIntoView({ behavior: "smooth" })
                     }
-                    className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium"
+                    className="text-slate-600 hover:text-primary transition-colors duration-300 font-bold"
                   >
                     Home
                   </button>
@@ -113,7 +113,7 @@ export default function Index() {
                     onClick={() =>
                       document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })
                     }
-                    className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium"
+                    className="text-slate-600 hover:text-primary transition-colors duration-300 font-bold"
                   >
                     Projects
                   </button>
@@ -123,7 +123,7 @@ export default function Index() {
                     onClick={() =>
                       document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
                     }
-                    className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium"
+                    className="text-slate-600 hover:text-primary transition-colors duration-300 font-bold"
                   >
                     Contact
                   </button>
@@ -131,12 +131,13 @@ export default function Index() {
               </ul>
             </div>
             <div className="text-center md:text-left">
-              <h4 className="font-bold text-white uppercase tracking-widest text-xs mb-8">Connect</h4>
+              <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs mb-8">Connect</h4>
               <div className="flex flex-col gap-6 items-center md:items-start">
                 <div className="flex gap-6">
                   <a
-                    href="#"
-                    className="p-3 rounded-2xl bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:bg-white/10 transition-all duration-300"
+                    href="https://github.com/yihune1234"
+                    target="_blank"
+                    className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-primary hover:shadow-lg transition-all duration-300"
                     title="GitHub"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -144,37 +145,30 @@ export default function Index() {
                     </svg>
                   </a>
                   <a
-                    href="#"
-                    className="p-3 rounded-2xl bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:bg-white/10 transition-all duration-300"
+                    href="https://linkedin.com/in/yihune-belay"
+                    target="_blank"
+                    className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-primary hover:shadow-lg transition-all duration-300"
                     title="LinkedIn"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.475-2.236-1.986-2.236-1.081 0-1.722.722-2.004 1.418-.103.249-.129.597-.129.946v5.441h-3.554v-11h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 8.855c-1.144 0-2.083-.931-2.083-2.076 0-1.144.92-2.083 2.083-2.083 1.144 0 2.084.92 2.084 2.083 0 1.144-.94 2.076-2.084 2.076zm1.782 11.597H3.555v-11h3.564v11zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                     </svg>
                   </a>
-                  <a
-                    href="mailto:your-email@example.com"
-                    className="p-3 rounded-2xl bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:bg-white/10 transition-all duration-300"
-                    title="Email"
-                  >
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                    </svg>
-                  </a>
                 </div>
                 {/* Admin Portal Button */}
                 <button
                   onClick={() => setShowAdminPortal(true)}
-                  className="p-3 rounded-2xl bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:bg-white/10 transition-all duration-300"
+                  className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-primary hover:shadow-lg transition-all duration-300 flex items-center gap-2 group"
                   title="Admin Portal"
                 >
-                  <Lock className="w-6 h-6" />
+                  <Lock className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Admin</span>
                 </button>
               </div>
             </div>
           </div>
-
-          <div className="border-t border-white/5 pt-10 text-center text-sm text-muted-foreground">
+ 
+          <div className="border-t border-slate-100 pt-10 text-center text-sm text-slate-400">
             <p className="font-medium">
               © 2024 Yihune Belay. All rights reserved. Designed & Built with
               care.

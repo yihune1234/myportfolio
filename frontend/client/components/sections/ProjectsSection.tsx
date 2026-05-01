@@ -54,13 +54,24 @@ export default function ProjectsSection() {
           </p>
         </motion.div>
 
-        {loading ? (
+        {error ? (
+          <div className="text-center py-20 px-8 bg-red-50 rounded-[2.5rem] border border-red-100 shadow-sm max-w-2xl mx-auto">
+            <p className="text-xl text-red-600 font-black mb-4 tracking-tight">Failed to load projects</p>
+            <p className="text-red-500/70 mb-8 font-medium">{error}</p>
+            <button 
+              onClick={() => refetch()}
+              className="px-8 py-3 bg-white border border-red-200 text-red-600 rounded-2xl font-bold hover:bg-red-50 transition-all shadow-sm active:scale-95"
+            >
+              Retry Connection
+            </button>
+          </div>
+        ) : loading ? (
           <div className="flex items-center justify-center py-32">
             <Loader className="w-12 h-12 animate-spin text-primary" />
           </div>
         ) : projects.length === 0 ? (
-          <div className="text-center py-32 bg-white rounded-3xl border border-slate-100 shadow-sm">
-            <p className="text-xl text-slate-500">No projects yet. Check back soon!</p>
+          <div className="text-center py-32 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">
+            <p className="text-xl text-slate-500 font-medium">No projects yet. Check back soon!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
