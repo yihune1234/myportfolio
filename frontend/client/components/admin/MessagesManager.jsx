@@ -8,7 +8,9 @@ import {
   MessageSquare,
   ArrowUpRight,
   Inbox,
-  User
+  Send,
+  X,
+  CheckCircle
 } from 'lucide-react';
 import { API_ENDPOINTS, apiFetch } from '../../lib/api';
 import { useToast } from '../../hooks/use-toast';
@@ -17,6 +19,10 @@ export function MessagesManager() {
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showReplyModal, setShowReplyModal] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [sending, setSending] = useState(false);
+  const [replySent, setReplySent] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -53,6 +59,47 @@ export function MessagesManager() {
     }
   };
 
+  const openReply = () => {
+    setReplyText('');
+    setReplySent(false);
+    setShowReplyModal(true);
+  };
+
+  const handleSendReply = async (e) => {
+    e.preventDefault();
+    if (!replyText.trim()) return;
+
+    setSending(true);
+    try {
+      const result = await apiFetch(API_ENDPOINTS.MESSAGES_REPLY(selectedMessage._id), {
+        method: 'POST',
+        body: JSON.stringify({ replyBody: replyText.trim() })
+      });
+
+      if (result.success) {
+        setReplySent(true);
+        toast({
+          title: "Sent",
+          description: "Your reply has been sent successfully."
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "Failed to send reply.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Connection error while sending reply.",
+        variant: "destructive"
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
   const filteredMessages = messages.filter(msg => 
     msg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     msg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -68,7 +115,6 @@ export function MessagesManager() {
           <p className="text-sm text-[#B7C0D1]">View and manage contact messages</p>
         </div>
 
-        {/* Search */}
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#B7C0D1]/50" />
           <input
@@ -151,7 +197,7 @@ export function MessagesManager() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="rounded-lg border border-white/[0.06] bg-[#0B1637] overflow-hidden shadow-lg shadow-black/20 flex flex-col h-full"
+                className="rounded-lg border border-white/[0.06] bg-[#0B1637] overflow-hidden shadow-lg shadow-black/20 flex flex-col"
               >
                 {/* Header */}
                 <div className="p-4 sm:p-6 border-b border-white/[0.06] bg-gradient-to-r from-[#0B1637] to-[#101B45]">
@@ -178,7 +224,7 @@ export function MessagesManager() {
                 </div>
 
                 {/* Body */}
-                <div className="p-4 sm:p-6 flex-1 overflow-y-auto space-y-4 sm:space-y-6">
+                <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                   <div>
                     <h4 className="font-bold text-[#B7C0D1] mb-2 text-xs uppercase tracking-wider">Subject</h4>
                     <p className="text-[#F5F7FA] font-medium text-sm">
@@ -211,13 +257,13 @@ export function MessagesManager() {
 
                 {/* Footer */}
                 <div className="p-4 sm:p-6 border-t border-white/[0.06] bg-[#050816]">
-                  <a
-                    href={`mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject}`}
+                  <button
+                    onClick={openReply}
                     className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
                   >
                     Reply
-                    <ArrowUpRight size={16} />
-                  </a>
+                    <Send size={16} />
+                  </button>
                 </div>
               </motion.div>
             ) : (
@@ -236,6 +282,108 @@ export function MessagesManager() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Reply Modal */}
+      <AnimatePresence>
+        {showReplyModal && selectedMessage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+            onClick={() => !sending && setShowReplyModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="w-full max-w-lg rounded-xl border border-white/[0.08] bg-[#0B1637] shadow-2xl shadow-black/60"
+              onClick={e => e.stopPropagation()}
+            >
+              {replySent ? (
+                <div className="p-8 sm:p-10 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#22C55E]/10 flex items-center justify-center">
+                    <CheckCircle className="w-8 h-8 text-[#22C55E]" />
+                  </div>
+                  <h3 className="text-xl font-black text-[#F5F7FA] mb-2">Reply Sent!</h3>
+                  <p className="text-sm text-[#B7C0D1] mb-6">
+                    Your reply to <span className="text-[#FF8A00] font-bold">{selectedMessage.name}</span> has been sent.
+                  </p>
+                  <button
+                    onClick={() => setShowReplyModal(false)}
+                    className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Header */}
+                  <div className="p-4 sm:p-6 border-b border-white/[0.06] flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-black text-[#F5F7FA]">Reply to {selectedMessage.name}</h3>
+                      <p className="text-xs text-[#B7C0D1]">Re: {selectedMessage.subject}</p>
+                    </div>
+                    <button
+                      onClick={() => setShowReplyModal(false)}
+                      className="p-2 hover:bg-white/[0.06] rounded-lg transition-colors text-[#B7C0D1] hover:text-[#F5F7FA]"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+
+                  {/* Form */}
+                  <form onSubmit={handleSendReply} className="p-4 sm:p-6 space-y-4">
+                    <div>
+                      <label className="text-xs font-bold text-[#B7C0D1] block mb-2">Your Reply</label>
+                      <textarea
+                        required
+                        rows="6"
+                        className="w-full px-4 py-3 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none text-sm"
+                        placeholder="Type your reply here..."
+                        value={replyText}
+                        onChange={e => setReplyText(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowReplyModal(false)}
+                        disabled={sending}
+                        className="flex-1 py-2.5 bg-white/[0.04] text-[#B7C0D1] rounded-lg font-bold hover:bg-white/[0.08] transition-all text-sm disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={sending || !replyText.trim()}
+                        className="flex-1 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                      >
+                        {sending ? (
+                          <>
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity }}
+                              className="w-4 h-4 border-2 border-[#050816]/30 border-t-[#050816] rounded-full"
+                            />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send size={16} />
+                            Send Reply
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

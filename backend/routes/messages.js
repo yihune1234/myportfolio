@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const nodemailer = require('nodemailer');
 const Message = require('../models/Message');
 const auth = require('../middleware/auth');
 
@@ -132,6 +133,69 @@ router.delete('/:id', auth, async (req, res) => {
         console.error('Error deleting message:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
+});
+
+// Reply to message (admin only) — sends email via SMTP
+router.post('/:id/reply', auth, async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid message ID' });
+    }
+
+    const { replyBody } = req.body;
+    if (!replyBody || !replyBody.trim()) {
+      return res.status(400).json({ message: 'Reply body is required' });
+    }
+
+    const message = await Message.findById(req.params.id);
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+
+    const adminEmail = process.env.ADMIN_EMAIL || 'yihunebelay@gmail.com';
+    const adminName = process.env.ADMIN_NAME || 'Yihune Belay';
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_SECURE === 'true',
+      auth: {
+        user: process.env.SMTP_USER || adminEmail,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const info = await transporter.sendMail({
+      from: `"${adminName}" <${adminEmail}>`,
+      to: message.email,
+      replyTo: adminEmail,
+      subject: `Re: ${message.subject}`,
+      text: replyBody,
+      html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #FF8A00, #FF6B00); padding: 3px; border-radius: 12px;">
+            <div style="background: #0B1637; border-radius: 10px; padding: 24px;">
+              <h2 style="color: #F5F7FA; margin: 0 0 16px;">${adminName}</h2>
+              <div style="color: #B7C0D1; line-height: 1.6; white-space: pre-wrap;">${replyBody}</div>
+              <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 20px 0;" />
+              <p style="color: #6B7280; font-size: 12px; margin: 0;">
+                --- Original message ---<br/>
+                From: ${message.name} &lt;${message.email}&gt;<br/>
+                Subject: ${message.subject}<br/>
+                Date: ${message.createdAt.toLocaleString()}<br/><br/>
+                ${message.message}
+              </p>
+            </div>
+          </div>
+        </div>
+      `,
+    });
+
+    res.json({ success: true, message: 'Reply sent successfully', messageId: info.messageId });
+  } catch (error) {
+    console.error('Error sending reply:', error);
+    res.status(500).json({ success: false, message: 'Failed to send reply', error: error.message });
+  }
 });
 
 module.exports = router;

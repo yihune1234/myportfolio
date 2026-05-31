@@ -25,6 +25,7 @@ export const API_ENDPOINTS = {
   MESSAGES_GET: (id: string) => `${API_URL}/api/messages/${id}`,
   MESSAGES_MARK_READ: (id: string) => `${API_URL}/api/messages/${id}/read`,
   MESSAGES_DELETE: (id: string) => `${API_URL}/api/messages/${id}`,
+  MESSAGES_REPLY: (id: string) => `${API_URL}/api/messages/${id}/reply`,
 };
 
 /**
