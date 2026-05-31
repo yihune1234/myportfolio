@@ -11,6 +11,8 @@ export interface Project {
   demoUrl?: string;
   role?: string;
   isMini?: boolean;
+  pinned?: boolean;
+  challenges?: string;
   createdAt: string;
 }
 
