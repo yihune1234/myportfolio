@@ -42,7 +42,7 @@ export default function AboutSection() {
             About Me
           </h2>
           <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
-            Software engineer based in Addis Ababa, Ethiopia. Currently pursuing Computer Science at Haramaya University, building production systems and digital infrastructure.
+            Software engineer based in Addis Ababa, Ethiopia. Currently pursuing Software Engineering at Haramaya University, building production systems and digital infrastructure.
           </p>
         </motion.div>
 

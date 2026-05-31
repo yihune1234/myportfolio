@@ -34,7 +34,7 @@ export default function EducationSection() {
             Education
           </h2>
           <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
-            Academic foundation in computer science with focus on software engineering.
+            Academic foundation in software engineering with focus on modern development practices.
           </p>
         </motion.div>
 
@@ -49,7 +49,7 @@ export default function EducationSection() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
               <div>
                 <h3 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-2 leading-tight">
-                  BSc in Computer Science
+                  BSc in Software Engineering
                 </h3>
                 <p className="text-base font-bold text-[#B7C0D1]">
                   Haramaya University
