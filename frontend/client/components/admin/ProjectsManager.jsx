@@ -9,6 +9,8 @@ import {
   FolderKanban, 
   Github,
   ExternalLink,
+  Pin,
+  PinOff,
   Image as ImageIcon
 } from 'lucide-react';
 import CloudinaryImage from '../CloudinaryImage.jsx';
@@ -130,6 +132,25 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       console.error('Error saving project:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePinToggle = async (id, currentlyPinned) => {
+    try {
+      const result = await apiFetch(API_ENDPOINTS.PROJECTS_PIN_TOGGLE(id), {
+        method: 'PUT'
+      });
+
+      if (result.success) {
+        toast({
+          title: currentlyPinned ? "Unpinned" : "Pinned!",
+          description: `Project has been ${currentlyPinned ? 'unpinned' : 'pinned to top'}.`
+        });
+        fetchProjects();
+        window.dispatchEvent(new Event('projectsUpdated'));
+      }
+    } catch (error) {
+      console.error('Error toggling pin:', error);
     }
   };
 
@@ -262,6 +283,12 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   width={400}
                   height={250}
                 />
+                {project.pinned && (
+                  <div className="absolute top-3 left-3 bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] px-2.5 py-1 rounded-full text-[9px] font-black text-[#050816] uppercase tracking-wider shadow-lg shadow-[#FF8A00]/30 flex items-center gap-1">
+                    <Pin size={10} className="fill-current" />
+                    Pinned
+                  </div>
+                )}
                 <div className="absolute top-3 right-3 bg-[#050816]/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-[#B7C0D1] border border-white/[0.06]">
                   {project.technologies?.length || 0} tech
                 </div>
@@ -321,6 +348,17 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                 {/* Actions */}
                 <div className="flex gap-2 pt-4 border-t border-white/[0.06]">
                   <button
+                    onClick={() => handlePinToggle(project._id, project.pinned)}
+                    className={`py-2 px-3 rounded-lg transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 ${
+                      project.pinned
+                        ? 'bg-[#FF8A00] text-[#050816] shadow-[0_0_12px_rgba(255,138,0,0.25)]'
+                        : 'bg-white/[0.04] text-[#B7C0D1] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00]'
+                    }`}
+                    title={project.pinned ? 'Unpin project' : 'Pin project to top'}
+                  >
+                    <Pin size={14} className={project.pinned ? 'fill-current' : ''} />
+                  </button>
+                  <button
                     onClick={() => openModal(project)}
                     className="flex-1 py-2 bg-[#FF8A00]/10 text-[#FF8A00] rounded-lg hover:bg-[#FF8A00] hover:text-[#050816] transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
                   >
@@ -329,10 +367,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   </button>
                   <button
                     onClick={() => handleDelete(project._id)}
-                    className="flex-1 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
+                    className="py-2 px-3 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-center"
+                    title="Delete project"
                   >
                     <Trash2 size={14} />
-                    <span className="hidden sm:inline">Delete</span>
                   </button>
                 </div>
               </div>

@@ -9,10 +9,10 @@ const isValidObjectId = (id) => {
     return /^[0-9a-fA-F]{24}$/.test(id);
 };
 
-// Get all projects (public)
+// Get all projects (public) — pinned first, then by date
 router.get('/', async (req, res) => {
     try {
-        const projects = await Project.find().sort({ createdAt: -1 });
+        const projects = await Project.find().sort({ pinned: -1, createdAt: -1 });
         res.json(projects);
     } catch (error) {
         console.error('Error fetching projects:', error);
@@ -129,6 +129,28 @@ router.put('/:id', auth, upload.single('image'), cloudinaryUpload, async (req, r
         res.json({ message: 'Project updated successfully', project });
     } catch (error) {
         console.error('Error updating project:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
+// Toggle pin project (admin only)
+router.put('/:id/pin', auth, async (req, res) => {
+    try {
+        if (!isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: 'Invalid project ID' });
+        }
+
+        const project = await Project.findById(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+
+        project.pinned = !project.pinned;
+        await project.save();
+
+        res.json({ message: project.pinned ? 'Project pinned' : 'Project unpinned', project });
+    } catch (error) {
+        console.error('Error toggling pin:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 });

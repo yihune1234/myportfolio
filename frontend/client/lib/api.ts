@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   PROJECTS_CREATE: `${API_URL}/api/projects`,
   PROJECTS_UPDATE: (id: string) => `${API_URL}/api/projects/${id}`,
   PROJECTS_DELETE: (id: string) => `${API_URL}/api/projects/${id}`,
+  PROJECTS_PIN_TOGGLE: (id: string) => `${API_URL}/api/projects/${id}/pin`,
 
   // Messages
   MESSAGES_CREATE: `${API_URL}/api/messages`,

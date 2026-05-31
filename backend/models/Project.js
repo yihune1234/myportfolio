@@ -9,6 +9,7 @@ const projectSchema = new mongoose.Schema({
     demoUrl: { type: String },
     role: { type: String, default: 'Developer' },
     isMini: { type: Boolean, default: false },
+    pinned: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
 });
 

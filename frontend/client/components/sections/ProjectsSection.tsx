@@ -1,4 +1,4 @@
-import { ExternalLink, Github, Loader, ArrowUpRight, Layers, Code2, Server, Zap, ChevronRight } from "lucide-react";
+import { ExternalLink, Github, Loader, ArrowUpRight, Layers, Pin, Code2, Server, Zap, ChevronRight } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -12,6 +12,8 @@ const projectIcons = [Code2, Server, Zap, Layers];
 export default function ProjectsSection() {
   const { projects, loading, error, refetch } = useProjects();
   const [selectedProject, setSelectedProject] = useState<any>(null);
+
+  const sorted = [...(projects || [])].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
   return (
     <section id="projects" className="section-padding relative overflow-hidden bg-background border-t border-white/[0.06]">
@@ -55,7 +57,7 @@ export default function ProjectsSection() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-            {projects.map((project: any, index: number) => {
+            {sorted.map((project: any, index: number) => {
               const Icon = projectIcons[index % projectIcons.length];
               return (
                 <motion.div
@@ -81,6 +83,13 @@ export default function ProjectsSection() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Icon className="w-16 h-16 text-[#FF8A00]/10" />
+                      </div>
+                    )}
+                    {/* Pin badge */}
+                    {project.pinned && (
+                      <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] text-[9px] font-black text-[#050816] uppercase tracking-wider shadow-lg shadow-[#FF8A00]/30">
+                        <Pin size={10} className="fill-current" />
+                        <span className="hidden sm:inline">Featured</span>
                       </div>
                     )}
                     {/* Top-left icon badge */}
@@ -174,7 +183,14 @@ export default function ProjectsSection() {
                         <Layers className="w-24 sm:w-32 h-24 sm:h-32 text-[#FF8A00]/10" />
                       </div>
                     )}
-                    {/* Tech badges on image */}
+                      {/* Pin badge in dialog */}
+                      {selectedProject.pinned && (
+                        <div className="absolute top-3 sm:top-4 right-3 sm:right-4 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] text-[9px] font-black text-[#050816] uppercase tracking-wider shadow-lg shadow-[#FF8A00]/30">
+                          <Pin size={10} className="fill-current" />
+                          Featured
+                        </div>
+                      )}
+                      {/* Tech badges on image */}
                     <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 flex flex-wrap gap-1.5 sm:gap-2">
                       {selectedProject.technologies?.slice(0, 5).map((tech: string, idx: number) => (
                         <span
@@ -196,9 +212,17 @@ export default function ProjectsSection() {
                       className="flex flex-col flex-1"
                     >
                       {/* Title */}
-                      <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#F5F7FA] mb-3 sm:mb-4 leading-[1.1]">
-                        {selectedProject.title}
-                      </h2>
+                      <div className="flex items-start gap-3 mb-3 sm:mb-4">
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#F5F7FA] leading-[1.1] flex-1">
+                          {selectedProject.title}
+                        </h2>
+                        {selectedProject.pinned && (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] text-[9px] font-black text-[#050816] uppercase tracking-wider shadow-lg shadow-[#FF8A00]/30 flex-shrink-0 mt-1">
+                            <Pin size={10} className="fill-current" />
+                            Featured
+                          </div>
+                        )}
+                      </div>
 
                       {/* Description */}
                       <p className="text-sm sm:text-base text-[#B7C0D1] leading-relaxed mb-6 sm:mb-8">
