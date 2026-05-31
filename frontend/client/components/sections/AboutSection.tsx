@@ -1,75 +1,75 @@
 import { motion } from "framer-motion";
-import { User, Award, Briefcase, Heart } from "lucide-react";
+import { Layers, Cpu, ShieldCheck, GitBranch } from "lucide-react";
 
 export default function AboutSection() {
-  const stats = [
-    { label: "Major Projects", value: "10+", icon: Briefcase },
+  const highlights = [
+    {
+      icon: Layers,
+      title: "Full-Stack Engineering",
+      desc: "Scalable backend systems, RESTful APIs, and responsive frontends built with modern architectures.",
+    },
+    {
+      icon: Cpu,
+      title: "Systems Thinker",
+      desc: "Designing distributed, fault-tolerant systems with clean separation of concerns.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Security Focused",
+      desc: "Implementing auth, encryption, and secure API patterns across the stack.",
+    },
+    {
+      icon: GitBranch,
+      title: "DevOps Mindset",
+      desc: "CI/CD pipelines, containerization, cloud deployment, and infrastructure automation.",
+    },
   ];
 
   return (
-    <section id="about" className="section-padding bg-white relative overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[30%] h-[30%] bg-primary/10 rounded-full blur-[100px] -z-10" />
-      <div className="absolute bottom-0 right-0 w-[20%] h-[20%] bg-secondary/10 rounded-full blur-[80px] -z-10" />
+    <section id="about" className="section-padding relative overflow-hidden border-t border-white/[0.06]" style={{ background: "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)" }}>
+      <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
+      <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-[#0A1330] rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-1/4 w-[200px] h-[200px] bg-[#1A1325] rounded-full blur-[100px]" />
 
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left Column: Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="mb-8">
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6">
-                About Me
-              </h2>
-              <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
-            </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 text-center lg:text-left"
+        >
+          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
+            About Me
+          </h2>
+          <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
+            Software engineer based in Addis Ababa, Ethiopia. Currently pursuing Computer Science at Haramaya University, building production systems and digital infrastructure.
+          </p>
+        </motion.div>
 
-            <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
-              <p>
-                I am a Software Developer based in Addis Ababa, Ethiopia, currently
-                pursuing a Bachelor's degree in Computer Science at Haramaya
-                University.
-              </p>
-
-              <p>
-                I have hands-on experience developing and integrating RESTful APIs,
-                designing efficient database systems, and building cross-platform
-                mobile applications. I am particularly interested in secure and
-                scalable systems, including digital identity solutions and
-                distributed architectures.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Right Column: Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="p-8 rounded-[2rem] bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 group relative overflow-hidden"
-              >
-                <div className="relative z-10">
-                  <div className="p-4 rounded-2xl w-fit mb-6 bg-slate-50 border border-slate-100 group-hover:scale-110 transition-all duration-500">
-                    <stat.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <div className="text-5xl font-black text-slate-900 mb-2 group-hover:text-primary transition-colors">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-[0.25em]">
-                    {stat.label}
-                  </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {highlights.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="group relative p-6 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:bg-[#101B45] hover:border-[#FF8A00]/30 transition-all duration-500"
+            >
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#FF8A00]/5 to-[#FF6B00]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative z-10">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-[#FF8A00]/10 to-[#FF6B00]/10 border border-[#FF8A00]/10 w-fit mb-5 group-hover:scale-110 transition-transform duration-500">
+                  <item.icon className="w-5 h-5 text-[#FF8A00]" />
                 </div>
-              </motion.div>
-            ))}
-          </div>
+                <h3 className="text-lg font-bold text-[#F5F7FA] mb-3 group-hover:text-[#FF8A00] transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-[#B7C0D1] leading-relaxed font-medium">
+                  {item.desc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

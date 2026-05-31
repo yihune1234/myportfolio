@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, MapPin, Phone, GraduationCap, Calendar, BookOpen, Send, CheckCircle2, Loader } from "lucide-react";
+import { Mail, MapPin, Phone, GraduationCap, BookOpen, Send, CheckCircle2, Loader, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { API_ENDPOINTS, apiFetch } from "@/lib/api";
@@ -9,7 +9,7 @@ export default function EducationSection() {
     "Data Structures & Algorithms",
     "Database Systems",
     "Web Development",
-    "Mobile Application Dev",
+    "Mobile App Development",
     "Network Security",
     "Software Architecture",
     "Cloud Computing",
@@ -18,91 +18,97 @@ export default function EducationSection() {
   ];
 
   return (
-    <section id="education" className="section-padding bg-slate-50 relative overflow-hidden border-t border-slate-100">
-      <div className="max-w-7xl mx-auto">
+    <section id="education" className="section-padding relative overflow-hidden bg-background border-t border-white/[0.06]">
+      <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
+      <div className="absolute top-0 right-1/4 w-[300px] h-[300px] bg-[#FF8A00]/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] bg-[#FFB020]/5 rounded-full blur-[100px]" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-16 text-center lg:text-left"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6">
+          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
             Education
           </h2>
-          <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full mx-auto lg:mx-0"></div>
+          <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
+            Academic foundation in computer science with focus on software engineering.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Education Main Card */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-2 bg-white p-8 md:p-12 rounded-[2.5rem] group relative overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-slate-100"
+            className="lg:col-span-2 p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:border-[#FF8A00]/20 transition-all duration-500"
           >
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
               <div>
-                <h3 className="text-3xl md:text-4xl font-black text-slate-900 mb-3 leading-tight">
-                  Bachelor of Science in <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Computer Science</span>
+                <h3 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-2 leading-tight">
+                  BSc in Computer Science
                 </h3>
-                <p className="text-lg font-bold text-slate-500">
+                <p className="text-base font-bold text-[#B7C0D1]">
                   Haramaya University
                 </p>
               </div>
-              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 group-hover:scale-110 group-hover:border-primary/50 transition-all duration-500">
-                <GraduationCap className="w-10 h-10 text-primary" />
+              <div className="p-4 rounded-xl bg-gradient-to-br from-[#FF8A00]/10 to-[#FF6B00]/10 border border-[#FF8A00]/10 w-fit group-hover:scale-110 transition-transform duration-500">
+                <GraduationCap className="w-8 h-8 text-[#FF8A00]" />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-10 border-y border-slate-100">
-              <div className="flex items-center gap-5">
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                  <Calendar className="w-6 h-6 text-primary" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-6 border-y border-white/[0.08] mb-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08]">
+                  <BookOpen className="w-5 h-5 text-[#FF8A00]" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Status</p>
-                  <p className="font-bold text-slate-900 text-lg">In Progress</p>
+                  <p className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest mb-0.5">Status</p>
+                  <p className="font-bold text-[#F5F7FA]">In Progress</p>
                 </div>
               </div>
-              <div className="flex items-center gap-5">
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                  <BookOpen className="w-6 h-6 text-primary" />
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08]">
+                  <Sparkles className="w-5 h-5 text-[#FF8A00]" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Focus</p>
-                  <p className="font-bold text-slate-900 text-lg">Software Engineering</p>
+                  <p className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest mb-0.5">Focus</p>
+                  <p className="font-bold text-[#F5F7FA]">Software Engineering</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-10">
-              <p className="text-lg text-slate-600 leading-relaxed">
-                Pursuing a rigorous curriculum focused on foundational computer science principles, advanced software development methodologies, and system architecture.
-              </p>
-            </div>
+            <p className="text-sm text-[#B7C0D1] leading-relaxed">
+              Rigorous curriculum in foundational computer science, advanced software development methodologies, and system architecture.
+            </p>
           </motion.div>
 
           {/* Areas of Study */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white p-8 rounded-[2.5rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] border border-slate-100 relative overflow-hidden h-fit"
+            transition={{ delay: 0.1 }}
+            className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:border-[#FF8A00]/20 transition-all duration-500 h-fit"
           >
-            <h4 className="text-xl font-black text-slate-900 mb-8">Core Focus Areas</h4>
-            <div className="grid grid-cols-1 gap-3">
+            <h4 className="text-base font-bold text-[#F5F7FA] mb-6">Core Focus Areas</h4>
+            <div className="grid grid-cols-1 gap-2">
               {studyAreas.map((area, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/30 hover:bg-white hover:shadow-lg transition-all group flex items-center gap-4"
+                  transition={{ delay: idx * 0.03 }}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#FF8A00]/20 transition-all group"
                 >
-                  <div className="w-2 h-2 rounded-full bg-primary shadow-lg shadow-primary/50"></div>
-                  <span className="font-bold text-sm text-slate-600 group-hover:text-slate-900 transition-colors">{area}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#FF8A00] shadow-lg shadow-[#FF8A00]/30" />
+                  <span className="text-xs font-bold text-[#B7C0D1] group-hover:text-[#F5F7FA] transition-colors">
+                    {area}
+                  </span>
                 </motion.div>
               ))}
             </div>
@@ -161,48 +167,53 @@ export function ContactSection() {
   const contactInfo = [
     { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia" },
     { icon: Mail, label: "Email", value: "yihunebelay859@gmail.com", href: "mailto:yihunebelay859@gmail.com" },
-    { icon: Phone, label: "Phone", value: "+251 987 414 282 / +251 723 874 282", href: "tel:+251987414282" },
+    { icon: Phone, label: "Phone", value: "+251 987 414 282", href: "tel:+251987414282" },
   ];
 
   return (
-    <section id="contact" className="section-padding bg-white relative overflow-hidden border-t border-slate-100">
-      <div className="max-w-7xl mx-auto">
+    <section id="contact" className="section-padding relative overflow-hidden bg-background border-t border-white/[0.06]">
+      <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-[#FF8A00]/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/3 right-1/3 w-[300px] h-[300px] bg-[#FFB020]/5 rounded-full blur-[120px]" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6">
+          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
             Let's Connect
           </h2>
-          <div className="h-1.5 w-20 bg-gradient-to-r from-primary to-secondary rounded-full mx-auto"></div>
+          <p className="text-[#B7C0D1] text-base max-w-2xl mx-auto leading-relaxed">
+            Open for full-time roles, freelance projects, and research collaborations.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Contact Info */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-slate-50 p-10 rounded-[2.5rem] space-y-10 border border-slate-100">
-              <h3 className="text-2xl font-black text-slate-900">Contact Information</h3>
-              <div className="space-y-8">
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] space-y-6">
+              <h3 className="text-lg font-bold text-[#F5F7FA]">Contact Information</h3>
+              <div className="space-y-5">
                 {contactInfo.map((info, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
-                    className="flex items-center gap-6 group"
+                    className="flex items-center gap-4 group"
                   >
-                    <div className="p-4 rounded-2xl bg-white border border-slate-100 group-hover:shadow-lg group-hover:border-primary transition-all duration-500">
-                      <info.icon className="w-6 h-6 text-primary" />
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08] group-hover:border-[#FF8A00]/20 transition-all duration-500">
+                      <info.icon className="w-5 h-5 text-[#FF8A00]" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{info.label}</p>
+                      <p className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest mb-0.5">{info.label}</p>
                       {info.href ? (
-                        <a href={info.href} className="font-bold text-slate-900 text-lg hover:text-primary transition-colors">{info.value}</a>
+                        <a href={info.href} className="font-bold text-[#F5F7FA] text-sm hover:text-[#FF8A00] transition-colors">{info.value}</a>
                       ) : (
-                        <p className="font-bold text-slate-900 text-lg">{info.value}</p>
+                        <p className="font-bold text-[#F5F7FA] text-sm">{info.value}</p>
                       )}
                     </div>
                   </motion.div>
@@ -210,99 +221,101 @@ export function ContactSection() {
               </div>
             </div>
 
-            <div className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100">
-              <h4 className="font-black text-slate-900 mb-4 uppercase tracking-[0.2em] text-sm">Availability</h4>
-              <p className="text-slate-600 leading-relaxed">
-                Open for full-time roles, freelance projects, and research collaborations. Typical response time: <span className="text-primary font-bold">24 hours</span>.
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08]">
+              <h4 className="font-bold text-[#F5F7FA] mb-3 uppercase tracking-[0.15em] text-xs">Availability</h4>
+              <p className="text-sm text-[#B7C0D1] leading-relaxed">
+                Open for full-time roles, freelance projects, and research collaborations.
+                <br />
+                <span className="text-[#FF8A00] font-bold">Response: 24 hours</span>
               </p>
             </div>
           </div>
 
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="lg:col-span-3"
           >
-            <form onSubmit={handleSubmit} className="bg-white p-8 md:p-12 rounded-[2.5rem] space-y-8 relative overflow-hidden border border-slate-100 shadow-2xl">
+            <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] space-y-6 relative overflow-hidden hover:border-[#FF8A00]/20 transition-all duration-500">
               <AnimatePresence>
                 {submitted && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 z-20 bg-white/95 backdrop-blur-xl flex flex-col items-center justify-center text-center p-8"
+                    className="absolute inset-0 z-20 bg-[#050816]/95 backdrop-blur-xl flex flex-col items-center justify-center text-center p-8 rounded-2xl"
                   >
                     <motion.div
                       initial={{ scale: 0.5, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-8 border border-primary/20"
+                      className="w-20 h-20 bg-[#FF8A00]/10 rounded-full flex items-center justify-center mb-6 border border-[#FF8A00]/20"
                     >
-                      <CheckCircle2 className="w-12 h-12 text-primary" />
+                      <CheckCircle2 className="w-10 h-10 text-[#FF8A00]" />
                     </motion.div>
-                    <h3 className="text-3xl font-black text-slate-900 mb-4">Message Received!</h3>
-                    <p className="text-slate-600 max-w-xs text-lg">Thank you for reaching out. I'll get back to you shortly.</p>
+                    <h3 className="text-2xl font-black text-[#F5F7FA] mb-2">Message Received!</h3>
+                    <p className="text-[#B7C0D1] text-sm max-w-xs">Thank you for reaching out. I'll get back to you shortly.</p>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Name</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">Name</label>
                   <input
                     id="name"
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white transition-all outline-none text-slate-900 placeholder:text-slate-300"
+                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
                   />
                 </div>
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">Email</label>
                   <input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="john@example.com"
-                    className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white transition-all outline-none text-slate-900 placeholder:text-slate-300"
+                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
                   />
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Subject</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">Subject</label>
                 <input
                   id="subject"
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="Project Inquiry"
-                  className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white transition-all outline-none text-slate-900 placeholder:text-slate-300"
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
                 />
               </div>
 
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Message</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">Message</label>
                 <textarea
                   id="message"
                   value={formData.message}
                   onChange={handleChange}
-                  rows={5}
+                  rows={4}
                   placeholder="Tell me about your project..."
-                  className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white transition-all outline-none resize-none text-slate-900 placeholder:text-slate-300"
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none resize-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-5 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-slate-200 text-lg"
+                className="w-full py-4 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-xl font-bold hover:shadow-[0_0_40px_rgba(255,138,0,0.35)] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
               >
-                {loading ? <Loader className="w-6 h-6 animate-spin" /> : (
+                {loading ? <Loader className="w-5 h-5 animate-spin" /> : (
                   <>
                     Send Message
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4" />
                   </>
                 )}
               </button>
