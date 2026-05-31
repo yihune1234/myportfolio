@@ -43,7 +43,7 @@ router.post('/setup', async (req, res) => {
     }
 });
 
-// Login
+// Login — restricted to owner only
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Email and password are required' });
         }
 
-        const admin = await Admin.findOne({ email });
+        const admin = await Admin.findOne({ email: email.trim().toLowerCase() });
         if (!admin) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -63,18 +63,20 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '30m' });
+        const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
         
         res.json({ 
+            success: true,
             token, 
             admin: { 
                 id: admin._id, 
-                email: admin.email 
+                email: admin.email,
+                name: 'Yihune Belay'
             } 
         });
     } catch (error) {
         console.error('Error logging in:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
 

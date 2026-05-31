@@ -6,12 +6,10 @@ import {
   Trash2, 
   X, 
   Upload, 
-  ExternalLink, 
   FolderKanban, 
   Github,
-  Globe,
-  Search,
-  Zap
+  ExternalLink,
+  Image as ImageIcon
 } from 'lucide-react';
 import CloudinaryImage from '../CloudinaryImage.jsx';
 import { API_ENDPOINTS, apiFetch, apiFetchFormData } from '../../lib/api';
@@ -210,15 +208,15 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1">Projects</h2>
-          <p className="text-sm text-slate-600">Manage your portfolio projects</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-1">Projects</h2>
+          <p className="text-sm text-[#B7C0D1]">Manage your portfolio projects</p>
         </div>
         
         <motion.button
           onClick={() => openModal()}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-bold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-2 w-full sm:w-fit"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] px-6 py-3 rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all flex items-center justify-center gap-2 w-full sm:w-fit"
         >
           <Plus size={18} />
           New Project
@@ -231,16 +229,16 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="col-span-full py-16 sm:py-20 rounded-xl bg-slate-100 flex flex-col items-center justify-center text-center space-y-4"
+            className="col-span-full py-16 sm:py-20 rounded-xl border border-white/[0.06] bg-[#0B1637] flex flex-col items-center justify-center text-center space-y-4"
           >
-            <FolderKanban size={40} className="text-slate-400" />
+            <FolderKanban size={40} className="text-[#FF8A00]/30" />
             <div>
-              <p className="text-slate-600 font-bold mb-2">No projects yet</p>
-              <p className="text-sm text-slate-500">Create your first project to get started</p>
+              <p className="text-[#F5F7FA] font-bold mb-2">No projects yet</p>
+              <p className="text-sm text-[#B7C0D1]">Create your first project to get started</p>
             </div>
             <button 
               onClick={() => openModal()} 
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 transition-all"
+              className="px-6 py-2 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
             >
               Create Project
             </button>
@@ -253,10 +251,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
               whileHover={{ y: -4 }}
-              className="group rounded-xl bg-white border border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all flex flex-col h-full"
+              className="group rounded-xl border border-white/[0.06] bg-[#0B1637] overflow-hidden hover:border-[#FF8A00]/25 hover:shadow-lg hover:shadow-[#FF8A00]/5 transition-all flex flex-col h-full"
             >
               {/* Image */}
-              <div className="relative aspect-video overflow-hidden bg-slate-100">
+              <div className="relative aspect-video overflow-hidden bg-[#050816]">
                 <CloudinaryImage
                   src={project.image}
                   alt={project.title}
@@ -264,46 +262,74 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   width={400}
                   height={250}
                 />
-                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-700">
+                <div className="absolute top-3 right-3 bg-[#050816]/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-[#B7C0D1] border border-white/[0.06]">
                   {project.technologies?.length || 0} tech
                 </div>
               </div>
 
               {/* Content */}
               <div className="p-4 sm:p-6 flex flex-col flex-1">
-                <h3 className="text-base sm:text-lg font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+                <h3 className="text-base sm:text-lg font-black text-[#F5F7FA] mb-2 group-hover:text-[#FF8A00] transition-colors line-clamp-2">
                   {project.title}
                 </h3>
-                <p className="text-slate-600 text-xs sm:text-sm line-clamp-2 mb-4 flex-1">
+                <p className="text-[#B7C0D1] text-xs sm:text-sm line-clamp-2 mb-4 flex-1">
                   {project.description}
                 </p>
 
                 {/* Tech Tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.technologies?.slice(0, 2).map((tech, i) => (
-                    <span key={i} className="text-xs px-2 py-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-600 rounded font-bold">
+                    <span key={i} className="text-[10px] px-2 py-1 bg-[#FF8A00]/10 text-[#FF8A00] rounded font-bold border border-[#FF8A00]/20">
                       {tech}
                     </span>
                   ))}
                   {project.technologies?.length > 2 && (
-                    <span className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded font-bold">
+                    <span className="text-[10px] px-2 py-1 bg-white/[0.04] text-[#B7C0D1] rounded font-bold border border-white/[0.06]">
                       +{project.technologies.length - 2}
                     </span>
                   )}
                 </div>
 
+                {/* Links */}
+                <div className="flex gap-2 mb-3">
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      className="flex items-center gap-1.5 text-[10px] font-bold text-[#B7C0D1] hover:text-[#FF8A00] transition-colors"
+                    >
+                      <Github size={12} />
+                      GitHub
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      className="flex items-center gap-1.5 text-[10px] font-bold text-[#B7C0D1] hover:text-[#FF8A00] transition-colors"
+                    >
+                      <ExternalLink size={12} />
+                      Demo
+                    </a>
+                  )}
+                </div>
+
                 {/* Actions */}
-                <div className="flex gap-2 pt-4 border-t border-slate-200">
+                <div className="flex gap-2 pt-4 border-t border-white/[0.06]">
                   <button
                     onClick={() => openModal(project)}
-                    className="flex-1 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
+                    className="flex-1 py-2 bg-[#FF8A00]/10 text-[#FF8A00] rounded-lg hover:bg-[#FF8A00] hover:text-[#050816] transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
                   >
                     <Edit3 size={14} /> 
                     <span className="hidden sm:inline">Edit</span>
                   </button>
                   <button
                     onClick={() => handleDelete(project._id)}
-                    className="flex-1 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
+                    className="flex-1 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
                   >
                     <Trash2 size={14} />
                     <span className="hidden sm:inline">Delete</span>
@@ -322,24 +348,24 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
             onClick={closeModal}
           >
             <motion.div
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              className="w-full max-w-2xl rounded-xl bg-white shadow-xl max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-2xl rounded-xl border border-white/[0.08] bg-[#0B1637] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="sticky top-0 p-4 sm:p-6 border-b border-slate-200 bg-white flex items-center justify-between z-10">
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+              <div className="sticky top-0 p-4 sm:p-6 border-b border-white/[0.06] bg-[#0B1637] flex items-center justify-between z-10">
+                <h3 className="text-xl sm:text-2xl font-black text-[#F5F7FA]">
                   {editingProject ? 'Edit Project' : 'New Project'}
                 </h3>
                 <button 
                   onClick={closeModal} 
-                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
+                  className="p-2 hover:bg-white/[0.06] rounded-lg transition-colors flex-shrink-0 text-[#B7C0D1] hover:text-[#F5F7FA]"
                 >
                   <X size={20} />
                 </button>
@@ -367,11 +393,11 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
                 {/* Description */}
                 <div>
-                  <label className="text-sm font-bold text-slate-700 block mb-2">Description</label>
+                  <label className="text-xs font-bold text-[#B7C0D1] block mb-2">Description</label>
                   <textarea
                     required
                     rows="4"
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-blue-500 transition-all font-medium text-slate-900 placeholder-slate-400 resize-none"
+                    className="w-full px-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none"
                     placeholder="Project description..."
                     value={formData.description}
                     onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -405,16 +431,16 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
                 {/* Image Upload */}
                 <div>
-                  <label className="text-sm font-bold text-slate-700 block mb-2">Project Image</label>
-                  <label className="flex flex-col items-center justify-center aspect-video bg-slate-50 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all">
+                  <label className="text-xs font-bold text-[#B7C0D1] block mb-2">Project Image</label>
+                  <label className="flex flex-col items-center justify-center aspect-video bg-[#050816] border-2 border-dashed border-white/[0.08] rounded-lg cursor-pointer hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.02] transition-all">
                     {imagePreview ? (
                       <img src={imagePreview} className="w-full h-full object-cover rounded-lg" alt="Preview" />
                     ) : (
                       <div className="text-center space-y-2 py-8">
-                        <Upload size={28} className="mx-auto text-slate-400" />
+                        <Upload size={28} className="mx-auto text-[#FF8A00]/40" />
                         <div>
-                          <span className="text-sm font-bold text-slate-600 block">Upload Image</span>
-                          <span className="text-xs text-slate-500">PNG, JPG up to 5MB</span>
+                          <span className="text-sm font-bold text-[#B7C0D1] block">Upload Image</span>
+                          <span className="text-xs text-[#B7C0D1]/50">PNG, JPG up to 5MB</span>
                         </div>
                       </div>
                     )}
@@ -423,34 +449,33 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                 </div>
 
                 {/* Mini Project Checkbox */}
-                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <div className="flex items-center gap-3 p-4 bg-[#050816] rounded-lg border border-white/[0.06]">
                   <input
                     type="checkbox"
                     id="isMini"
-                    className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
+                    className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
                     checked={formData.isMini}
                     onChange={e => setFormData({ ...formData, isMini: e.target.checked })}
                   />
-                  <label htmlFor="isMini" className="text-sm font-bold text-slate-700 cursor-pointer flex-1">
+                  <label htmlFor="isMini" className="text-sm font-bold text-[#B7C0D1] cursor-pointer flex-1">
                     Mark as mini/experimental project
                   </label>
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-3 pt-4 border-t border-slate-200">
+                <div className="flex gap-3 pt-4 border-t border-white/[0.06]">
                   <button 
                     type="button" 
                     onClick={closeModal} 
-                    className="flex-1 py-2.5 bg-slate-100 text-slate-900 rounded-lg font-bold hover:bg-slate-200 transition-all text-sm"
+                    className="flex-1 py-2.5 bg-white/[0.04] text-[#B7C0D1] rounded-lg font-bold hover:bg-white/[0.08] transition-all text-sm"
                   >
                     Cancel
                   </button>
                   <button 
                     type="submit" 
                     disabled={loading} 
-                    className="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                    className="flex-1 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
                   >
-                    {loading ? <Zap size={16} className="animate-spin" /> : <Zap size={16} />}
                     {editingProject ? 'Update' : 'Create'}
                   </button>
                 </div>
@@ -465,10 +490,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
 const InputField = ({ label, ...props }) => (
   <div className="space-y-2">
-    <label className="text-sm font-bold text-slate-700 block">{label}</label>
+    <label className="text-xs font-bold text-[#B7C0D1] block">{label}</label>
     <input
       {...props}
-      className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-blue-500 transition-all font-medium text-slate-900 placeholder-slate-400"
+      className="w-full px-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40"
     />
   </div>
 );

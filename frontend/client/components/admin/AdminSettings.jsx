@@ -11,7 +11,8 @@ import {
   EyeOff,
   Key,
   RotateCcw,
-  AlertCircle
+  AlertCircle,
+  Sparkles
 } from 'lucide-react';
 import { API_ENDPOINTS, apiFetch } from '../../lib/api';
 import { useToast } from '../../hooks/use-toast';
@@ -40,7 +41,7 @@ export function AdminSettings() {
       setAdmin(parsed);
       setProfileData({
         email: parsed.email || '',
-        username: parsed.username || 'Administrator'
+        username: parsed.name || 'Yihune Belay'
       });
     }
   }, []);
@@ -49,9 +50,9 @@ export function AdminSettings() {
     e.preventDefault();
     setLoading(true);
     try {
-      const result = await apiFetch(API_ENDPOINTS.ADMIN_UPDATE_PROFILE, {
+      const result = await apiFetch(API_ENDPOINTS.ADMIN_UPDATE_USERNAME, {
         method: 'PUT',
-        body: JSON.stringify(profileData)
+        body: JSON.stringify({ username: profileData.username })
       });
       if (result.success) {
         localStorage.setItem('adminUser', JSON.stringify({ ...admin, ...profileData }));
@@ -85,9 +86,12 @@ export function AdminSettings() {
     }
     setLoading(true);
     try {
-      const result = await apiFetch(API_ENDPOINTS.ADMIN_CHANGE_PASSWORD, {
+      const result = await apiFetch(API_ENDPOINTS.ADMIN_UPDATE_PASSWORD, {
         method: 'PUT',
-        body: JSON.stringify(securityData)
+        body: JSON.stringify({
+          currentPassword: securityData.currentPassword,
+          newPassword: securityData.newPassword
+        })
       });
       if (result.success) {
         toast({
@@ -113,16 +117,16 @@ export function AdminSettings() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm"
+      className="border border-white/[0.06] bg-[#0B1637] rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg shadow-black/20"
     >
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
         <div className="lg:w-1/3 space-y-3 sm:space-y-4">
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center text-blue-600">
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#FF8A00]/20 to-[#FF6B00]/10 flex items-center justify-center text-[#FF8A00] border border-[#FF8A00]/20">
             <Icon size={24} />
           </div>
           <div>
-            <h3 className="text-lg sm:text-xl font-black text-slate-900">{title}</h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2">{desc}</p>
+            <h3 className="text-lg sm:text-xl font-black text-[#F5F7FA]">{title}</h3>
+            <p className="text-xs sm:text-sm text-[#B7C0D1] mt-2">{desc}</p>
           </div>
         </div>
         <div className="lg:w-2/3">
@@ -134,14 +138,14 @@ export function AdminSettings() {
 
   const InputField = ({ label, icon: Icon, ...props }) => (
     <div className="space-y-2">
-      <label className="text-sm font-bold text-slate-700 block">{label}</label>
+      <label className="text-xs font-bold text-[#B7C0D1] block">{label}</label>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon size={16} className="text-slate-400" />
+          <Icon size={16} className="text-[#B7C0D1]/40" />
         </div>
         <input
           {...props}
-          className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-blue-500 transition-all font-medium text-slate-900 placeholder-slate-400"
+          className="w-full pl-10 pr-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40"
         />
       </div>
     </div>
@@ -151,8 +155,8 @@ export function AdminSettings() {
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
       {/* Header */}
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Settings</h2>
-        <p className="text-sm text-slate-600">Manage your admin account and security</p>
+        <h2 className="text-2xl sm:text-3xl font-black text-[#F5F7FA]">Settings</h2>
+        <p className="text-sm text-[#B7C0D1]">Manage your admin account and security</p>
       </div>
 
       <div className="space-y-6 sm:space-y-8">
@@ -167,18 +171,25 @@ export function AdminSettings() {
               <InputField
                 label="Name"
                 icon={User}
-                placeholder="Admin"
+                placeholder="Yihune Belay"
                 value={profileData.username}
                 onChange={e => setProfileData({ ...profileData, username: e.target.value })}
               />
-              <InputField
-                label="Email"
-                icon={Mail}
-                type="email"
-                placeholder="admin@example.com"
-                value={profileData.email}
-                onChange={e => setProfileData({ ...profileData, email: e.target.value })}
-              />
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[#B7C0D1] block">Email</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail size={16} className="text-[#B7C0D1]/40" />
+                  </div>
+                  <input
+                    type="email"
+                    value={profileData.email}
+                    disabled
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#050816]/50 border border-white/[0.06] rounded-lg text-[#B7C0D1]/60 font-medium cursor-not-allowed"
+                  />
+                </div>
+                <p className="text-[10px] text-[#B7C0D1]/40">Contact support to change email</p>
+              </div>
             </div>
             
             <motion.button
@@ -186,7 +197,7 @@ export function AdminSettings() {
               disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold text-sm hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
+              className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
             >
               <Save size={16} />
               Save Changes
@@ -210,7 +221,7 @@ export function AdminSettings() {
               onChange={e => setSecurityData({ ...securityData, currentPassword: e.target.value })}
             />
             
-            <div className="h-px bg-slate-200" />
+            <div className="h-px bg-white/[0.06]" />
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <InputField
@@ -235,7 +246,7 @@ export function AdminSettings() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"
+                className="flex items-center gap-2 text-sm font-bold text-[#B7C0D1] hover:text-[#FF8A00] transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 <span>{showPassword ? 'Hide' : 'Show'} Password</span>
@@ -246,7 +257,7 @@ export function AdminSettings() {
                 disabled={loading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold text-sm hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
+                className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
               >
                 <RotateCcw size={16} />
                 Update Password
@@ -259,12 +270,12 @@ export function AdminSettings() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 sm:p-6 rounded-lg bg-amber-50 border border-amber-200 flex gap-4"
+          className="p-4 sm:p-6 rounded-lg bg-[#FF8A00]/5 border border-[#FF8A00]/20 flex gap-4"
         >
-          <AlertCircle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
+          <AlertCircle size={20} className="text-[#FF8A00] flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-bold text-amber-900 mb-1 text-sm">Security Notice</h4>
-            <p className="text-xs sm:text-sm text-amber-800">
+            <h4 className="font-bold text-[#F5F7FA] mb-1 text-sm">Security Notice</h4>
+            <p className="text-xs sm:text-sm text-[#B7C0D1]">
               Keep your password secure and never share it with anyone. Always use a strong password with a mix of letters, numbers, and symbols.
             </p>
           </div>

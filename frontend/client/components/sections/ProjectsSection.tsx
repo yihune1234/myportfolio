@@ -1,4 +1,4 @@
-import { ExternalLink, Github, Loader, ArrowUpRight, Layers, Eye, Code2, Server, Zap, ChevronRight } from "lucide-react";
+import { ExternalLink, Github, Loader, ArrowUpRight, Layers, Code2, Server, Zap, ChevronRight } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -24,12 +24,12 @@ export default function ProjectsSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 text-center lg:text-left"
+          className="mb-12 sm:mb-16 text-center lg:text-left"
         >
-          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#F5F7FA] mb-4">
             Featured Projects
           </h2>
-          <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
+          <p className="text-[#B7C0D1] text-sm sm:text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
             Production-grade systems and applications — from backend infrastructure to full-stack platforms.
           </p>
         </motion.div>
@@ -54,7 +54,7 @@ export default function ProjectsSection() {
             <p className="text-[#B7C0D1] font-medium">No projects yet. Check back soon!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
             {projects.map((project: any, index: number) => {
               const Icon = projectIcons[index % projectIcons.length];
               return (
@@ -68,7 +68,7 @@ export default function ProjectsSection() {
                   className="group relative bg-[#0B1637] border border-white/[0.08] rounded-2xl overflow-hidden hover:border-[#FF8A00]/25 hover:bg-[#101B45] transition-all duration-500 cursor-pointer flex flex-col"
                 >
                   {/* Image */}
-                  <div className="relative h-52 overflow-hidden bg-[#050816]">
+                  <div className="relative h-48 sm:h-52 overflow-hidden bg-[#050816]">
                     {project.image ? (
                       <>
                         <img
@@ -106,26 +106,28 @@ export default function ProjectsSection() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-lg font-black text-[#F5F7FA] mb-2 group-hover:text-[#FF8A00] transition-colors leading-tight">
+                  <div className="p-5 sm:p-6 flex flex-col flex-1">
+                    <h3 className="text-base sm:text-lg font-black text-[#F5F7FA] mb-2 group-hover:text-[#FF8A00] transition-colors leading-tight">
                       {project.title}
                     </h3>
-                    <p className="text-sm text-[#B7C0D1] leading-relaxed line-clamp-2 mb-5 flex-1">
+                    <p className="text-sm text-[#B7C0D1] leading-relaxed line-clamp-3 mb-4 flex-1">
                       {project.description}
                     </p>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-white/[0.08]">
-                      <span className="flex items-center gap-2 text-sm font-bold text-[#B7C0D1] group-hover:text-[#FF8A00] transition-colors">
+                    {/* Links row */}
+                    <div className="flex items-center gap-3 pt-4 border-t border-white/[0.08]">
+                      <span className="flex items-center gap-1.5 text-sm font-bold text-[#B7C0D1] group-hover:text-[#FF8A00] transition-colors">
                         View Details
                         <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                       </span>
-                      <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                      <div className="ml-auto flex gap-2" onClick={(e) => e.stopPropagation()}>
                         {project.githubUrl && (
                           <a
                             href={project.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-2 rounded-lg bg-white/[0.03] text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.08] border border-white/[0.08] transition-all"
+                            title="View Source Code"
                           >
                             <Github className="w-4 h-4" />
                           </a>
@@ -136,6 +138,7 @@ export default function ProjectsSection() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-2 rounded-lg bg-white/[0.03] text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.08] border border-white/[0.08] transition-all"
+                            title="Live Demo"
                           >
                             <ExternalLink className="w-4 h-4" />
                           </a>
@@ -153,10 +156,10 @@ export default function ProjectsSection() {
         <AnimatePresence>
           {selectedProject && (
             <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-              <DialogContent className="max-w-5xl p-0 overflow-hidden border border-white/[0.08] bg-[#050816] rounded-2xl shadow-2xl shadow-black/60 sm:max-h-[90vh] max-h-[95vh]">
-                <div className="flex flex-col lg:flex-row h-full max-h-[95vh]">
+              <DialogContent className="max-w-5xl w-[95vw] p-0 overflow-hidden border border-white/[0.08] bg-[#050816] rounded-2xl shadow-2xl shadow-black/60 max-h-[90vh]">
+                <div className="flex flex-col lg:flex-row h-full max-h-[90vh]">
                   {/* Image Side */}
-                  <div className="relative w-full lg:w-[55%] h-64 sm:h-80 lg:h-auto min-h-[280px] overflow-hidden bg-[#0B1637] flex-shrink-0">
+                  <div className="relative w-full lg:w-[55%] h-56 sm:h-72 md:h-80 lg:h-auto min-h-[240px] lg:min-h-[400px] overflow-hidden bg-[#0B1637] flex-shrink-0">
                     {selectedProject.image ? (
                       <>
                         <img
@@ -164,19 +167,19 @@ export default function ProjectsSection() {
                           alt={selectedProject.title}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-[#050816]/40" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-[#050816]/60" />
                       </>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Layers className="w-32 h-32 text-[#FF8A00]/10" />
+                        <Layers className="w-24 sm:w-32 h-24 sm:h-32 text-[#FF8A00]/10" />
                       </div>
                     )}
                     {/* Tech badges on image */}
-                    <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
+                    <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 flex flex-wrap gap-1.5 sm:gap-2">
                       {selectedProject.technologies?.slice(0, 5).map((tech: string, idx: number) => (
                         <span
                           key={idx}
-                          className="px-3 py-1 rounded-lg bg-[#050816]/70 backdrop-blur-md border border-white/[0.08] text-[10px] font-bold uppercase tracking-wider text-[#D5D9E3]"
+                          className="px-2 sm:px-3 py-1 rounded-lg bg-[#050816]/70 backdrop-blur-md border border-white/[0.08] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#D5D9E3]"
                         >
                           {tech}
                         </span>
@@ -185,7 +188,7 @@ export default function ProjectsSection() {
                   </div>
 
                   {/* Content Side */}
-                  <div className="w-full lg:w-[45%] p-6 sm:p-8 lg:p-10 overflow-y-auto flex flex-col">
+                  <div className="w-full lg:w-[45%] p-5 sm:p-6 lg:p-8 overflow-y-auto flex flex-col">
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -193,19 +196,19 @@ export default function ProjectsSection() {
                       className="flex flex-col flex-1"
                     >
                       {/* Title */}
-                      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#F5F7FA] mb-4 leading-[1.1]">
+                      <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#F5F7FA] mb-3 sm:mb-4 leading-[1.1]">
                         {selectedProject.title}
                       </h2>
 
                       {/* Description */}
-                      <p className="text-sm sm:text-base text-[#B7C0D1] leading-relaxed mb-8">
+                      <p className="text-sm sm:text-base text-[#B7C0D1] leading-relaxed mb-6 sm:mb-8">
                         {selectedProject.description}
                       </p>
 
                       {/* Challenges */}
                       {selectedProject.challenges && (
-                        <div className="p-5 rounded-xl bg-[#0B1637] border border-white/[0.08] mb-8">
-                          <h4 className="text-[10px] font-black text-[#FF8A00] uppercase tracking-[0.25em] mb-3">Key Challenges & Solutions</h4>
+                        <div className="p-4 sm:p-5 rounded-xl bg-[#0B1637] border border-white/[0.08] mb-6 sm:mb-8">
+                          <h4 className="text-[10px] font-black text-[#FF8A00] uppercase tracking-[0.25em] mb-2 sm:mb-3">Key Challenges & Solutions</h4>
                           <p className="text-sm text-[#B7C0D1] leading-relaxed">
                             {selectedProject.challenges}
                           </p>
@@ -222,7 +225,8 @@ export default function ProjectsSection() {
                             className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-white/[0.05] border border-white/[0.08] text-[#F5F7FA] rounded-xl font-bold hover:bg-white/[0.1] transition-all text-sm"
                           >
                             <Github className="w-4 h-4" />
-                            View Source
+                            <span className="sm:hidden">GitHub</span>
+                            <span className="hidden sm:inline">View Source</span>
                           </a>
                         )}
                         {selectedProject.demoUrl && (
@@ -233,7 +237,8 @@ export default function ProjectsSection() {
                             className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-xl font-bold hover:shadow-[0_0_30px_rgba(255,138,0,0.3)] transition-all text-sm"
                           >
                             <ExternalLink className="w-4 h-4" />
-                            Live Demo
+                            <span className="sm:hidden">Demo</span>
+                            <span className="hidden sm:inline">Live Demo</span>
                           </a>
                         )}
                       </div>
