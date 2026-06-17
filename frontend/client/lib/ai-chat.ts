@@ -2,7 +2,7 @@ import { portfolioData, searchPortfolio } from "./portfolio-data";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const MODEL = 'gemini-flash-latest';
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
 export interface ChatMessage {
   id: string;
@@ -66,7 +66,6 @@ export async function sendChatMessage(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-goog-api-key": API_KEY,
     },
     body: JSON.stringify({
       contents,
