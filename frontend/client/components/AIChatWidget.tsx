@@ -8,25 +8,25 @@ import {
   Bot,
   User,
   ChevronDown,
+  Code2,
 } from "lucide-react";
 import {
   sendChatMessage,
   ChatMessage,
   createMessageId,
   suggestedQuestions,
-  isApiKeyConfigured,
 } from "@/lib/ai-chat";
 
 function TypingIndicator() {
   return (
-    <div className="flex items-start gap-3 px-4 py-3">
-      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#FF8A00]/20">
-        <Bot className="w-4 h-4 text-[#050816]" />
+    <div className="flex items-start gap-2.5 px-4 py-2">
+      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-orange-500/30 ring-1 ring-white/10">
+        <Bot className="w-3.5 h-3.5 text-[#050816]" />
       </div>
-      <div className="flex items-center gap-1.5 px-4 py-3 rounded-2xl bg-[#0B1637] border border-white/[0.08]">
-        <span className="w-2 h-2 bg-[#FF8A00]/60 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-        <span className="w-2 h-2 bg-[#FF8A00]/60 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-        <span className="w-2 h-2 bg-[#FF8A00]/60 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+      <div className="flex items-center gap-1 px-3.5 py-2.5 rounded-xl bg-[#0A0F1E] border border-white/[0.06] shadow-sm">
+        <span className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+        <span className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+        <span className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
       </div>
     </div>
   );
@@ -36,19 +36,19 @@ function SuggestedQuestions({ onSelect, visible }: { onSelect: (q: string) => vo
   if (!visible) return null;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="px-4 pb-3 space-y-1.5"
+      className="px-4 pb-3"
     >
-      <p className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest px-1 mb-2">
-        Suggested Questions
+      <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-[0.15em] px-1 mb-2.5">
+        Quick Questions
       </p>
       <div className="flex flex-wrap gap-1.5">
         {suggestedQuestions.map((q) => (
           <button
             key={q}
             onClick={() => onSelect(q)}
-            className="text-[11px] font-bold px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-[#B7C0D1] hover:text-[#FF8A00] hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.03] transition-all duration-300 whitespace-nowrap"
+            className="text-[11px] font-medium px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-zinc-400 hover:text-amber-300 hover:border-amber-500/25 hover:bg-amber-500/5 transition-all duration-300 whitespace-nowrap"
           >
             {q}
           </button>
@@ -58,27 +58,20 @@ function SuggestedQuestions({ onSelect, visible }: { onSelect: (q: string) => vo
   );
 }
 
-function ConfigWarning() {
-  return (
-    <div className="mx-4 mb-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-      <p className="text-[11px] font-bold text-red-400 leading-relaxed">
-        OpenAI API key not configured. Add <code className="text-red-300 bg-red-500/10 px-1 rounded">VITE_OPENAI_API_KEY</code> to your .env file.
-      </p>
-    </div>
-  );
-}
-
 function EmptyState({ onSelect }: { onSelect: (q: string) => void }) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF8A00]/10 to-[#FF6B00]/10 border border-[#FF8A00]/20 flex items-center justify-center mb-5">
-        <Sparkles className="w-8 h-8 text-[#FF8A00]" />
+    <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 text-center">
+      <div className="relative mb-5">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-600/10 rounded-2xl blur-xl" />
+        <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-xl shadow-orange-500/25 ring-1 ring-white/10">
+          <Sparkles className="w-7 h-7 text-[#050816]" />
+        </div>
       </div>
-      <h3 className="text-lg font-black text-[#F5F7FA] mb-2">
-        Yihune's AI Assistant
+      <h3 className="text-base font-bold text-zinc-100 mb-1.5 tracking-tight">
+        Hey there! I'm Yihune's AI
       </h3>
-      <p className="text-xs text-[#B7C0D1] leading-relaxed max-w-xs mb-6">
-        Ask me anything about Yihune's projects, skills, experience, or how to get in touch.
+      <p className="text-[11px] text-zinc-500 leading-relaxed max-w-[220px] mb-5 font-medium">
+        Ask me about his projects, skills, experience — anything portfolio-related.
       </p>
       <SuggestedQuestions onSelect={onSelect} visible />
     </div>
@@ -94,7 +87,6 @@ export default function AIChatWidget() {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const configured = isApiKeyConfigured();
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -118,7 +110,7 @@ export default function AIChatWidget() {
 
   const handleSend = async (text?: string) => {
     const message = (text || input).trim();
-    if (!message || isLoading || !configured) return;
+    if (!message || isLoading) return;
 
     setInput("");
     setShowSuggestions(false);
@@ -134,7 +126,7 @@ export default function AIChatWidget() {
       const response = await sendChatMessage(updatedMessages);
       addMessage("assistant", response);
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : "Failed to get response";
+      const errMsg = err instanceof Error ? err.message : "Something went wrong";
       setError(errMsg);
     } finally {
       setIsLoading(false);
@@ -158,72 +150,86 @@ export default function AIChatWidget() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed bottom-24 right-4 sm:right-6 z-[100] w-[calc(100vw-32px)] sm:w-[400px] h-[560px] sm:h-[600px] rounded-2xl bg-[#050816]/95 backdrop-blur-2xl border border-white/[0.08] shadow-2xl shadow-black/60 flex flex-col overflow-hidden"
+            initial={{ opacity: 0, scale: 0.92, y: 16, x: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: 16, x: 8 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed bottom-24 right-4 sm:right-6 z-[100] w-[calc(100vw-32px)] sm:w-[380px] h-[560px] sm:h-[580px] rounded-xl bg-[#060A13]/95 backdrop-blur-2xl border border-white/[0.07] shadow-2xl shadow-black/70 flex flex-col overflow-hidden"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-white/[0.08] bg-gradient-to-r from-[#FF8A00]/10 to-[#FF6B00]/5 flex-shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
-                  <Bot className="w-5 h-5 text-[#050816]" />
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+              style={{
+                backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                backgroundSize: "32px 32px",
+              }}
+            />
+
+            <div className="relative flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-gradient-to-r from-[#0A0F1E] to-[#0D0F1A] flex-shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-amber-500/20 rounded-lg blur-md" />
+                  <div className="relative w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/25 ring-1 ring-white/10">
+                    <Code2 className="w-4 h-4 text-[#050816]" />
+                  </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-[#F5F7FA] leading-tight">
-                    AI Assistant
-                  </h3>
-                  <p className="text-[9px] font-bold text-[#B7C0D1] uppercase tracking-wider">
-                    Yihune's Digital Rep
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-zinc-100 tracking-tight">
+                      Yihune's AI
+                    </h3>
+                    <span className="px-1.5 py-0.5 rounded bg-amber-500/15 border border-amber-500/20 text-[8px] font-bold text-amber-300/90 uppercase tracking-wider">
+                      Beta
+                    </span>
+                  </div>
+                  <p className="text-[9px] font-medium text-zinc-500 tracking-wide">
+                    Portfolio Intelligence
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 rounded-lg bg-white/[0.03] border border-white/[0.08] text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.06] transition-all"
+                className="p-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.08] transition-all"
               >
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto py-4 scroll-smooth">
+            <div className="flex-1 overflow-y-auto py-3 scroll-smooth">
               {messages.length === 0 ? (
                 <EmptyState onSelect={handleSuggestedQuestion} />
               ) : (
-                <div className="space-y-3 px-4">
+                <div className="space-y-2.5 px-3">
                   {messages.map((msg) => (
                     <motion.div
                       key={msg.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={`flex items-start gap-3 ${
+                      initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.15, ease: "easeOut" }}
+                      className={`flex items-start gap-2.5 ${
                         msg.role === "user" ? "flex-row-reverse" : ""
                       }`}
                     >
                       <div
-                        className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ${
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm ${
                           msg.role === "user"
-                            ? "bg-[#0B1637] border border-white/[0.08]"
-                            : "bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] shadow-[#FF8A00]/20"
+                            ? "bg-zinc-800/80 border border-white/[0.06]"
+                            : "bg-gradient-to-br from-amber-500 to-orange-600 shadow-orange-500/20 ring-1 ring-white/10"
                         }`}
                       >
                         {msg.role === "user" ? (
-                          <User className="w-4 h-4 text-[#B7C0D1]" />
+                          <User className="w-3.5 h-3.5 text-zinc-400" />
                         ) : (
-                          <Bot className="w-4 h-4 text-[#050816]" />
+                          <Bot className="w-3.5 h-3.5 text-[#050816]" />
                         )}
                       </div>
                       <div
-                        className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                        className={`max-w-[88%] px-3.5 py-2.5 rounded-xl text-[13px] leading-relaxed ${
                           msg.role === "user"
-                            ? "bg-[#0B1637] border border-white/[0.08] text-[#F5F7FA]"
-                            : "bg-[#0B1637]/60 border border-white/[0.06] text-[#D5D9E3]"
+                            ? "bg-gradient-to-br from-amber-500/10 to-orange-600/5 border border-amber-500/15 text-zinc-200"
+                            : "bg-[#0A0F1E] border border-white/[0.06] text-zinc-300 shadow-sm"
                         }`}
                       >
                         {msg.role === "assistant" ? (
-                          <div className="prose prose-invert prose-sm max-w-none [&_a]:text-[#FF8A00] [&_a]:font-bold [&_a]:no-underline hover:[&_a]:underline [&_strong]:text-[#F5F7FA] [&_code]:text-[#FFB84D] [&_code]:text-[11px] [&_code]:bg-white/[0.03] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_p]:leading-relaxed [&_p]:text-[13px] [&_ul]:text-[13px] [&_li]:leading-relaxed">
+                          <div className="prose prose-invert prose-sm max-w-none [&_a]:text-amber-400 [&_a]:font-semibold [&_a]:no-underline hover:[&_a]:underline [&_strong]:text-zinc-100 [&_code]:text-amber-300/90 [&_code]:text-[11px] [&_code]:bg-white/[0.04] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_p]:leading-relaxed [&_p]:text-[13px] [&_ul]:text-[13px] [&_li]:leading-relaxed [&_li]:my-0.5">
                             <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }} />
                           </div>
                         ) : (
@@ -239,9 +245,9 @@ export default function AIChatWidget() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="mx-1 p-3 rounded-xl bg-red-500/10 border border-red-500/20"
+                      className="mx-1 p-2.5 rounded-lg bg-red-500/8 border border-red-500/15"
                     >
-                      <p className="text-[11px] font-bold text-red-400">{error}</p>
+                      <p className="text-[10px] font-medium text-red-400/80">{error}</p>
                     </motion.div>
                   )}
 
@@ -250,18 +256,13 @@ export default function AIChatWidget() {
               )}
             </div>
 
-            {/* Suggested Questions (when no messages) */}
-            {messages.length === 0 && showSuggestions && configured && (
+            {messages.length === 0 && showSuggestions && (
               <div className="flex-shrink-0">
                 <SuggestedQuestions onSelect={handleSuggestedQuestion} visible />
               </div>
             )}
 
-            {/* Config Warning */}
-            {!configured && <ConfigWarning />}
-
-            {/* Input */}
-            <div className="flex-shrink-0 p-3 border-t border-white/[0.08] bg-[#050816]/60">
+            <div className="flex-shrink-0 px-3 py-2.5 border-t border-white/[0.06] bg-[#060A13]/80">
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
@@ -269,39 +270,38 @@ export default function AIChatWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={configured ? "Ask about Yihune's work..." : "Configure API key to chat..."}
-                  disabled={!configured || isLoading}
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm outline-none focus:border-[#FF8A00]/50 focus:bg-white/[0.05] transition-all disabled:opacity-40"
+                  placeholder="Ask anything about Yihune..."
+                  disabled={isLoading}
+                  className="flex-1 px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-zinc-200 placeholder:text-zinc-600 text-sm outline-none focus:border-amber-500/30 focus:bg-white/[0.06] transition-all disabled:opacity-30"
                 />
                 <button
                   onClick={() => handleSend()}
-                  disabled={!input.trim() || !configured || isLoading}
-                  className="p-2.5 rounded-xl bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] hover:shadow-[0_0_20px_rgba(255,138,0,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                  disabled={!input.trim() || isLoading}
+                  className="p-2.5 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 text-[#050816] hover:shadow-[0_0_16px_rgba(245,158,11,0.25)] transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0 shadow-lg shadow-orange-500/15"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <p className="text-[9px] text-[#B7C0D1]/40 text-center mt-2 font-medium">
-                Powered by OpenAI · Answers based on portfolio data only
+              <p className="text-[8px] text-zinc-600 text-center mt-1.5 font-medium tracking-wide">
+                Powered by OpenAI · Portfolio-aware responses
               </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Floating Button */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.94 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-4 sm:right-6 z-[100] w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-2xl shadow-[#FF8A00]/30 hover:shadow-[#FF8A00]/40 border border-white/10 transition-shadow"
+        className="fixed bottom-6 right-4 sm:right-6 z-[100] w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-2xl shadow-orange-500/35 hover:shadow-orange-500/45 border border-white/10 transition-shadow"
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-[#050816]" />
+          <X className="w-5 h-5 text-[#050816]" />
         ) : (
-          <MessageSquare className="w-6 h-6 text-[#050816]" />
+          <MessageSquare className="w-5 h-5 text-[#050816]" />
         )}
       </motion.button>
     </>
@@ -316,21 +316,22 @@ function formatMessage(text: string): string {
     .map((p) => {
       if (p.startsWith("- ") || p.startsWith("* ")) {
         const items = p.split(/\n/).map((l) => l.replace(/^[-*]\s/, "").trim()).filter(Boolean);
-        return `<ul class="space-y-1 my-1">${items.map((i) => `<li>${inlineFormat(i)}</li>`).join("")}</ul>`;
+        return `<ul class="space-y-0.5 my-1">${items.map((i) => `<li class="flex items-start gap-1.5"><span class="text-amber-400/60 mt-1.5 flex-shrink-0">\u2022</span><span>${inlineFormat(i)}</span></li>`).join("")}</ul>`;
       }
       if (p.startsWith("#")) {
         const level = p.match(/^#{1,3}/)?.[0].length || 1;
         const text = p.replace(/^#{1,3}\s/, "");
-        return `<h${level + 2} class="text-sm font-bold text-[#F5F7FA] mt-3 mb-1">${inlineFormat(text)}</h${level + 2}>`;
+        return `<h${level + 2} class="text-sm font-bold text-zinc-100 mt-2.5 mb-1">${inlineFormat(text)}</h${level + 2}>`;
       }
-      return `<p class="mb-1.5">${inlineFormat(p)}</p>`;
+      return `<p class="mb-1 last:mb-0">${inlineFormat(p)}</p>`;
     })
     .join("");
 }
 
 function inlineFormat(text: string): string {
   return text
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    .replace(/`([^`]+)`/g, "<code>$1</code>");
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-amber-400 font-semibold no-underline hover:underline">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong class=\"text-zinc-100 font-semibold\">$1</strong>")
+    .replace(/`([^`]+)`/g, "<code class=\"text-amber-300/90 bg-white/[0.04] px-1 py-0.5 rounded text-[11px]\">$1</code>")
+    .replace(/^###?\s?(.*)$/gm, "<strong class=\"text-zinc-100\">$1</strong>");
 }

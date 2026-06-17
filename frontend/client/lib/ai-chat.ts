@@ -1,5 +1,8 @@
 import { portfolioData, searchPortfolio } from "./portfolio-data";
 
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -8,26 +11,14 @@ export interface ChatMessage {
 }
 
 export interface ChatConfig {
-  model: string;
   temperature: number;
   maxTokens: number;
 }
 
 const defaultConfig: ChatConfig = {
-  model: "gpt-4o-mini",
   temperature: 0.3,
   maxTokens: 1024,
 };
-
-function getApiKey(): string {
-  const key = import.meta.env.VITE_OPENAI_API_KEY;
-  if (!key) {
-    throw new Error(
-      "OpenAI API key not configured. Please add VITE_OPENAI_API_KEY to your .env file."
-    );
-  }
-  return key;
-}
 
 function buildSystemPrompt(context: string): string {
   return `You are Yihune Belay's AI Assistant — a digital representative of Yihune Belay, a Full-Stack Software Engineer from Addis Ababa, Ethiopia.
@@ -44,7 +35,6 @@ RULES:
 6. When discussing projects, mention technologies used and provide GitHub/demo links when available.
 7. If someone wants to hire or contact Yihune, provide the contact information from the context and encourage them to use the contact form on the website.
 8. Keep responses focused and avoid unnecessary elaboration.
-9. Use markdown formatting sparingly — bold for emphasis, links when referencing projects.
 
 CONTEXT:
 ${context}
@@ -52,34 +42,40 @@ ${context}
 Remember: You are representing Yihune Belay. Be helpful, accurate, and professional.`;
 }
 
+function geminiRole(role: string): string {
+  return role === "assistant" ? "model" : "user";
+}
+
 export async function sendChatMessage(
   messages: ChatMessage[],
   config: ChatConfig = defaultConfig
 ): Promise<string> {
-  const apiKey = getApiKey();
-
   const context = searchPortfolio(
     messages.length > 0 ? messages[messages.length - 1].content : ""
   );
 
-  const systemPrompt = buildSystemPrompt(context);
+  const systemInstruction = buildSystemPrompt(context);
 
-  const apiMessages: { role: string; content: string }[] = [
-    { role: "system", content: systemPrompt },
-    ...messages.map((m) => ({ role: m.role, content: m.content })),
-  ];
+  const contents = messages.map((m) => ({
+    role: geminiRole(m.role),
+    parts: [{ text: m.content }],
+  }));
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
+      "X-goog-api-key": API_KEY,
     },
     body: JSON.stringify({
-      model: config.model,
-      messages: apiMessages,
-      temperature: config.temperature,
-      max_tokens: config.maxTokens,
+      contents,
+      systemInstruction: {
+        parts: [{ text: systemInstruction }],
+      },
+      generationConfig: {
+        temperature: config.temperature,
+        maxOutputTokens: config.maxTokens,
+      },
     }),
   });
 
@@ -90,7 +86,7 @@ export async function sendChatMessage(
   }
 
   const data = await response.json();
-  return data.choices[0].message.content;
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
 }
 
 export function createMessageId(): string {
@@ -107,12 +103,3 @@ export const suggestedQuestions = [
   "Show me your skills and expertise",
   "Tell me about your education",
 ];
-
-export function isApiKeyConfigured(): boolean {
-  try {
-    getApiKey();
-    return true;
-  } catch {
-    return false;
-  }
-}
