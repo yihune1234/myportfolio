@@ -36,4 +36,4 @@ frontend/android/.externalNativeBuild/
 frontend/android/.cxx/
 *.apk
 *.aab
-*.keystore
+*.keystore.env
