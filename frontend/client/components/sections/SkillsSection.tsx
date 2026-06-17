@@ -92,18 +92,7 @@ export default function SkillsSection() {
         { name: "Git" },
       ],
     },
-    {
-      title: "AI & Automation",
-      icon: BrainCircuit,
-      color: "from-[#FFB020] to-amber-400",
-      glow: "shadow-[#FFB020]/25",
-      nodes: [
-        { name: "LLMs" },
-        { name: "AI APIs" },
-        { name: "Automation" },
-        { name: "Scripting" },
-      ],
-    },
+
   ];
 
   return (
