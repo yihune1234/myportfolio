@@ -24,6 +24,7 @@ const allowedOrigins = [
     'http://localhost:5174',
     'https://myportfolio-1-01m7.onrender.com',
     'https://portfoliobackend-a6ah.onrender.com',
+    'https://yihune-software.vercel.app/',
     process.env.FRONTEND_URL?.replace(/\/$/, '')
 ].filter(Boolean);
 
