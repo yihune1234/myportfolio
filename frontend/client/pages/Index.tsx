@@ -11,6 +11,7 @@ import EducationSection, {
 import { useState } from "react";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import AIChatWidget from "@/components/AIChatWidget";
 import { Lock, Github, Linkedin, Sparkles } from "lucide-react";
 
 export default function Index() {
@@ -165,6 +166,8 @@ export default function Index() {
           </div>
         </div>
       </footer>
+
+      <AIChatWidget />
     </div>
   );
 }
