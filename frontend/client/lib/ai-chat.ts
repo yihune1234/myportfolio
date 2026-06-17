@@ -1,6 +1,6 @@
 import { portfolioData, searchPortfolio } from "./portfolio-data";
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const API_KEY = 'YOUR_API_KEY_HERE';
 const MODEL = 'gemini-flash-latest';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
