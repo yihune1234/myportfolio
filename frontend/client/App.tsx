@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import ProjectDetails from "./pages/ProjectDetails";
+import ProjectModal from "./pages/ProjectModal";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +20,7 @@ const App = () => (
       <BrowserRouter future={{ v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/project/:id" element={<ProjectDetails />} />
+          <Route path="/project/:id" element={<ProjectModal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
