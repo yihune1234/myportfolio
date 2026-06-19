@@ -65,7 +65,7 @@ export default function ProjectSectionsManager() {
         `/api/project-sections/project/${selectedProject}`,
       );
       if (result.success) {
-        setSections(result.data);
+        setSections(Array.isArray(result.data) ? result.data : []);
       } else {
         toast.error("Failed to fetch sections");
       }

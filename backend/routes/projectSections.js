@@ -18,7 +18,7 @@ router.get('/project/:projectId', async (req, res) => {
             return res.status(400).json({ message: 'Invalid project ID' });
         }
 
-        const sections = await ProjectSection.find({ project: req.params.projectId, isVisible: true })
+        const sections = await ProjectSection.find({ project: req.params.projectId })
             .sort({ order: 1 });
 
         res.json(sections);

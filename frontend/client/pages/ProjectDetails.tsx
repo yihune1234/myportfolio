@@ -129,7 +129,10 @@ export default function ProjectDetailsPage() {
       }
 
       if (sectionsResult.success) {
-        const visibleSections = sectionsResult.data.filter(
+        const sectionsData = Array.isArray(sectionsResult.data)
+          ? sectionsResult.data
+          : [];
+        const visibleSections = sectionsData.filter(
           (section) => section.isVisible && !section.isDraft,
         );
         setSections(visibleSections);
