@@ -1,26 +1,26 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mail, 
-  Trash2, 
-  ChevronRight, 
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Mail,
+  Trash2,
+  ChevronRight,
   Search,
   MessageSquare,
   ArrowUpRight,
   Inbox,
   Send,
   X,
-  CheckCircle
-} from 'lucide-react';
-import { API_ENDPOINTS, apiFetch } from '../../lib/api';
-import { useToast } from '../../hooks/use-toast';
+  CheckCircle,
+} from "lucide-react";
+import { API_ENDPOINTS, apiFetch } from "../../lib/api";
+import { useToast } from "../../hooks/use-toast";
 
 export function MessagesManager() {
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [showReplyModal, setShowReplyModal] = useState(false);
-  const [replyText, setReplyText] = useState('');
+  const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
   const [replySent, setReplySent] = useState(false);
   const { toast } = useToast();
@@ -36,31 +36,31 @@ export function MessagesManager() {
         setMessages(result.data);
       }
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      console.error("Error fetching messages:", error);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this message?')) return;
+    if (!confirm("Are you sure you want to delete this message?")) return;
     try {
       const result = await apiFetch(API_ENDPOINTS.MESSAGES_DELETE(id), {
-        method: 'DELETE'
+        method: "DELETE",
       });
       if (result.success) {
         toast({
           title: "Deleted",
-          description: "Message has been removed."
+          description: "Message has been removed.",
         });
         fetchMessages();
         setSelectedMessage(null);
       }
     } catch (error) {
-      console.error('Error deleting message:', error);
+      console.error("Error deleting message:", error);
     }
   };
 
   const openReply = () => {
-    setReplyText('');
+    setReplyText("");
     setReplySent(false);
     setShowReplyModal(true);
   };
@@ -71,39 +71,43 @@ export function MessagesManager() {
 
     setSending(true);
     try {
-      const result = await apiFetch(API_ENDPOINTS.MESSAGES_REPLY(selectedMessage._id), {
-        method: 'POST',
-        body: JSON.stringify({ replyBody: replyText.trim() })
-      });
+      const result = await apiFetch(
+        API_ENDPOINTS.MESSAGES_REPLY(selectedMessage._id),
+        {
+          method: "POST",
+          body: JSON.stringify({ replyBody: replyText.trim() }),
+        },
+      );
 
       if (result.success) {
         setReplySent(true);
         toast({
           title: "Sent",
-          description: "Your reply has been sent successfully."
+          description: "Your reply has been sent successfully.",
         });
       } else {
         toast({
           title: "Error",
           description: result.error || "Failed to send reply.",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "Connection error while sending reply.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setSending(false);
     }
   };
 
-  const filteredMessages = messages.filter(msg => 
-    msg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    msg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    msg.subject?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredMessages = messages.filter(
+    (msg) =>
+      msg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      msg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      msg.subject?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -111,8 +115,12 @@ export function MessagesManager() {
       {/* Header & Search */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-1">Messages</h2>
-          <p className="text-sm text-[#B7C0D1]">View and manage contact messages</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-1">
+            Messages
+          </h2>
+          <p className="text-sm text-[#B7C0D1]">
+            View and manage contact messages
+          </p>
         </div>
 
         <div className="relative w-full sm:w-64">
@@ -133,7 +141,8 @@ export function MessagesManager() {
         <div className="lg:col-span-2 space-y-2 sm:space-y-3">
           <div className="text-[10px] font-bold text-[#B7C0D1]/60 uppercase tracking-[0.2em] px-4 py-2">
             <Inbox size={12} className="inline mr-1.5" />
-            {filteredMessages.length} Message{filteredMessages.length !== 1 ? 's' : ''}
+            {filteredMessages.length} Message
+            {filteredMessages.length !== 1 ? "s" : ""}
           </div>
           <AnimatePresence mode="popLayout">
             {filteredMessages.length === 0 ? (
@@ -144,8 +153,12 @@ export function MessagesManager() {
               >
                 <MessageSquare size={32} className="text-[#FF8A00]/30" />
                 <div>
-                  <p className="text-sm font-bold text-[#F5F7FA]">No messages found</p>
-                  <p className="text-xs text-[#B7C0D1]">Try adjusting your search</p>
+                  <p className="text-sm font-bold text-[#F5F7FA]">
+                    No messages found
+                  </p>
+                  <p className="text-xs text-[#B7C0D1]">
+                    Try adjusting your search
+                  </p>
                 </div>
               </motion.div>
             ) : (
@@ -157,17 +170,19 @@ export function MessagesManager() {
                   transition={{ delay: idx * 0.05 }}
                   onClick={() => setSelectedMessage(msg)}
                   className={`group relative p-3 sm:p-4 rounded-lg cursor-pointer transition-all border ${
-                    selectedMessage?._id === msg._id 
-                    ? 'bg-[#FF8A00]/10 border-[#FF8A00]/30 shadow-lg shadow-[#FF8A00]/5' 
-                    : 'border-white/[0.06] bg-[#0B1637] hover:border-white/[0.12] hover:bg-[#101B45]'
+                    selectedMessage?._id === msg._id
+                      ? "bg-[#FF8A00]/10 border-[#FF8A00]/30 shadow-lg shadow-[#FF8A00]/5"
+                      : "border-white/[0.06] bg-[#0B1637] hover:border-white/[0.12] hover:bg-[#101B45]"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs sm:text-sm font-black flex-shrink-0 ${
-                      selectedMessage?._id === msg._id 
-                        ? 'bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] text-[#050816]' 
-                        : 'bg-[#050816] text-[#FF8A00] border border-white/[0.06]'
-                    }`}>
+                    <div
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs sm:text-sm font-black flex-shrink-0 ${
+                        selectedMessage?._id === msg._id
+                          ? "bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] text-[#050816]"
+                          : "bg-[#050816] text-[#FF8A00] border border-white/[0.06]"
+                      }`}
+                    >
                       {msg.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -175,12 +190,16 @@ export function MessagesManager() {
                         {msg.name}
                       </h4>
                       <p className="text-xs text-[#B7C0D1]/60 truncate">
-                        {msg.subject || 'No subject'}
+                        {msg.subject || "No subject"}
                       </p>
                     </div>
-                    <ChevronRight className={`w-4 h-4 transition-all flex-shrink-0 ${
-                      selectedMessage?._id === msg._id ? 'text-[#FF8A00]' : 'text-[#B7C0D1]/30'
-                    }`} />
+                    <ChevronRight
+                      className={`w-4 h-4 transition-all flex-shrink-0 ${
+                        selectedMessage?._id === msg._id
+                          ? "text-[#FF8A00]"
+                          : "text-[#B7C0D1]/30"
+                      }`}
+                    />
                   </div>
                 </motion.div>
               ))
@@ -207,7 +226,9 @@ export function MessagesManager() {
                         {selectedMessage.name.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
-                        <h3 className="font-bold text-[#F5F7FA] text-sm sm:text-base truncate">{selectedMessage.name}</h3>
+                        <h3 className="font-bold text-[#F5F7FA] text-sm sm:text-base truncate">
+                          {selectedMessage.name}
+                        </h3>
                         <p className="text-xs text-[#B7C0D1] flex items-center gap-1 truncate">
                           <Mail size={12} /> {selectedMessage.email}
                         </p>
@@ -226,14 +247,18 @@ export function MessagesManager() {
                 {/* Body */}
                 <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                   <div>
-                    <h4 className="font-bold text-[#B7C0D1] mb-2 text-xs uppercase tracking-wider">Subject</h4>
+                    <h4 className="font-bold text-[#B7C0D1] mb-2 text-xs uppercase tracking-wider">
+                      Subject
+                    </h4>
                     <p className="text-[#F5F7FA] font-medium text-sm">
-                      {selectedMessage.subject || 'No subject'}
+                      {selectedMessage.subject || "No subject"}
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-[#B7C0D1] mb-2 text-xs uppercase tracking-wider">Message</h4>
+                    <h4 className="font-bold text-[#B7C0D1] mb-2 text-xs uppercase tracking-wider">
+                      Message
+                    </h4>
                     <p className="text-[#B7C0D1] whitespace-pre-wrap leading-relaxed text-sm">
                       {selectedMessage.message}
                     </p>
@@ -241,15 +266,24 @@ export function MessagesManager() {
 
                   <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/[0.06]">
                     <div className="p-3 bg-[#050816] rounded-lg">
-                      <span className="text-[10px] font-bold text-[#B7C0D1]/60 block mb-1 uppercase tracking-wider">Date</span>
+                      <span className="text-[10px] font-bold text-[#B7C0D1]/60 block mb-1 uppercase tracking-wider">
+                        Date
+                      </span>
                       <p className="text-xs sm:text-sm font-bold text-[#F5F7FA]">
-                        {new Date(selectedMessage.createdAt).toLocaleDateString()}
+                        {new Date(
+                          selectedMessage.createdAt,
+                        ).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="p-3 bg-[#050816] rounded-lg">
-                      <span className="text-[10px] font-bold text-[#B7C0D1]/60 block mb-1 uppercase tracking-wider">Time</span>
+                      <span className="text-[10px] font-bold text-[#B7C0D1]/60 block mb-1 uppercase tracking-wider">
+                        Time
+                      </span>
                       <p className="text-xs sm:text-sm font-bold text-[#F5F7FA]">
-                        {new Date(selectedMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(selectedMessage.createdAt).toLocaleTimeString(
+                          [],
+                          { hour: "2-digit", minute: "2-digit" },
+                        )}
                       </p>
                     </div>
                   </div>
@@ -274,8 +308,12 @@ export function MessagesManager() {
               >
                 <MessageSquare size={40} className="text-[#FF8A00]/20" />
                 <div>
-                  <h3 className="font-bold text-[#F5F7FA] mb-1 text-sm">No message selected</h3>
-                  <p className="text-xs text-[#B7C0D1]">Select a message to view details</p>
+                  <h3 className="font-bold text-[#F5F7FA] mb-1 text-sm">
+                    No message selected
+                  </h3>
+                  <p className="text-xs text-[#B7C0D1]">
+                    Select a message to view details
+                  </p>
                 </div>
               </motion.div>
             )}
@@ -298,16 +336,22 @@ export function MessagesManager() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               className="w-full max-w-lg rounded-xl border border-white/[0.08] bg-[#0B1637] shadow-2xl shadow-black/60"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               {replySent ? (
                 <div className="p-8 sm:p-10 text-center">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#22C55E]/10 flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-[#22C55E]" />
                   </div>
-                  <h3 className="text-xl font-black text-[#F5F7FA] mb-2">Reply Sent!</h3>
+                  <h3 className="text-xl font-black text-[#F5F7FA] mb-2">
+                    Reply Sent!
+                  </h3>
                   <p className="text-sm text-[#B7C0D1] mb-6">
-                    Your reply to <span className="text-[#FF8A00] font-bold">{selectedMessage.name}</span> has been sent.
+                    Your reply to{" "}
+                    <span className="text-[#FF8A00] font-bold">
+                      {selectedMessage.name}
+                    </span>{" "}
+                    has been sent.
                   </p>
                   <button
                     onClick={() => setShowReplyModal(false)}
@@ -321,8 +365,12 @@ export function MessagesManager() {
                   {/* Header */}
                   <div className="p-4 sm:p-6 border-b border-white/[0.06] flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg sm:text-xl font-black text-[#F5F7FA]">Reply to {selectedMessage.name}</h3>
-                      <p className="text-xs text-[#B7C0D1]">Re: {selectedMessage.subject}</p>
+                      <h3 className="text-lg sm:text-xl font-black text-[#F5F7FA]">
+                        Reply to {selectedMessage.name}
+                      </h3>
+                      <p className="text-xs text-[#B7C0D1]">
+                        Re: {selectedMessage.subject}
+                      </p>
                     </div>
                     <button
                       onClick={() => setShowReplyModal(false)}
@@ -333,16 +381,21 @@ export function MessagesManager() {
                   </div>
 
                   {/* Form */}
-                  <form onSubmit={handleSendReply} className="p-4 sm:p-6 space-y-4">
+                  <form
+                    onSubmit={handleSendReply}
+                    className="p-4 sm:p-6 space-y-4"
+                  >
                     <div>
-                      <label className="text-xs font-bold text-[#B7C0D1] block mb-2">Your Reply</label>
+                      <label className="text-xs font-bold text-[#B7C0D1] block mb-2">
+                        Your Reply
+                      </label>
                       <textarea
                         required
                         rows="6"
                         className="w-full px-4 py-3 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none text-sm"
                         placeholder="Type your reply here..."
                         value={replyText}
-                        onChange={e => setReplyText(e.target.value)}
+                        onChange={(e) => setReplyText(e.target.value)}
                       />
                     </div>
 

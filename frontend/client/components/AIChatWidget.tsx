@@ -24,15 +24,30 @@ function TypingIndicator() {
         <Bot className="w-3.5 h-3.5 text-[#050816]" />
       </div>
       <div className="flex items-center gap-1 px-3.5 py-2.5 rounded-xl bg-[#0A0F1E] border border-white/[0.06] shadow-sm">
-        <span className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-        <span className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-        <span className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+        <span
+          className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce"
+          style={{ animationDelay: "0ms" }}
+        />
+        <span
+          className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce"
+          style={{ animationDelay: "150ms" }}
+        />
+        <span
+          className="w-1.5 h-1.5 bg-amber-400/80 rounded-full animate-bounce"
+          style={{ animationDelay: "300ms" }}
+        />
       </div>
     </div>
   );
 }
 
-function SuggestedQuestions({ onSelect, visible }: { onSelect: (q: string) => void; visible: boolean }) {
+function SuggestedQuestions({
+  onSelect,
+  visible,
+}: {
+  onSelect: (q: string) => void;
+  visible: boolean;
+}) {
   if (!visible) return null;
   return (
     <motion.div
@@ -71,7 +86,8 @@ function EmptyState({ onSelect }: { onSelect: (q: string) => void }) {
         Hey there! I'm Yihune's AI
       </h3>
       <p className="text-[11px] text-zinc-500 leading-relaxed max-w-[220px] mb-5 font-medium">
-        Ask me about his projects, skills, experience — anything portfolio-related.
+        Ask me about his projects, skills, experience — anything
+        portfolio-related.
       </p>
       <SuggestedQuestions onSelect={onSelect} visible />
     </div>
@@ -121,12 +137,18 @@ export default function AIChatWidget() {
     try {
       const updatedMessages: ChatMessage[] = [
         ...messages,
-        { id: createMessageId(), role: "user" as const, content: message, timestamp: Date.now() },
+        {
+          id: createMessageId(),
+          role: "user" as const,
+          content: message,
+          timestamp: Date.now(),
+        },
       ];
       const response = await sendChatMessage(updatedMessages);
       addMessage("assistant", response);
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : "Something went wrong";
+      const errMsg =
+        err instanceof Error ? err.message : "Something went wrong";
       setError(errMsg);
     } finally {
       setIsLoading(false);
@@ -156,7 +178,8 @@ export default function AIChatWidget() {
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="fixed bottom-24 right-4 sm:right-6 z-[100] w-[calc(100vw-32px)] sm:w-[380px] h-[560px] sm:h-[580px] rounded-xl bg-[#060A13]/95 backdrop-blur-2xl border border-white/[0.07] shadow-2xl shadow-black/70 flex flex-col overflow-hidden"
           >
-            <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.03]"
               style={{
                 backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
                 backgroundSize: "32px 32px",
@@ -230,10 +253,16 @@ export default function AIChatWidget() {
                       >
                         {msg.role === "assistant" ? (
                           <div className="prose prose-invert prose-sm max-w-none [&_a]:text-amber-400 [&_a]:font-semibold [&_a]:no-underline hover:[&_a]:underline [&_strong]:text-zinc-100 [&_code]:text-amber-300/90 [&_code]:text-[11px] [&_code]:bg-white/[0.04] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_p]:leading-relaxed [&_p]:text-[13px] [&_ul]:text-[13px] [&_li]:leading-relaxed [&_li]:my-0.5">
-                            <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }} />
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: formatMessage(msg.content),
+                              }}
+                            />
                           </div>
                         ) : (
-                          <p className="text-[13px] leading-relaxed">{msg.content}</p>
+                          <p className="text-[13px] leading-relaxed">
+                            {msg.content}
+                          </p>
                         )}
                       </div>
                     </motion.div>
@@ -247,7 +276,9 @@ export default function AIChatWidget() {
                       animate={{ opacity: 1 }}
                       className="mx-1 p-2.5 rounded-lg bg-red-500/8 border border-red-500/15"
                     >
-                      <p className="text-[10px] font-medium text-red-400/80">{error}</p>
+                      <p className="text-[10px] font-medium text-red-400/80">
+                        {error}
+                      </p>
                     </motion.div>
                   )}
 
@@ -258,7 +289,10 @@ export default function AIChatWidget() {
 
             {messages.length === 0 && showSuggestions && (
               <div className="flex-shrink-0">
-                <SuggestedQuestions onSelect={handleSuggestedQuestion} visible />
+                <SuggestedQuestions
+                  onSelect={handleSuggestedQuestion}
+                  visible
+                />
               </div>
             )}
 
@@ -315,7 +349,10 @@ function formatMessage(text: string): string {
     .filter(Boolean)
     .map((p) => {
       if (p.startsWith("- ") || p.startsWith("* ")) {
-        const items = p.split(/\n/).map((l) => l.replace(/^[-*]\s/, "").trim()).filter(Boolean);
+        const items = p
+          .split(/\n/)
+          .map((l) => l.replace(/^[-*]\s/, "").trim())
+          .filter(Boolean);
         return `<ul class="space-y-0.5 my-1">${items.map((i) => `<li class="flex items-start gap-1.5"><span class="text-amber-400/60 mt-1.5 flex-shrink-0">\u2022</span><span>${inlineFormat(i)}</span></li>`).join("")}</ul>`;
       }
       if (p.startsWith("#")) {
@@ -330,8 +367,17 @@ function formatMessage(text: string): string {
 
 function inlineFormat(text: string): string {
   return text
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-amber-400 font-semibold no-underline hover:underline">$1</a>')
-    .replace(/\*\*([^*]+)\*\*/g, "<strong class=\"text-zinc-100 font-semibold\">$1</strong>")
-    .replace(/`([^`]+)`/g, "<code class=\"text-amber-300/90 bg-white/[0.04] px-1 py-0.5 rounded text-[11px]\">$1</code>")
-    .replace(/^###?\s?(.*)$/gm, "<strong class=\"text-zinc-100\">$1</strong>");
+    .replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-amber-400 font-semibold no-underline hover:underline">$1</a>',
+    )
+    .replace(
+      /\*\*([^*]+)\*\*/g,
+      '<strong class="text-zinc-100 font-semibold">$1</strong>',
+    )
+    .replace(
+      /`([^`]+)`/g,
+      '<code class="text-amber-300/90 bg-white/[0.04] px-1 py-0.5 rounded text-[11px]">$1</code>',
+    )
+    .replace(/^###?\s?(.*)$/gm, '<strong class="text-zinc-100">$1</strong>');
 }

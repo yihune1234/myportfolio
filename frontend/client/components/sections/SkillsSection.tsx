@@ -1,6 +1,13 @@
 import { motion } from "framer-motion";
 import {
-  Globe, Server, Database, Shield, Cpu, Cloud, GitBranch, BrainCircuit,
+  Globe,
+  Server,
+  Database,
+  Shield,
+  Cpu,
+  Cloud,
+  GitBranch,
+  BrainCircuit,
 } from "lucide-react";
 
 interface SkillNode {
@@ -92,11 +99,17 @@ export default function SkillsSection() {
         { name: "Git" },
       ],
     },
-
   ];
 
   return (
-    <section id="skills" className="section-padding relative overflow-hidden border-t border-white/[0.06]" style={{ background: "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)" }}>
+    <section
+      id="skills"
+      className="section-padding relative overflow-hidden border-t border-white/[0.06]"
+      style={{
+        background:
+          "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)",
+      }}
+    >
       <div className="absolute inset-0 architecture-grid opacity-30" />
       <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#FF8A00]/5 rounded-full blur-[150px]" />
@@ -113,7 +126,8 @@ export default function SkillsSection() {
             System Architecture
           </h2>
           <p className="text-[#B7C0D1] text-base max-w-2xl mx-auto leading-relaxed">
-            Full-stack engineering ecosystem — from frontend interfaces to cloud infrastructure
+            Full-stack engineering ecosystem — from frontend interfaces to cloud
+            infrastructure
           </p>
         </motion.div>
 
@@ -143,15 +157,23 @@ export default function SkillsSection() {
                 <div className="absolute left-4 sm:left-6 top-8 -translate-x-1/2 z-10">
                   <motion.div
                     animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: layerIndex * 0.3 }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: layerIndex * 0.3,
+                    }}
                     className={`w-4 h-4 rounded-full bg-gradient-to-br ${layer.color} shadow-lg ${layer.glow}`}
                   />
                 </div>
 
                 {/* Card */}
-                <div className={`group p-5 sm:p-6 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:bg-[#101B45] hover:border-[#FF8A00]/20 transition-all duration-500`}>
+                <div
+                  className={`group p-5 sm:p-6 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:bg-[#101B45] hover:border-[#FF8A00]/20 transition-all duration-500`}
+                >
                   <div className="flex items-center gap-4 mb-5">
-                    <div className={`p-2.5 rounded-xl bg-gradient-to-br ${layer.color} shadow-lg`}>
+                    <div
+                      className={`p-2.5 rounded-xl bg-gradient-to-br ${layer.color} shadow-lg`}
+                    >
                       <layer.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#050816]" />
                     </div>
                     <div>
@@ -168,11 +190,15 @@ export default function SkillsSection() {
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ delay: (layerIndex * 0.08) + (nodeIndex * 0.05) }}
+                        transition={{
+                          delay: layerIndex * 0.08 + nodeIndex * 0.05,
+                        }}
                         className="group/node relative px-3.5 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-[11px] font-bold text-[#B7C0D1] hover:text-[#FF8A00] hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.03] transition-all duration-300 cursor-default"
                       >
                         {node.name}
-                        <span className={`absolute inset-0 rounded-lg opacity-0 group-hover/node:opacity-100 transition-opacity duration-300 bg-gradient-to-r ${layer.color} opacity-[0.04]`} />
+                        <span
+                          className={`absolute inset-0 rounded-lg opacity-0 group-hover/node:opacity-100 transition-opacity duration-300 bg-gradient-to-r ${layer.color} opacity-[0.04]`}
+                        />
                       </motion.span>
                     ))}
                   </div>

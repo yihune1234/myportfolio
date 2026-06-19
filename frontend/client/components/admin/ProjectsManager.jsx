@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Plus, 
-  Edit3, 
-  Trash2, 
-  X, 
-  Upload, 
-  FolderKanban, 
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Plus,
+  Edit3,
+  Trash2,
+  X,
+  Upload,
+  FolderKanban,
   Github,
   ExternalLink,
   Pin,
   PinOff,
-  Image as ImageIcon
-} from 'lucide-react';
-import CloudinaryImage from '../CloudinaryImage.jsx';
-import { API_ENDPOINTS, apiFetch, apiFetchFormData } from '../../lib/api';
-import { useToast } from '../../hooks/use-toast';
+  Image as ImageIcon,
+} from "lucide-react";
+import CloudinaryImage from "../CloudinaryImage.jsx";
+import { API_ENDPOINTS, apiFetch, apiFetchFormData } from "../../lib/api";
+import { useToast } from "../../hooks/use-toast";
 
 export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const [projects, setProjects] = useState([]);
@@ -25,29 +25,34 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const [imagePreview, setImagePreview] = useState(null);
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    technologies: '',
-    githubUrl: '',
-    demoUrl: '',
-    role: 'Developer',
+    title: "",
+    description: "",
+    technologies: "",
+    githubUrl: "",
+    demoUrl: "",
+    role: "Developer",
     isMini: false,
-    image: null
+    image: null,
   });
 
   const getImageUrl = (imagePath) => {
-    if (!imagePath) return '';
-    if (imagePath.startsWith('data:')) return imagePath;
-    
-    if (imagePath.startsWith('http') && imagePath.includes('res.cloudinary.com')) {
+    if (!imagePath) return "";
+    if (imagePath.startsWith("data:")) return imagePath;
+
+    if (
+      imagePath.startsWith("http") &&
+      imagePath.includes("res.cloudinary.com")
+    ) {
       return imagePath;
     }
 
     let originalUrl = imagePath;
-    if (!imagePath.startsWith('http')) {
-      const BASE_URL = 'https://portfoliobackend-a6ah.onrender.com';
-      const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
-      if (cleanPath.startsWith('uploads/')) {
+    if (!imagePath.startsWith("http")) {
+      const BASE_URL = "https://portfoliobackend-a6ah.onrender.com";
+      const cleanPath = imagePath.startsWith("/")
+        ? imagePath.substring(1)
+        : imagePath;
+      if (cleanPath.startsWith("uploads/")) {
         originalUrl = `${BASE_URL}/${cleanPath}`;
       } else {
         originalUrl = `${BASE_URL}/uploads/${cleanPath}`;
@@ -77,11 +82,11 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         toast({
           title: "Error",
           description: "Failed to fetch projects.",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.error("Error fetching projects:", error);
     }
   };
 
@@ -90,16 +95,19 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     setLoading(true);
 
     const formDataToSend = new FormData();
-    formDataToSend.append('title', formData.title);
-    formDataToSend.append('description', formData.description);
-    formDataToSend.append('technologies', JSON.stringify(formData.technologies.split(',').map(t => t.trim())));
-    formDataToSend.append('githubUrl', formData.githubUrl);
-    formDataToSend.append('demoUrl', formData.demoUrl);
-    formDataToSend.append('role', formData.role);
-    formDataToSend.append('isMini', formData.isMini);
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append(
+      "technologies",
+      JSON.stringify(formData.technologies.split(",").map((t) => t.trim())),
+    );
+    formDataToSend.append("githubUrl", formData.githubUrl);
+    formDataToSend.append("demoUrl", formData.demoUrl);
+    formDataToSend.append("role", formData.role);
+    formDataToSend.append("isMini", formData.isMini);
 
     if (formData.image) {
-      formDataToSend.append('image', formData.image);
+      formDataToSend.append("image", formData.image);
     }
 
     try {
@@ -110,26 +118,26 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       const result = await apiFetchFormData(
         url,
         formDataToSend,
-        editingProject ? 'PUT' : 'POST'
+        editingProject ? "PUT" : "POST",
       );
 
       if (result.success) {
         toast({
           title: editingProject ? "Updated" : "Created",
-          description: `Project "${formData.title}" has been ${editingProject ? 'updated' : 'created'}.`
+          description: `Project "${formData.title}" has been ${editingProject ? "updated" : "created"}.`,
         });
         fetchProjects();
-        window.dispatchEvent(new Event('projectsUpdated'));
+        window.dispatchEvent(new Event("projectsUpdated"));
         closeModal();
       } else {
         toast({
           title: "Error",
           description: result.error || "Failed to save project.",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     } catch (error) {
-      console.error('Error saving project:', error);
+      console.error("Error saving project:", error);
     } finally {
       setLoading(false);
     }
@@ -138,40 +146,40 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const handlePinToggle = async (id, currentlyPinned) => {
     try {
       const result = await apiFetch(API_ENDPOINTS.PROJECTS_PIN_TOGGLE(id), {
-        method: 'PUT'
+        method: "PUT",
       });
 
       if (result.success) {
         toast({
           title: currentlyPinned ? "Unpinned" : "Pinned!",
-          description: `Project has been ${currentlyPinned ? 'unpinned' : 'pinned to top'}.`
+          description: `Project has been ${currentlyPinned ? "unpinned" : "pinned to top"}.`,
         });
         fetchProjects();
-        window.dispatchEvent(new Event('projectsUpdated'));
+        window.dispatchEvent(new Event("projectsUpdated"));
       }
     } catch (error) {
-      console.error('Error toggling pin:', error);
+      console.error("Error toggling pin:", error);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
+    if (!confirm("Are you sure you want to delete this project?")) return;
 
     try {
       const result = await apiFetch(API_ENDPOINTS.PROJECTS_DELETE(id), {
-        method: 'DELETE'
+        method: "DELETE",
       });
 
       if (result.success) {
         toast({
           title: "Deleted",
-          description: "Project has been removed."
+          description: "Project has been removed.",
         });
         fetchProjects();
-        window.dispatchEvent(new Event('projectsUpdated'));
+        window.dispatchEvent(new Event("projectsUpdated"));
       }
     } catch (error) {
-      console.error('Error deleting project:', error);
+      console.error("Error deleting project:", error);
     }
   };
 
@@ -181,25 +189,25 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       setFormData({
         title: project.title,
         description: project.description,
-        technologies: project.technologies.join(', '),
-        githubUrl: project.githubUrl || '',
-        demoUrl: project.demoUrl || '',
-        role: project.role || 'Developer',
+        technologies: project.technologies.join(", "),
+        githubUrl: project.githubUrl || "",
+        demoUrl: project.demoUrl || "",
+        role: project.role || "Developer",
         isMini: project.isMini || false,
-        image: null
+        image: null,
       });
       setImagePreview(project.image ? getImageUrl(project.image) : null);
     } else {
       setEditingProject(null);
       setFormData({
-        title: '',
-        description: '',
-        technologies: '',
-        githubUrl: '',
-        demoUrl: '',
-        role: 'Developer',
+        title: "",
+        description: "",
+        technologies: "",
+        githubUrl: "",
+        demoUrl: "",
+        role: "Developer",
         isMini: false,
-        image: null
+        image: null,
       });
       setImagePreview(null);
     }
@@ -229,10 +237,14 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-1">Projects</h2>
-          <p className="text-sm text-[#B7C0D1]">Manage your portfolio projects</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-1">
+            Projects
+          </h2>
+          <p className="text-sm text-[#B7C0D1]">
+            Manage your portfolio projects
+          </p>
         </div>
-        
+
         <motion.button
           onClick={() => openModal()}
           whileHover={{ scale: 1.02 }}
@@ -255,10 +267,12 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
             <FolderKanban size={40} className="text-[#FF8A00]/30" />
             <div>
               <p className="text-[#F5F7FA] font-bold mb-2">No projects yet</p>
-              <p className="text-sm text-[#B7C0D1]">Create your first project to get started</p>
+              <p className="text-sm text-[#B7C0D1]">
+                Create your first project to get started
+              </p>
             </div>
-            <button 
-              onClick={() => openModal()} 
+            <button
+              onClick={() => openModal()}
               className="px-6 py-2 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
             >
               Create Project
@@ -306,7 +320,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                 {/* Tech Tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.technologies?.slice(0, 2).map((tech, i) => (
-                    <span key={i} className="text-[10px] px-2 py-1 bg-[#FF8A00]/10 text-[#FF8A00] rounded font-bold border border-[#FF8A00]/20">
+                    <span
+                      key={i}
+                      className="text-[10px] px-2 py-1 bg-[#FF8A00]/10 text-[#FF8A00] rounded font-bold border border-[#FF8A00]/20"
+                    >
                       {tech}
                     </span>
                   ))}
@@ -324,7 +341,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={e => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
                       className="flex items-center gap-1.5 text-[10px] font-bold text-[#B7C0D1] hover:text-[#FF8A00] transition-colors"
                     >
                       <Github size={12} />
@@ -336,7 +353,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                       href={project.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={e => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
                       className="flex items-center gap-1.5 text-[10px] font-bold text-[#B7C0D1] hover:text-[#FF8A00] transition-colors"
                     >
                       <ExternalLink size={12} />
@@ -351,18 +368,23 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     onClick={() => handlePinToggle(project._id, project.pinned)}
                     className={`py-2 px-3 rounded-lg transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 ${
                       project.pinned
-                        ? 'bg-[#FF8A00] text-[#050816] shadow-[0_0_12px_rgba(255,138,0,0.25)]'
-                        : 'bg-white/[0.04] text-[#B7C0D1] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00]'
+                        ? "bg-[#FF8A00] text-[#050816] shadow-[0_0_12px_rgba(255,138,0,0.25)]"
+                        : "bg-white/[0.04] text-[#B7C0D1] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00]"
                     }`}
-                    title={project.pinned ? 'Unpin project' : 'Pin project to top'}
+                    title={
+                      project.pinned ? "Unpin project" : "Pin project to top"
+                    }
                   >
-                    <Pin size={14} className={project.pinned ? 'fill-current' : ''} />
+                    <Pin
+                      size={14}
+                      className={project.pinned ? "fill-current" : ""}
+                    />
                   </button>
                   <button
                     onClick={() => openModal(project)}
                     className="flex-1 py-2 bg-[#FF8A00]/10 text-[#FF8A00] rounded-lg hover:bg-[#FF8A00] hover:text-[#050816] transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
                   >
-                    <Edit3 size={14} /> 
+                    <Edit3 size={14} />
                     <span className="hidden sm:inline">Edit</span>
                   </button>
                   <button
@@ -394,15 +416,15 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               className="w-full max-w-2xl rounded-xl border border-white/[0.08] bg-[#0B1637] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
               <div className="sticky top-0 p-4 sm:p-6 border-b border-white/[0.06] bg-[#0B1637] flex items-center justify-between z-10">
                 <h3 className="text-xl sm:text-2xl font-black text-[#F5F7FA]">
-                  {editingProject ? 'Edit Project' : 'New Project'}
+                  {editingProject ? "Edit Project" : "New Project"}
                 </h3>
-                <button 
-                  onClick={closeModal} 
+                <button
+                  onClick={closeModal}
                   className="p-2 hover:bg-white/[0.06] rounded-lg transition-colors flex-shrink-0 text-[#B7C0D1] hover:text-[#F5F7FA]"
                 >
                   <X size={20} />
@@ -417,28 +439,36 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     label="Title"
                     placeholder="Project name"
                     value={formData.title}
-                    onChange={e => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     required
                   />
                   <InputField
                     label="Role"
                     placeholder="e.g. Developer"
                     value={formData.role}
-                    onChange={e => setFormData({ ...formData, role: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, role: e.target.value })
+                    }
                     required
                   />
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="text-xs font-bold text-[#B7C0D1] block mb-2">Description</label>
+                  <label className="text-xs font-bold text-[#B7C0D1] block mb-2">
+                    Description
+                  </label>
                   <textarea
                     required
                     rows="4"
                     className="w-full px-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none"
                     placeholder="Project description..."
                     value={formData.description}
-                    onChange={e => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                   />
                 </div>
 
@@ -447,7 +477,9 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   label="Technologies (comma-separated)"
                   placeholder="React, Node, MongoDB"
                   value={formData.technologies}
-                  onChange={e => setFormData({ ...formData, technologies: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, technologies: e.target.value })
+                  }
                   required
                 />
 
@@ -457,32 +489,54 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     label="GitHub URL"
                     placeholder="https://github.com/..."
                     value={formData.githubUrl}
-                    onChange={e => setFormData({ ...formData, githubUrl: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, githubUrl: e.target.value })
+                    }
                   />
                   <InputField
                     label="Demo URL"
                     placeholder="https://..."
                     value={formData.demoUrl}
-                    onChange={e => setFormData({ ...formData, demoUrl: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, demoUrl: e.target.value })
+                    }
                   />
                 </div>
 
                 {/* Image Upload */}
                 <div>
-                  <label className="text-xs font-bold text-[#B7C0D1] block mb-2">Project Image</label>
+                  <label className="text-xs font-bold text-[#B7C0D1] block mb-2">
+                    Project Image
+                  </label>
                   <label className="flex flex-col items-center justify-center aspect-video bg-[#050816] border-2 border-dashed border-white/[0.08] rounded-lg cursor-pointer hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.02] transition-all">
                     {imagePreview ? (
-                      <img src={imagePreview} className="w-full h-full object-cover rounded-lg" alt="Preview" />
+                      <img
+                        src={imagePreview}
+                        className="w-full h-full object-cover rounded-lg"
+                        alt="Preview"
+                      />
                     ) : (
                       <div className="text-center space-y-2 py-8">
-                        <Upload size={28} className="mx-auto text-[#FF8A00]/40" />
+                        <Upload
+                          size={28}
+                          className="mx-auto text-[#FF8A00]/40"
+                        />
                         <div>
-                          <span className="text-sm font-bold text-[#B7C0D1] block">Upload Image</span>
-                          <span className="text-xs text-[#B7C0D1]/50">PNG, JPG up to 5MB</span>
+                          <span className="text-sm font-bold text-[#B7C0D1] block">
+                            Upload Image
+                          </span>
+                          <span className="text-xs text-[#B7C0D1]/50">
+                            PNG, JPG up to 5MB
+                          </span>
                         </div>
                       </div>
                     )}
-                    <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
                   </label>
                 </div>
 
@@ -493,28 +547,33 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     id="isMini"
                     className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
                     checked={formData.isMini}
-                    onChange={e => setFormData({ ...formData, isMini: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isMini: e.target.checked })
+                    }
                   />
-                  <label htmlFor="isMini" className="text-sm font-bold text-[#B7C0D1] cursor-pointer flex-1">
+                  <label
+                    htmlFor="isMini"
+                    className="text-sm font-bold text-[#B7C0D1] cursor-pointer flex-1"
+                  >
                     Mark as mini/experimental project
                   </label>
                 </div>
 
                 {/* Actions */}
                 <div className="flex gap-3 pt-4 border-t border-white/[0.06]">
-                  <button 
-                    type="button" 
-                    onClick={closeModal} 
+                  <button
+                    type="button"
+                    onClick={closeModal}
                     className="flex-1 py-2.5 bg-white/[0.04] text-[#B7C0D1] rounded-lg font-bold hover:bg-white/[0.08] transition-all text-sm"
                   >
                     Cancel
                   </button>
-                  <button 
-                    type="submit" 
-                    disabled={loading} 
+                  <button
+                    type="submit"
+                    disabled={loading}
                     className="flex-1 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
                   >
-                    {editingProject ? 'Update' : 'Create'}
+                    {editingProject ? "Update" : "Create"}
                   </button>
                 </div>
               </form>

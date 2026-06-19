@@ -1,7 +1,7 @@
 import { portfolioData, searchPortfolio } from "./portfolio-data";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash-lite';
+const MODEL = import.meta.env.VITE_GEMINI_MODEL || "gemini-2.0-flash-lite";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
 export interface ChatMessage {
@@ -49,10 +49,10 @@ function geminiRole(role: string): string {
 
 export async function sendChatMessage(
   messages: ChatMessage[],
-  config: ChatConfig = defaultConfig
+  config: ChatConfig = defaultConfig,
 ): Promise<string> {
   const context = searchPortfolio(
-    messages.length > 0 ? messages[messages.length - 1].content : ""
+    messages.length > 0 ? messages[messages.length - 1].content : "",
   );
 
   const systemInstruction = buildSystemPrompt(context);
@@ -81,12 +81,16 @@ export async function sendChatMessage(
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    const errorMessage = error.error?.message || `API request failed with status ${response.status}`;
+    const errorMessage =
+      error.error?.message ||
+      `API request failed with status ${response.status}`;
     throw new Error(errorMessage);
   }
 
   const data = await response.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+  return (
+    data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated."
+  );
 }
 
 export function createMessageId(): string {

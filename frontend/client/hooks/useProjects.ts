@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { API_ENDPOINTS, apiFetch } from '@/lib/api';
+import { useState, useEffect, useCallback } from "react";
+import { API_ENDPOINTS, apiFetch, apiFetchFormData } from "@/lib/api";
 
 export interface Project {
   _id: string;
@@ -16,6 +16,30 @@ export interface Project {
   createdAt: string;
 }
 
+export interface ProjectSection {
+  _id: string;
+  project: string;
+  title: string;
+  content: string;
+  order: number;
+  isVisible: boolean;
+  isDraft: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SectionMedia {
+  _id: string;
+  projectSection: string;
+  url: string;
+  type: "image" | "video";
+  alt: string;
+  caption: string;
+  order: number;
+  isPrimary: boolean;
+  createdAt: string;
+}
+
 export const useProjects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,12 +53,12 @@ export const useProjects = () => {
       if (result.success) {
         setProjects(result.data);
       } else {
-        setError(result.error || 'Failed to fetch projects');
+        setError(result.error || "Failed to fetch projects");
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
+      const message = err instanceof Error ? err.message : "Unknown error";
       setError(message);
-      console.error('Error fetching projects:', err);
+      console.error("Error fetching projects:", err);
     } finally {
       setLoading(false);
     }
@@ -51,13 +75,46 @@ export const useProjects = () => {
       fetchProjects();
     };
 
-    window.addEventListener('projectsUpdated', handleProjectsUpdated);
+    window.addEventListener("projectsUpdated", handleProjectsUpdated);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('projectsUpdated', handleProjectsUpdated);
+      window.removeEventListener("projectsUpdated", handleProjectsUpdated);
     };
   }, [fetchProjects]);
 
   return { projects, loading, error, refetch: fetchProjects };
+};
+
+export const useProject = (id: string) => {
+  const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProject = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await apiFetch(API_ENDPOINTS.PROJECTS_GET(id));
+      if (result.success) {
+        setProject(result.data);
+      } else {
+        setError(result.error || "Failed to fetch project");
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      setError(message);
+      console.error("Error fetching project:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchProject();
+    }
+  }, [fetchProject, id]);
+
+  return { project, loading, error, refetch: fetchProject };
 };

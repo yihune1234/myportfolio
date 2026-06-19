@@ -28,13 +28,21 @@ export default function PlatformShowcase() {
       title: "Performance Engineering",
       icon: Gauge,
       desc: "Optimized rendering, caching strategies, and performance monitoring.",
-      features: ["Code Splitting", "Lazy Loading", "CDN Optimization", "Caching"],
+      features: [
+        "Code Splitting",
+        "Lazy Loading",
+        "CDN Optimization",
+        "Caching",
+      ],
       color: "from-[#FFB020] to-[#FF8A00]",
     },
   ];
 
   return (
-    <section id="platforms" className="section-padding relative overflow-hidden bg-background border-t border-white/[0.08]">
+    <section
+      id="platforms"
+      className="section-padding relative overflow-hidden bg-background border-t border-white/[0.08]"
+    >
       <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
       <div className="absolute top-1/3 -left-32 w-[350px] h-[350px] bg-[#FFB020]/5 rounded-full blur-[120px]" />
       <div className="absolute bottom-1/3 -right-32 w-[250px] h-[250px] bg-[#FF8A00]/5 rounded-full blur-[100px]" />
@@ -50,7 +58,8 @@ export default function PlatformShowcase() {
             Cross-Platform Engineering
           </h2>
           <p className="text-[#B7C0D1] text-base max-w-2xl mx-auto leading-relaxed">
-            Building across web, mobile, and infrastructure — delivering cohesive, scalable experiences
+            Building across web, mobile, and infrastructure — delivering
+            cohesive, scalable experiences
           </p>
         </motion.div>
 
@@ -64,9 +73,13 @@ export default function PlatformShowcase() {
               transition={{ delay: index * 0.1 }}
               className="group relative p-6 sm:p-8 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.04] hover:border-primary/20 transition-all duration-500"
             >
-              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${platform.color} opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500`} />
+              <div
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${platform.color} opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500`}
+              />
               <div className="relative z-10">
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${platform.color} shadow-lg w-fit mb-5 group-hover:scale-110 transition-transform duration-500`}>
+                <div
+                  className={`p-3 rounded-xl bg-gradient-to-br ${platform.color} shadow-lg w-fit mb-5 group-hover:scale-110 transition-transform duration-500`}
+                >
                   <platform.icon className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-lg font-bold text-[#F5F7FA] mb-3 group-hover:text-primary transition-colors">

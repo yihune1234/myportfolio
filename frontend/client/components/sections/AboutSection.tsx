@@ -26,7 +26,14 @@ export default function AboutSection() {
   ];
 
   return (
-    <section id="about" className="section-padding relative overflow-hidden border-t border-white/[0.06]" style={{ background: "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)" }}>
+    <section
+      id="about"
+      className="section-padding relative overflow-hidden border-t border-white/[0.06]"
+      style={{
+        background:
+          "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)",
+      }}
+    >
       <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
       <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-[#0A1330] rounded-full blur-[120px]" />
       <div className="absolute bottom-0 right-1/4 w-[200px] h-[200px] bg-[#1A1325] rounded-full blur-[100px]" />
@@ -42,7 +49,9 @@ export default function AboutSection() {
             About Me
           </h2>
           <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
-            Software engineer based in Addis Ababa, Ethiopia. Currently pursuing Software Engineering at Haramaya University, building production systems and digital infrastructure.
+            Software engineer based in Addis Ababa, Ethiopia. Currently pursuing
+            Software Engineering at Haramaya University, building production
+            systems and digital infrastructure.
           </p>
         </motion.div>
 

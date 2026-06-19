@@ -1,4 +1,11 @@
-import { ArrowRight, ChevronRight, Sparkles, Cpu, Database, Code2 } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  Sparkles,
+  Cpu,
+  Database,
+  Code2,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 interface HeroSectionProps {
@@ -14,7 +21,10 @@ export default function HeroSection({
     <section
       id="home"
       className="relative min-h-screen pt-28 pb-12 overflow-hidden"
-      style={{ background: "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)" }}
+      style={{
+        background:
+          "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)",
+      }}
     >
       {/* Architecture Grid */}
       <div className="absolute inset-0 architecture-grid opacity-40" />
@@ -59,9 +69,7 @@ export default function HeroSection({
 
               <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-[#F5F7FA] mb-6 tracking-tighter leading-[0.9]">
                 Hi, I'm{" "}
-                <span className="gradient-text-accent">
-                  Yihune Belay
-                </span>
+                <span className="gradient-text-accent">Yihune Belay</span>
                 <br />
                 <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#B7C0D1]/80">
                   Full-Stack Engineer
@@ -69,8 +77,9 @@ export default function HeroSection({
               </h1>
 
               <p className="text-base sm:text-lg text-[#B7C0D1] leading-relaxed max-w-xl mb-10 font-medium mx-auto lg:mx-0">
-                Building scalable backend systems, robust APIs, and cross-platform
-                experiences. Focused on architecture, performance, and clean code.
+                Building scalable backend systems, robust APIs, and
+                cross-platform experiences. Focused on architecture,
+                performance, and clean code.
               </p>
 
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
@@ -134,7 +143,6 @@ export default function HeroSection({
                     </motion.div>
                   ))}
                 </div>
-
               </div>
 
               {/* Orbital Ring */}

@@ -17,7 +17,7 @@ import { Lock, Github, Linkedin, Sparkles } from "lucide-react";
 export default function Index() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [adminToken, setAdminToken] = useState<string | null>(
-    localStorage.getItem("adminToken")
+    localStorage.getItem("adminToken"),
   );
 
   const handleContactClick = () => {
@@ -94,7 +94,9 @@ export default function Index() {
                 <div className="w-10 h-10 bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] rounded-xl flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
                   <Sparkles className="w-5 h-5 text-[#050816]" />
                 </div>
-                <span className="font-black text-xl text-[#F5F7FA] tracking-tight">Yihune Belay</span>
+                <span className="font-black text-xl text-[#F5F7FA] tracking-tight">
+                  Yihune Belay
+                </span>
               </div>
               <p className="text-sm text-[#B7C0D1] leading-relaxed max-w-sm">
                 Full-stack software engineer specializing in backend systems,
@@ -104,7 +106,9 @@ export default function Index() {
 
             {/* Quick Links */}
             <div>
-              <h4 className="font-bold text-[#F5F7FA] uppercase tracking-widest text-xs mb-6">Navigate</h4>
+              <h4 className="font-bold text-[#F5F7FA] uppercase tracking-widest text-xs mb-6">
+                Navigate
+              </h4>
               <ul className="space-y-3">
                 {[
                   { name: "Home", id: "home" },
@@ -115,7 +119,9 @@ export default function Index() {
                   <li key={link.id}>
                     <button
                       onClick={() =>
-                        document.getElementById(link.id)?.scrollIntoView({ behavior: "smooth" })
+                        document
+                          .getElementById(link.id)
+                          ?.scrollIntoView({ behavior: "smooth" })
                       }
                       className="text-sm text-[#B7C0D1] hover:text-[#FF8A00] transition-colors font-medium"
                     >
@@ -128,7 +134,9 @@ export default function Index() {
 
             {/* Connect */}
             <div>
-              <h4 className="font-bold text-[#F5F7FA] uppercase tracking-widest text-xs mb-6">Connect</h4>
+              <h4 className="font-bold text-[#F5F7FA] uppercase tracking-widest text-xs mb-6">
+                Connect
+              </h4>
               <div className="flex flex-col gap-4">
                 <div className="flex gap-3">
                   <a

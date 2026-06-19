@@ -11,8 +11,17 @@ export default function Navigation() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      const sections = ["home", "about", "skills", "projects", "platforms", "experience", "education", "contact"];
-      const current = sections.find(section => {
+      const sections = [
+        "home",
+        "about",
+        "skills",
+        "projects",
+        "platforms",
+        "experience",
+        "education",
+        "contact",
+      ];
+      const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
@@ -126,7 +135,11 @@ export default function Navigation() {
               onClick={() => setIsOpen(!isOpen)}
               className="lg:hidden p-3 rounded-xl bg-white/[0.05] text-[#D5D9E3] hover:text-[#F5F7FA] hover:bg-white/[0.1] transition-all border border-white/[0.08]"
             >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </button>
           </motion.div>
         </div>

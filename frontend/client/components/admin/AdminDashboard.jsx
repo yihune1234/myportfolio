@@ -1,20 +1,35 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, FolderKanban, MessageSquare, Settings, Plus, Home, Globe, Menu, X, ChevronRight, LayoutDashboard, Sparkles } from 'lucide-react';
-import { ProjectsManager } from './ProjectsManager';
-import { MessagesManager } from './MessagesManager';
-import { AdminSettings } from './AdminSettings';
-import { API_ENDPOINTS, apiFetch } from '../../lib/api';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  LogOut,
+  FolderKanban,
+  MessageSquare,
+  Settings,
+  Plus,
+  Home,
+  Globe,
+  Menu,
+  X,
+  ChevronRight,
+  LayoutDashboard,
+  Sparkles,
+  FileText,
+} from "lucide-react";
+import { ProjectsManager } from "./ProjectsManager";
+import { MessagesManager } from "./MessagesManager";
+import { AdminSettings } from "./AdminSettings";
+import ProjectSectionsManager from "./ProjectSectionsManager";
+import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 
 export default function AdminDashboard({ onLogout, onBack }) {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   const [admin, setAdmin] = useState(null);
   const [showAddProject, setShowAddProject] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [stats, setStats] = useState({ projects: 0, messages: 0 });
 
   useEffect(() => {
-    const adminData = localStorage.getItem('adminUser');
+    const adminData = localStorage.getItem("adminUser");
     if (adminData) {
       setAdmin(JSON.parse(adminData));
     }
@@ -27,7 +42,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
       const mResult = await apiFetch(API_ENDPOINTS.MESSAGES_LIST);
       setStats({
         projects: pResult.success ? pResult.data.length : 0,
-        messages: mResult.success ? mResult.data.length : 0
+        messages: mResult.success ? mResult.data.length : 0,
       });
     } catch (e) {
       console.error(e);
@@ -35,10 +50,11 @@ export default function AdminDashboard({ onLogout, onBack }) {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: Home },
-    { id: 'projects', label: 'Projects', icon: FolderKanban },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: "overview", label: "Overview", icon: Home },
+    { id: "projects", label: "Projects", icon: FolderKanban },
+    { id: "sections", label: "Project Sections", icon: FileText },
+    { id: "messages", label: "Messages", icon: MessageSquare },
+    { id: "settings", label: "Settings", icon: Settings },
   ];
 
   const Overview = () => (
@@ -49,8 +65,12 @@ export default function AdminDashboard({ onLogout, onBack }) {
           animate={{ opacity: 1, y: 0 }}
           className="p-6 rounded-xl border border-white/[0.08] bg-[#0B1637]"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">Projects</p>
-          <h3 className="text-3xl font-black text-[#F5F7FA]">{stats.projects}</h3>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">
+            Projects
+          </p>
+          <h3 className="text-3xl font-black text-[#F5F7FA]">
+            {stats.projects}
+          </h3>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,8 +78,12 @@ export default function AdminDashboard({ onLogout, onBack }) {
           transition={{ delay: 0.1 }}
           className="p-6 rounded-xl border border-white/[0.08] bg-[#0B1637]"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">Messages</p>
-          <h3 className="text-3xl font-black text-[#F5F7FA]">{stats.messages}</h3>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">
+            Messages
+          </p>
+          <h3 className="text-3xl font-black text-[#F5F7FA]">
+            {stats.messages}
+          </h3>
         </motion.div>
       </div>
 
@@ -74,8 +98,12 @@ export default function AdminDashboard({ onLogout, onBack }) {
             <Sparkles className="w-5 h-5 text-[#050816]" />
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-[#F5F7FA]">Welcome back, Yihune</h2>
-            <p className="text-sm text-[#B7C0D1]">Manage your portfolio from here</p>
+            <h2 className="text-lg sm:text-xl font-black text-[#F5F7FA]">
+              Welcome back, Yihune
+            </h2>
+            <p className="text-sm text-[#B7C0D1]">
+              Manage your portfolio from here
+            </p>
           </div>
         </div>
         <motion.button
@@ -102,7 +130,9 @@ export default function AdminDashboard({ onLogout, onBack }) {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
               <LayoutDashboard className="w-4 h-4 text-[#050816]" />
             </div>
-            <h1 className="text-lg sm:text-xl font-black text-[#F5F7FA]">Admin Panel</h1>
+            <h1 className="text-lg sm:text-xl font-black text-[#F5F7FA]">
+              Admin Panel
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <motion.button
@@ -134,9 +164,11 @@ export default function AdminDashboard({ onLogout, onBack }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
           {/* Sidebar */}
-          <div className={`lg:col-span-1 ${mobileMenuOpen ? 'block' : 'hidden lg:block'}`}>
+          <div
+            className={`lg:col-span-1 ${mobileMenuOpen ? "block" : "hidden lg:block"}`}
+          >
             <nav className="space-y-1.5">
-              {tabs.map(tab => (
+              {tabs.map((tab) => (
                 <motion.button
                   key={tab.id}
                   onClick={() => {
@@ -146,13 +178,15 @@ export default function AdminDashboard({ onLogout, onBack }) {
                   whileHover={{ x: 4 }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${
                     activeTab === tab.id
-                      ? 'bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] shadow-lg shadow-[#FF8A00]/20'
-                      : 'text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.04]'
+                      ? "bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] shadow-lg shadow-[#FF8A00]/20"
+                      : "text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.04]"
                   }`}
                 >
                   <tab.icon size={18} />
                   <span>{tab.label}</span>
-                  {activeTab === tab.id && <ChevronRight size={16} className="ml-auto" />}
+                  {activeTab === tab.id && (
+                    <ChevronRight size={16} className="ml-auto" />
+                  )}
                 </motion.button>
               ))}
             </nav>
@@ -168,10 +202,16 @@ export default function AdminDashboard({ onLogout, onBack }) {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
               >
-                {activeTab === 'overview' && <Overview />}
-                {activeTab === 'projects' && <ProjectsManager showAddProject={showAddProject} setShowAddProject={setShowAddProject} />}
-                {activeTab === 'messages' && <MessagesManager />}
-                {activeTab === 'settings' && <AdminSettings />}
+                {activeTab === "overview" && <Overview />}
+                {activeTab === "projects" && (
+                  <ProjectsManager
+                    showAddProject={showAddProject}
+                    setShowAddProject={setShowAddProject}
+                  />
+                )}
+                {activeTab === "sections" && <ProjectSectionsManager />}
+                {activeTab === "messages" && <MessagesManager />}
+                {activeTab === "settings" && <AdminSettings />}
               </motion.div>
             </AnimatePresence>
           </div>

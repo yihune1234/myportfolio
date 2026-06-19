@@ -28,7 +28,10 @@ export default function ExperienceSection() {
   ];
 
   return (
-    <section id="experience" className="section-padding relative overflow-hidden bg-background border-t border-white/[0.06]">
+    <section
+      id="experience"
+      className="section-padding relative overflow-hidden bg-background border-t border-white/[0.06]"
+    >
       <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
       <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] bg-[#FF8A00]/5 rounded-full blur-[120px]" />
       <div className="absolute bottom-1/4 left-1/4 w-[200px] h-[200px] bg-[#FFB020]/5 rounded-full blur-[90px]" />
@@ -58,11 +61,15 @@ export default function ExperienceSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group relative p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:bg-[#101B45] hover:border-[#FF8A00]/20 transition-all duration-500"
             >
-              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${exp.gradient} opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500`} />
+              <div
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${exp.gradient} opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500`}
+              />
               <div className="relative z-10">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                   <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${exp.gradient} shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                    <div
+                      className={`p-3 rounded-xl bg-gradient-to-br ${exp.gradient} shadow-lg group-hover:scale-110 transition-transform duration-500`}
+                    >
                       <Briefcase className="w-5 h-5 text-[#050816]" />
                     </div>
                     <div>

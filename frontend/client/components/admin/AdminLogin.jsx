@@ -1,22 +1,31 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Lock, Mail, Eye, EyeOff, ArrowRight, ArrowLeft, Sparkles, Shield } from 'lucide-react';
-import { API_ENDPOINTS, apiFetch } from '../../lib/api';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Shield,
+} from "lucide-react";
+import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 
 export function AdminLogin({ onLogin, onBack }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const trimmedEmail = email.trim().toLowerCase();
     if (!trimmedEmail) {
-      setError('Email is required');
+      setError("Email is required");
       return;
     }
 
@@ -24,19 +33,19 @@ export function AdminLogin({ onLogin, onBack }) {
 
     try {
       const result = await apiFetch(API_ENDPOINTS.ADMIN_LOGIN, {
-        method: 'POST',
-        body: JSON.stringify({ email: trimmedEmail, password })
+        method: "POST",
+        body: JSON.stringify({ email: trimmedEmail, password }),
       });
 
       if (result.success) {
-        localStorage.setItem('adminToken', result.data.token);
-        localStorage.setItem('adminUser', JSON.stringify(result.data.admin));
+        localStorage.setItem("adminToken", result.data.token);
+        localStorage.setItem("adminUser", JSON.stringify(result.data.admin));
         onLogin(result.data.token, result.data.admin);
       } else {
-        setError(result.error || 'Invalid credentials');
+        setError(result.error || "Invalid credentials");
       }
     } catch (err) {
-      setError('Connection error');
+      setError("Connection error");
     } finally {
       setLoading(false);
     }
@@ -70,9 +79,12 @@ export function AdminLogin({ onLogin, onBack }) {
             <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
               <Shield className="text-[#050816]" size={28} />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-1">Admin Access</h1>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-1">
+              Admin Access
+            </h1>
             <p className="text-sm text-[#B7C0D1]">
-              Signed in as <span className="text-[#FF8A00] font-bold">Yihune Belay</span>
+              Signed in as{" "}
+              <span className="text-[#FF8A00] font-bold">Yihune Belay</span>
             </p>
           </div>
 
@@ -80,7 +92,9 @@ export function AdminLogin({ onLogin, onBack }) {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF8A00]/80">Email Address</label>
+              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF8A00]/80">
+                Email Address
+              </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#FF8A00]/50" />
                 <input
@@ -89,23 +103,25 @@ export function AdminLogin({ onLogin, onBack }) {
                   className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-[#050816] border border-white/[0.08] text-[#F5F7FA] placeholder-[#B7C0D1]/40 focus:border-[#FF8A00]/50 focus:outline-none transition-all text-sm"
                   placeholder="yihune@example.com"
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF8A00]/80">Password</label>
+              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF8A00]/80">
+                Password
+              </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#FF8A00]/50" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-[#050816] border border-white/[0.08] text-[#F5F7FA] placeholder-[#B7C0D1]/40 focus:border-[#FF8A00]/50 focus:outline-none transition-all text-sm"
                   placeholder="••••••••"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"

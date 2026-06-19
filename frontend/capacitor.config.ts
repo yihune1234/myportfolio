@@ -1,9 +1,9 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: 'com.yihunebelay.portfolio',
-  appName: 'Yihune Belay Portfolio',
-  webDir: 'dist/spa',
+  appId: "com.yihunebelay.portfolio",
+  appName: "Yihune Belay Portfolio",
+  webDir: "dist/spa",
   // For development, set the server URL to load live from deployed site:
   // Uncomment the line below and replace with your deployed URL to enable live updates
   // without rebuilding. Comment it out or set to undefined to use local web build.
@@ -14,9 +14,9 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
-      backgroundColor: '#050816',
-      androidSplashResourceName: 'splash',
-      androidScaleType: 'CENTER_CROP',
+      backgroundColor: "#050816",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
     },
   },
   android: {
