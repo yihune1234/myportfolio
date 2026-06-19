@@ -20,6 +20,13 @@ export const API_ENDPOINTS = {
   PROJECTS_DELETE: (id: string) => `${API_URL}/api/projects/${id}`,
   PROJECTS_PIN_TOGGLE: (id: string) => `${API_URL}/api/projects/${id}/pin`,
 
+  // Project Images
+  PROJECT_IMAGES_LIST: (id: string) => `${API_URL}/api/projects/${id}/images`,
+  PROJECT_IMAGES_UPLOAD: (id: string) => `${API_URL}/api/projects/${id}/images`,
+  PROJECT_IMAGE_DELETE: (id: string, imageId: string) => `${API_URL}/api/projects/${id}/images/${imageId}`,
+  PROJECT_IMAGE_UPDATE: (id: string, imageId: string) => `${API_URL}/api/projects/${id}/images/${imageId}`,
+  PROJECT_IMAGES_REORDER: (id: string) => `${API_URL}/api/projects/${id}/images/reorder`,
+
   // Messages
   MESSAGES_CREATE: `${API_URL}/api/messages`,
   MESSAGES_LIST: `${API_URL}/api/messages`,

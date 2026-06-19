@@ -1,44 +1,27 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
+  ChevronLeft,
   ChevronRight,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
   Maximize2,
   X,
+  ZoomIn,
   Image as ImageIcon,
-  Video as VideoIcon,
+  Github,
+  ExternalLink,
   AlertCircle,
 } from "lucide-react";
 import { API_ENDPOINTS, apiFetch } from "@/lib/api";
-import { toast } from "react-toastify";
 
-interface ProjectSection {
+interface ProjectImage {
   _id: string;
-  project: string;
-  title: string;
-  content: string;
-  order: number;
-  isVisible: boolean;
-  isDraft: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface SectionMedia {
-  _id: string;
-  projectSection: string;
   url: string;
-  type: "image" | "video";
-  alt: string;
-  caption: string;
+  public_id?: string;
+  title: string;
   order: number;
-  isPrimary: boolean;
-  createdAt: string;
+  isFeatured: boolean;
 }
 
 interface Project {
@@ -47,102 +30,56 @@ interface Project {
   description: string;
   technologies: string[];
   image?: string;
+  images?: ProjectImage[];
   githubUrl?: string;
   demoUrl?: string;
   role?: string;
   isMini?: boolean;
   pinned?: boolean;
-  challenges?: string;
   createdAt: string;
 }
 
 export default function ProjectDetailsPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
-  const [sections, setSections] = useState<ProjectSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState<string>("");
-  const [mediaCache, setMediaCache] = useState<Record<string, SectionMedia[]>>(
-    {},
-  );
-  const [selectedMedia, setSelectedMedia] = useState<{
-    url: string;
-    type: "image" | "video";
-    alt: string;
-  } | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.7);
-  const [isMuted, setIsMuted] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fullscreenIndex, setFullscreenIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<ProjectImage | null>(null);
 
   useEffect(() => {
     if (id) {
-      fetchProjectAndSections();
+      fetchProject();
     }
   }, [id]);
 
   useEffect(() => {
-    if (sections.length > 0 && !activeSection) {
-      setActiveSection(sections[0]._id);
-    }
-  }, [sections, activeSection]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sectionElements = document.querySelectorAll("[data-section-id]");
-      const scrollPosition = window.scrollY + 100;
-
-      for (const element of sectionElements) {
-        const rect = element.getBoundingClientRect();
-        const elementTop = rect.top + window.scrollY;
-        const elementBottom = elementTop + rect.height;
-
-        if (scrollPosition >= elementTop && scrollPosition <= elementBottom) {
-          const sectionId = element.getAttribute("data-section-id");
-          if (sectionId) {
-            setActiveSection(sectionId);
-          }
-        }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isFullscreen) return;
+      if (e.key === "ArrowLeft") {
+        setFullscreenIndex((prev) => (prev - 1 + slides.length) % slides.length);
+      } else if (e.key === "ArrowRight") {
+        setFullscreenIndex((prev) => (prev + 1) % slides.length);
+      } else if (e.key === "Escape") {
+        setIsFullscreen(false);
       }
     };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFullscreen]);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const fetchProjectAndSections = async () => {
+  const fetchProject = async () => {
     try {
       setLoading(true);
       setError(null);
-
-      const [projectResult, sectionsResult] = await Promise.all([
-        apiFetch(API_ENDPOINTS.PROJECTS_GET(id!)),
-        apiFetch(`/api/project-sections/project/${id}`),
-      ]);
-
-      if (projectResult.success) {
-        setProject(projectResult.data);
+      const result = await apiFetch(API_ENDPOINTS.PROJECTS_GET(id!));
+      if (result.success) {
+        setProject(result.data);
       } else {
         setError("Failed to fetch project");
-        return;
-      }
-
-      if (sectionsResult.success) {
-        const sectionsData = Array.isArray(sectionsResult.data)
-          ? sectionsResult.data
-          : [];
-        const visibleSections = sectionsData.filter(
-          (section) => section.isVisible && !section.isDraft,
-        );
-        setSections(visibleSections);
-
-        // Pre-fetch media for each section
-        for (const section of visibleSections) {
-          fetchMediaForSection(section._id);
-        }
-      } else {
-        setError("Failed to fetch sections");
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
@@ -153,178 +90,42 @@ export default function ProjectDetailsPage() {
     }
   };
 
-  const fetchMediaForSection = async (sectionId: string) => {
-    try {
-      const result = await apiFetch(`/api/section-media/section/${sectionId}`);
-      if (result.success) {
-        setMediaCache((prev) => ({
-          ...prev,
-          [sectionId]: result.data,
-        }));
-      }
-    } catch (error) {
-      console.error(`Error fetching media for section ${sectionId}:`, error);
-    }
+  const slides: ProjectImage[] = project?.images?.length
+    ? [...project.images].sort((a, b) => a.order - b.order)
+    : project?.image
+    ? [{ _id: "cover", url: project.image, title: "Cover Image", order: 0, isFeatured: true }]
+    : [];
+
+  const goToHero = useCallback(
+    (index: number) => {
+      if (slides.length === 0) return;
+      setHeroIndex((index + slides.length) % slides.length);
+    },
+    [slides.length],
+  );
+
+  const openFullscreen = (index: number) => {
+    setFullscreenIndex(index);
+    setIsFullscreen(true);
+    document.body.style.overflow = "hidden";
   };
 
-  const handleMediaClick = (media: SectionMedia) => {
-    setSelectedMedia({
-      url: media.url,
-      type: media.type,
-      alt: media.alt || "",
-    });
-    setIsPlaying(false);
-    setIsMuted(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
+  const closeFullscreen = () => {
+    setIsFullscreen(false);
+    document.body.style.overflow = "";
   };
 
-  const closeMediaModal = () => {
-    setSelectedMedia(null);
-    setIsPlaying(false);
-    setIsMuted(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
-  };
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-    setVolume(isMuted ? 0.7 : 0);
-  };
-
-  const changeVolume = (newVolume: number) => {
-    setVolume(newVolume);
-    if (videoRef.current) {
-      videoRef.current.volume = newVolume;
-    }
-  };
-
-  const renderSectionContent = (section: ProjectSection) => {
-    const media = mediaCache[section._id] || [];
-    const images = media.filter((m) => m.type === "image");
-    const videos = media.filter((m) => m.type === "video");
-
-    return (
-      <div className="space-y-8">
-        {/* Section Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#F5F7FA] mb-4">
-            {section.title}
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-amber-500 mx-auto rounded-full"></div>
-        </div>
-
-        {/* Rich Text Content */}
-        <div
-          className="prose prose-invert prose-lg max-w-none prose-headings:text-[#F5F7FA] prose-p:text-[#B7C0D1] prose-strong:text-orange-400 prose-a:text-orange-400 hover:prose-a:text-orange-300"
-          dangerouslySetInnerHTML={{ __html: section.content }}
-        />
-
-        {/* Images Gallery */}
-        {images.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-[#F5F7FA] flex items-center gap-2">
-              <ImageIcon size={24} className="text-orange-500" />
-              Images
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {images.map((media, index) => (
-                <motion.div
-                  key={media._id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="relative group cursor-pointer"
-                  onClick={() => handleMediaClick(media)}
-                >
-                  <div className="aspect-video bg-[#050816] rounded-lg border border-white/[0.08] overflow-hidden">
-                    <img
-                      src={media.url}
-                      alt={media.alt || ""}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                  </div>
-                  {media.caption && (
-                    <p className="text-sm text-[#B7C0D1] mt-2 line-clamp-2">
-                      {media.caption}
-                    </p>
-                  )}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <Maximize2 size={24} className="text-white" />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Videos */}
-        {videos.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-[#F5F7FA] flex items-center gap-2">
-              <VideoIcon size={24} className="text-orange-500" />
-              Videos
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {videos.map((media, index) => (
-                <motion.div
-                  key={media._id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="relative group cursor-pointer"
-                  onClick={() => handleMediaClick(media)}
-                >
-                  <div className="aspect-video bg-[#050816] rounded-lg border border-white/[0.08] overflow-hidden relative">
-                    <video
-                      src={media.url}
-                      className="w-full h-full object-cover"
-                      poster={images.find((img) => img.isPrimary)?.url}
-                    />
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/50 transition-colors">
-                      <div className="w-16 h-16 bg-orange-500/80 rounded-full flex items-center justify-center">
-                        <Play size={24} className="text-[#050816] ml-1" />
-                      </div>
-                    </div>
-                  </div>
-                  {media.caption && (
-                    <p className="text-sm text-[#B7C0D1] mt-2 line-clamp-2">
-                      {media.caption}
-                    </p>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    );
+  const handleImageClick = (img: ProjectImage, index: number) => {
+    setSelectedImage(img);
+    openFullscreen(index);
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#050816] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-[#B7C0D1]">Loading project details...</p>
+        <div className="text-center px-4">
+          <div className="animate-spin rounded-full h-12 sm:h-16 w-12 sm:w-16 border-b-2 border-orange-500 mx-auto mb-4" />
+          <p className="text-sm sm:text-base text-[#B7C0D1]">Loading project details...</p>
         </div>
       </div>
     );
@@ -334,16 +135,14 @@ export default function ProjectDetailsPage() {
     return (
       <div className="min-h-screen bg-[#050816] flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-6">
-          <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-[#F5F7FA] mb-2">Error</h2>
-          <p className="text-[#B7C0D1] mb-6">
-            {error || "Project not found or sections are not available."}
-          </p>
+          <AlertCircle size={40} className="text-red-400 mx-auto mb-4" />
+          <h2 className="text-xl sm:text-2xl font-bold text-[#F5F7FA] mb-2">Error</h2>
+          <p className="text-sm sm:text-base text-[#B7C0D1] mb-6">{error || "Project not found."}</p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.history.back()}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-[#050816] rounded-lg font-bold mx-auto"
+            onClick={() => navigate("/")}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-[#050816] rounded-lg font-bold text-sm mx-auto"
           >
             <ArrowLeft size={16} />
             Go Back
@@ -355,30 +154,30 @@ export default function ProjectDetailsPage() {
 
   return (
     <div className="min-h-screen bg-[#050816]">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050816]/80 backdrop-blur-2xl border-b border-white/[0.06] shadow-2xl shadow-black/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      {/* Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050816]/90 backdrop-blur-xl border-b border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => window.history.back()}
+              onClick={() => navigate("/")}
               className="flex items-center gap-2 text-[#B7C0D1] hover:text-orange-400 transition-colors"
             >
-              <ArrowLeft size={20} />
-              <span className="hidden sm:inline">Back to Projects</span>
+              <ArrowLeft size={18} />
+              <span className="hidden sm:inline text-sm font-medium">Back</span>
             </motion.button>
 
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/20">
-                <span className="text-[#050816] font-bold text-sm">P</span>
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 px-2">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-[#050816] font-bold text-xs sm:text-sm">P</span>
               </div>
-              <span className="font-bold text-[#F5F7FA] text-lg truncate max-w-xs sm:max-w-none">
+              <span className="font-bold text-[#F5F7FA] text-sm sm:text-base truncate max-w-[140px] sm:max-w-sm">
                 {project.title}
               </span>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 sm:gap-2">
               {project.githubUrl && (
                 <motion.a
                   whileHover={{ scale: 1.1 }}
@@ -387,18 +186,9 @@ export default function ProjectDetailsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 text-[#B7C0D1] hover:text-orange-400 transition-colors"
+                  aria-label="GitHub"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <Github size={18} />
                 </motion.a>
               )}
               {project.demoUrl && (
@@ -409,14 +199,9 @@ export default function ProjectDetailsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 text-[#B7C0D1] hover:text-orange-400 transition-colors"
+                  aria-label="Live Demo"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                  </svg>
+                  <ExternalLink size={18} />
                 </motion.a>
               )}
             </div>
@@ -425,226 +210,374 @@ export default function ProjectDetailsPage() {
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        {/* Project Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 20 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold text-[#F5F7FA] mb-4">
-            {project.title}
-          </h1>
-          <p className="text-lg text-[#B7C0D1] max-w-3xl mx-auto mb-6">
-            {project.description}
-          </p>
-          {project.technologies && project.technologies.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-2">
-              {project.technologies.map((tech, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-white/[0.05] border border-white/[0.08] rounded-full text-sm text-[#B7C0D1]"
+      <div className="pt-14 sm:pt-16">
+        {/* ===== HERO CAROUSEL ===== */}
+        {slides.length > 0 && (
+          <div className="relative bg-[#0B1637]">
+            <div className="relative w-full h-[45vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh] overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={heroIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0"
                 >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          )}
-        </motion.div>
+                  <img
+                    src={slides[heroIndex]?.url}
+                    alt={slides[heroIndex]?.title || project.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-[#050816]/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#050816]/40 via-transparent to-[#050816]/40" />
+                </motion.div>
+              </AnimatePresence>
 
-        {/* Sticky Navigation */}
-        {sections.length > 0 && (
-          <div className="sticky top-20 z-40 bg-[#050816]/95 backdrop-blur-xl border-b border-white/[0.06] mb-8">
-            <div className="flex overflow-x-auto pb-4 hide-scrollbar">
-              {sections.map((section) => (
-                <motion.button
-                  key={section._id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    const element = document.getElementById(section._id);
-                    if (element) {
-                      const navHeight = 80;
-                      const elementPosition =
-                        element.getBoundingClientRect().top;
-                      const offsetPosition =
-                        elementPosition + window.pageYOffset - navHeight;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
-                  className={`flex-shrink-0 px-6 py-3 mx-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
-                    activeSection === section._id
-                      ? "bg-gradient-to-r from-orange-500 to-amber-500 text-[#050816] shadow-lg shadow-orange-500/25"
-                      : "text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.05]"
-                  }`}
+              {/* Hero Nav Arrows */}
+              {slides.length > 1 && (
+                <>
+                  <button
+                    onClick={() => goToHero(heroIndex - 1)}
+                    className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 rounded-full bg-black/40 backdrop-blur-md text-white hover:bg-[#FF8A00] hover:text-[#050816] transition-all border border-white/[0.1] hover:shadow-lg hover:shadow-[#FF8A00]/20"
+                  >
+                    <ChevronLeft size={18} className="sm:w-5 sm:h-5" />
+                  </button>
+                  <button
+                    onClick={() => goToHero(heroIndex + 1)}
+                    className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 rounded-full bg-black/40 backdrop-blur-md text-white hover:bg-[#FF8A00] hover:text-[#050816] transition-all border border-white/[0.1] hover:shadow-lg hover:shadow-[#FF8A00]/20"
+                  >
+                    <ChevronRight size={18} className="sm:w-5 sm:h-5" />
+                  </button>
+                </>
+              )}
+
+              {/* Hero Content Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 z-20 p-4 sm:p-6 md:p-8 lg:p-10">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="max-w-4xl"
                 >
-                  {section.title}
-                  {activeSection === section._id && (
-                    <ChevronRight size={16} className="inline ml-2" />
-                  )}
-                </motion.button>
-              ))}
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+                    {project.technologies?.slice(0, 4).map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-2 sm:px-3 py-0.5 sm:py-1 bg-white/[0.08] backdrop-blur-sm border border-white/[0.12] rounded-full text-[10px] sm:text-xs text-[#B7C0D1]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {project.technologies?.length > 4 && (
+                      <span className="px-2 sm:px-3 py-0.5 sm:py-1 bg-[#FF8A00]/10 backdrop-blur-sm border border-[#FF8A00]/20 rounded-full text-[10px] sm:text-xs text-[#FF8A00]">
+                        +{project.technologies.length - 4}
+                      </span>
+                    )}
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
+                    {project.title}
+                  </h1>
+                  <p className="text-xs sm:text-sm md:text-base text-[#B7C0D1] max-w-2xl mt-1 sm:mt-2 line-clamp-1 sm:line-clamp-2 md:line-clamp-3">
+                    {project.description}
+                  </p>
+                </motion.div>
+              </div>
+
+              {/* Hero Controls */}
+              <div className="absolute top-3 right-3 sm:top-4 sm:right-4 lg:top-6 lg:right-6 z-20 flex items-center gap-2">
+                {slides.length > 1 && (
+                  <div className="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-black/60 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-[#B7C0D1] border border-white/[0.08]">
+                    {heroIndex + 1} / {slides.length}
+                  </div>
+                )}
+                <button
+                  onClick={() => openFullscreen(heroIndex)}
+                  className="p-1.5 sm:p-2 bg-black/60 backdrop-blur-sm rounded-lg border border-white/[0.08] text-white/70 hover:text-white hover:bg-[#FF8A00]/80 transition-all"
+                >
+                  <Maximize2 size={14} className="sm:w-4 sm:h-4" />
+                </button>
+              </div>
+
+              {/* Hero Dots */}
+              {slides.length > 1 && (
+                <div className="absolute bottom-2 sm:bottom-3 lg:bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 sm:gap-2">
+                  {slides.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => goToHero(idx)}
+                      className={`transition-all duration-300 rounded-full ${
+                        idx === heroIndex
+                          ? "w-5 sm:w-6 h-1.5 sm:h-2 bg-[#FF8A00] shadow-[0_0_8px_rgba(255,138,0,0.5)]"
+                          : "w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/40 hover:bg-white/60"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
 
-        {/* Sections Content */}
-        <div className="space-y-32">
-          {sections.map((section, index) => (
-            <motion.section
-              key={section._id}
-              id={section._id}
-              data-section-id={section._id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              className="scroll-mt-24"
-            >
-              {renderSectionContent(section)}
-            </motion.section>
-          ))}
-        </div>
-
-        {/* Related Projects Section */}
-        {project.technologies && project.technologies.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 20 }}
-            viewport={{ once: true }}
-            className="mt-32 pt-16 border-t border-white/[0.06]"
-          >
-            <h2 className="text-3xl font-bold text-[#F5F7FA] mb-8 text-center">
-              Related Technologies
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {project.technologies.map((tech, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="bg-white/[0.03] border border-white/[0.08] rounded-lg p-4 text-center hover:border-orange-500/30 transition-all"
-                >
-                  <div className="text-sm font-medium text-[#B7C0D1] hover:text-orange-400 transition-colors">
-                    {tech}
-                  </div>
-                </motion.div>
-              ))}
+        {/* ===== PROJECT DETAILS SECTION ===== */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+            {/* Description - 2/3 width */}
+            <div className="lg:col-span-2 space-y-6">
+              <div>
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#F5F7FA] mb-4">
+                  About This Project
+                </h2>
+                <div className="text-sm sm:text-base text-[#B7C0D1] leading-relaxed whitespace-pre-line space-y-4">
+                  {project.description}
+                </div>
+              </div>
             </div>
-          </motion.div>
-        )}
+
+            {/* Sidebar - 1/3 width */}
+            <div className="space-y-4 sm:space-y-6">
+              {/* Project Info Card */}
+              <div className="bg-[#0B1637] border border-white/[0.08] rounded-xl p-4 sm:p-5 lg:p-6">
+                <h3 className="text-xs sm:text-sm font-bold text-[#FF8A00] mb-3 sm:mb-4 uppercase tracking-wider">
+                  Project Info
+                </h3>
+                <div className="space-y-3 sm:space-y-4">
+                  {project.role && (
+                    <div>
+                      <span className="text-[10px] sm:text-xs font-bold text-[#B7C0D1]/60 uppercase tracking-wider block mb-1">
+                        Role
+                      </span>
+                      <span className="text-sm sm:text-base font-bold text-[#F5F7FA]">
+                        {project.role}
+                      </span>
+                    </div>
+                  )}
+                  <div>
+                    <span className="text-[10px] sm:text-xs font-bold text-[#B7C0D1]/60 uppercase tracking-wider block mb-1.5">
+                      Technologies
+                    </span>
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                      {project.technologies?.map((tech, i) => (
+                        <span
+                          key={i}
+                          className="text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#FF8A00]/10 text-[#FF8A00] rounded-md font-medium border border-[#FF8A00]/20"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-[10px] sm:text-xs font-bold text-[#B7C0D1]/60 uppercase tracking-wider block mb-1">
+                      Screenshots
+                    </span>
+                    <span className="text-sm sm:text-base font-bold text-[#F5F7FA]">
+                      {slides.length} image{slides.length !== 1 ? "s" : ""}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-white/[0.08] flex flex-col gap-2">
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 bg-white/[0.05] hover:bg-white/[0.1] text-[#B7C0D1] hover:text-[#F5F7FA] rounded-lg text-xs sm:text-sm font-bold text-center transition-all flex items-center justify-center gap-2"
+                    >
+                      <Github size={16} />
+                      View Source Code
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 bg-[#FF8A00]/10 hover:bg-[#FF8A00] text-[#FF8A00] hover:text-[#050816] rounded-lg text-xs sm:text-sm font-bold text-center transition-all flex items-center justify-center gap-2"
+                    >
+                      <ExternalLink size={16} />
+                      Live Demo
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ===== GALLERY SECTION ===== */}
+          {slides.length > 0 && (
+            <div className="mt-10 sm:mt-14 lg:mt-16">
+              {/* Gallery Header */}
+              <div className="flex items-center gap-3 mb-5 sm:mb-6 lg:mb-8">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center flex-shrink-0">
+                  <ImageIcon size={16} className="sm:w-[18px] sm:h-[18px] text-[#050816]" />
+                </div>
+                <div>
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#F5F7FA]">
+                    Project Gallery
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#B7C0D1]">
+                    {slides.length} screenshot{slides.length !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+
+              {/* Gallery Grid - Responsive Masonry */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
+                {slides.map((img, index) => (
+                  <motion.div
+                    key={img._id || index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.3) }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    className={`relative group cursor-pointer rounded-lg sm:rounded-xl overflow-hidden bg-[#0B1637] border border-white/[0.08] hover:border-[#FF8A00]/30 transition-all duration-500 ${
+                      index === 0 && slides.length >= 3
+                        ? "sm:col-span-2"
+                        : ""
+                    }`}
+                    onClick={() => handleImageClick(img, index)}
+                  >
+                    <div className="aspect-video sm:aspect-[16/10] md:aspect-video overflow-hidden">
+                      <img
+                        src={img.url}
+                        alt={img.title || `Screenshot ${index + 1}`}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                          {img.title && (
+                            <p className="text-xs sm:text-sm font-bold text-white truncate">
+                              {img.title}
+                            </p>
+                          )}
+                          {img.isFeatured && (
+                            <span className="inline-block mt-1 text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 bg-[#FF8A00]/20 text-[#FF8A00] rounded border border-[#FF8A00]/30 font-bold">
+                              FEATURED
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      {/* Zoom icon */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="p-2 sm:p-2.5 bg-[#FF8A00]/90 rounded-full shadow-lg transform group-hover:scale-110 transition-transform">
+                          <ZoomIn size={14} className="sm:w-4 sm:h-4 text-[#050816]" />
+                        </div>
+                      </div>
+                      {/* Badge */}
+                      <div className="absolute top-2 left-2 sm:top-3 sm:left-3 px-1.5 sm:px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[9px] sm:text-[10px] font-bold text-[#B7C0D1] border border-white/[0.08]">
+                        #{index + 1}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Media Modal */}
+      {/* ===== FULLSCREEN MODAL ===== */}
       <AnimatePresence>
-        {selectedMedia && (
+        {isFullscreen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-60 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={closeMediaModal}
+            className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-lg flex items-center justify-center"
+            onClick={closeFullscreen}
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="relative max-w-6xl w-full max-h-[90vh]"
+            <div
+              className="relative w-full h-full flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                onClick={closeMediaModal}
-                className="absolute top-4 right-4 z-10 p-2 bg-white/[0.1] hover:bg-white/[0.2] rounded-lg text-white transition-colors"
+              <motion.div
+                key={fullscreenIndex}
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.92 }}
+                transition={{ duration: 0.25 }}
+                className="w-full h-full flex items-center justify-center p-3 sm:p-6 md:p-10"
               >
-                <X size={24} />
-              </button>
+                <img
+                  src={slides[fullscreenIndex]?.url}
+                  alt={slides[fullscreenIndex]?.title || "Fullscreen preview"}
+                  className="max-w-full max-h-[85vh] sm:max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+                />
+              </motion.div>
 
-              <div className="relative">
-                {selectedMedia.type === "video" ? (
-                  <video
-                    ref={videoRef}
-                    src={selectedMedia.url}
-                    className="w-full max-h-[80vh] object-contain rounded-lg"
-                    controls={false}
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onVolumeChange={() =>
-                      videoRef.current && setVolume(videoRef.current.volume)
-                    }
-                  />
-                ) : (
-                  <img
-                    src={selectedMedia.url}
-                    alt={selectedMedia.alt}
-                    className="w-full max-h-[80vh] object-contain rounded-lg"
-                  />
-                )}
+              {/* Fullscreen nav */}
+              {slides.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFullscreenIndex(
+                        (fullscreenIndex - 1 + slides.length) % slides.length,
+                      );
+                    }}
+                    className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-white/[0.06] backdrop-blur-md text-white hover:bg-[#FF8A00] hover:text-[#050816] transition-all border border-white/[0.08] hover:shadow-lg hover:shadow-[#FF8A00]/20"
+                  >
+                    <ChevronLeft size={22} className="sm:w-6 sm:h-6" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFullscreenIndex(
+                        (fullscreenIndex + 1) % slides.length,
+                      );
+                    }}
+                    className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-white/[0.06] backdrop-blur-md text-white hover:bg-[#FF8A00] hover:text-[#050816] transition-all border border-white/[0.08] hover:shadow-lg hover:shadow-[#FF8A00]/20"
+                  >
+                    <ChevronRight size={22} className="sm:w-6 sm:h-6" />
+                  </button>
+                </>
+              )}
 
-                {/* Video Controls */}
-                {selectedMedia.type === "video" && (
-                  <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-4">
-                    <div className="flex items-center gap-4">
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={togglePlay}
-                        className="p-2 text-white hover:text-orange-400 transition-colors"
-                      >
-                        {isPlaying ? (
-                          <Pause size={20} />
-                        ) : (
-                          <Play size={20} className="ml-1" />
-                        )}
-                      </motion.button>
-
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={toggleMute}
-                        className="p-2 text-white hover:text-orange-400 transition-colors"
-                      >
-                        {isMuted ? (
-                          <VolumeX size={20} />
-                        ) : (
-                          <Volume2 size={20} />
-                        )}
-                      </motion.button>
-
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.1"
-                        value={volume}
-                        onChange={(e) =>
-                          changeVolume(parseFloat(e.target.value))
-                        }
-                        className="flex-1 h-2 bg-white/[0.2] rounded-lg appearance-none cursor-pointer"
-                        style={{
-                          background: `linear-gradient(to right, #FF8A00 ${volume * 100}%, rgba(255,255,255,0.2) ${volume * 100}%)`,
+              {/* Fullscreen dots */}
+              {slides.length > 1 && (
+                <div className="absolute bottom-4 sm:bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-3 sm:px-4 py-2 rounded-full border border-white/[0.08]">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    {slides.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFullscreenIndex(idx);
                         }}
+                        className={`transition-all duration-300 rounded-full ${
+                          idx === fullscreenIndex
+                            ? "w-5 sm:w-6 h-1.5 sm:h-2 bg-[#FF8A00]"
+                            : "w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/30 hover:bg-white/50"
+                        }`}
                       />
-
-                      <span className="text-white text-sm ml-2">
-                        {Math.round(volume * 100)}%
-                      </span>
-                    </div>
+                    ))}
                   </div>
-                )}
-              </div>
-
-              {selectedMedia.alt && (
-                <div className="mt-4 text-center">
-                  <p className="text-[#B7C0D1]">{selectedMedia.alt}</p>
                 </div>
               )}
-            </motion.div>
+
+              {/* Image title */}
+              {slides[fullscreenIndex]?.title && (
+                <div className="absolute top-4 sm:top-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/[0.08] max-w-[80%]">
+                  <p className="text-xs sm:text-sm font-bold text-white truncate">
+                    {slides[fullscreenIndex].title}
+                  </p>
+                </div>
+              )}
+
+              {/* Close */}
+              <button
+                onClick={closeFullscreen}
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 lg:top-6 lg:right-6 p-2 sm:p-2.5 rounded-full bg-white/[0.06] backdrop-blur-md text-white hover:bg-red-500/80 transition-all border border-white/[0.08]"
+                aria-label="Close fullscreen"
+              >
+                <X size={18} className="sm:w-5 sm:h-5" />
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
