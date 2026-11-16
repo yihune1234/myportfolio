@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   ADMIN_UPDATE_USERNAME: `${API_URL}/api/admin/username`,
   ADMIN_UPDATE_PASSWORD: `${API_URL}/api/admin/password`,
   ADMIN_GITHUB_SETTINGS: `${API_URL}/api/admin/github-settings`,
+  ADMIN_GITHUB_VALIDATE: `${API_URL}/api/admin/github-validate`,
   ADMIN_GITHUB_SYNC: `${API_URL}/api/admin/github-sync`,
 
   // Projects

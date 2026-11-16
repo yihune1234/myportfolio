@@ -15,8 +15,17 @@ import AdminDashboard from "@/components/admin/AdminDashboard";
 import AIChatWidget from "@/components/AIChatWidget";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Lock, Github, Linkedin, Sparkles } from "lucide-react";
+import { useGitHubSettings } from "@/hooks/useGitHubSettings";
 
 export default function Index() {
+  const { data: settings } = useGitHubSettings();
+  const personalUsername = settings?.githubUsername || "yihune1234";
+  const orgUsername = settings?.githubOrg || "AriitiMarket";
+  const personalUrl = `https://github.com/${personalUsername}`;
+  const orgUrl = `https://github.com/${orgUsername}`;
+  const showPersonal = settings?.personalVisibility !== false;
+  const showOrg = settings?.orgVisibility !== false;
+
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [adminToken, setAdminToken] = useState<string | null>(
     localStorage.getItem("adminToken"),
@@ -148,14 +157,18 @@ export default function Index() {
                 Full-stack software engineer & distributed systems architect. Specializing in high-throughput backend APIs, security engineering, and multi-tenant commerce platforms.
               </p>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--card-surface,#3A3836)] border border-[var(--primary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)] animate-pulse" />
-                  Personal Lab: @yihune1234
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--card-surface,#3A3836)] border border-[var(--secondary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--secondary-accent,#FFDD9B)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--secondary-accent,#FFDD9B)]" />
-                  Org Venture: @AriitiMarket
-                </span>
+                {showPersonal && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--card-surface,#3A3836)] border border-[var(--primary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)] animate-pulse" />
+                    Personal Lab: @{personalUsername}
+                  </span>
+                )}
+                {showOrg && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--card-surface,#3A3836)] border border-[var(--secondary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--secondary-accent,#FFDD9B)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--secondary-accent,#FFDD9B)]" />
+                    Org Venture: @{orgUsername}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -197,24 +210,28 @@ export default function Index() {
               </h4>
               <div className="flex flex-col gap-4">
                 <div className="flex gap-2.5">
-                  <a
-                    href="https://github.com/yihune1234"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--primary-accent,#FFDD9B)] hover:border-[var(--primary-accent,#FFDD9B)]/30 transition-all duration-200"
-                    title="Personal GitHub: @yihune1234"
-                  >
-                    <Github className="w-4 h-4" />
-                  </a>
-                  <a
-                    href="https://github.com/AriitiMarket"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--secondary-accent,#FFDD9B)] hover:border-[var(--secondary-accent,#FFDD9B)]/30 transition-all duration-200"
-                    title="Organization GitHub: @AriitiMarket"
-                  >
-                    <Github className="w-4 h-4 text-[var(--secondary-accent,#FFDD9B)]" />
-                  </a>
+                  {showPersonal && (
+                    <a
+                      href={personalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--primary-accent,#FFDD9B)] hover:border-[var(--primary-accent,#FFDD9B)]/30 transition-all duration-200"
+                      title={`Personal GitHub: @${personalUsername}`}
+                    >
+                      <Github className="w-4 h-4" />
+                    </a>
+                  )}
+                  {showOrg && (
+                    <a
+                      href={orgUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--secondary-accent,#FFDD9B)] hover:border-[var(--secondary-accent,#FFDD9B)]/30 transition-all duration-200"
+                      title={`Organization GitHub: @${orgUsername}`}
+                    >
+                      <Github className="w-4 h-4 text-[var(--secondary-accent,#FFDD9B)]" />
+                    </a>
+                  )}
                   <a
                     href="https://linkedin.com/in/yihune-belay"
                     target="_blank"

@@ -32,6 +32,18 @@ class GitHubService {
     }
 
     /**
+     * Update active usernames dynamically from database or admin input
+     */
+    updateConfig({ username, org }) {
+        if (username !== undefined && username.trim()) {
+            this.config.username = username.trim();
+        }
+        if (org !== undefined) {
+            this.config.org = org.trim();
+        }
+    }
+
+    /**
      * Helper to perform conditional fetch with ETag support and smart cache management
      * @private
      */

@@ -220,9 +220,12 @@ async function handleWebhook(req, res) {
 async function getPublicSettings(req, res) {
     try {
         const SiteSettings = require('../models/SiteSettings');
+        const githubConfig = require('../config/githubConfig');
         let settings = await SiteSettings.findOne({ key: 'site_settings' });
         if (!settings) {
             settings = {
+                githubUsername: githubConfig.username,
+                githubOrg: githubConfig.org,
                 personalVisibility: true,
                 orgVisibility: true,
                 showHeroPulse: true,
@@ -231,6 +234,8 @@ async function getPublicSettings(req, res) {
             };
         }
         res.json({
+            githubUsername: settings.githubUsername || githubConfig.username,
+            githubOrg: settings.githubOrg || githubConfig.org,
             personalVisibility: settings.personalVisibility,
             orgVisibility: settings.orgVisibility,
             showHeroPulse: settings.showHeroPulse,
@@ -238,7 +243,10 @@ async function getPublicSettings(req, res) {
             showEngineeringShowcase: settings.showEngineeringShowcase
         });
     } catch (err) {
+        const githubConfig = require('../config/githubConfig');
         res.json({
+            githubUsername: githubConfig.username,
+            githubOrg: githubConfig.org,
             personalVisibility: true,
             orgVisibility: true,
             showHeroPulse: true,

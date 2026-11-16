@@ -25,6 +25,11 @@ export function HeroGitHubPulse() {
   const orgConnected = overview?.status?.organization === 'ok';
   const lastSync = overview?.last_synchronized_at;
 
+  const personalUsername = settings?.githubUsername || overview?.accounts?.personal?.login || "yihune1234";
+  const orgUsername = settings?.githubOrg || overview?.accounts?.organization?.login || "AriitiMarket";
+  const personalUrl = `https://github.com/${personalUsername}`;
+  const orgUrl = `https://github.com/${orgUsername}`;
+
   const activeEvent = activeTab === 'PERSONAL' ? (personalEvent || overview?.recent_activity?.[0]) : (orgEvent || overview?.recent_activity?.[0]);
   const isPersonal = activeTab === 'PERSONAL';
 
@@ -58,8 +63,8 @@ export function HeroGitHubPulse() {
     );
   }
 
-  const repoName = activeEvent?.repo?.name?.split('/')[1] || activeEvent?.repo?.name || (isPersonal ? 'myportfolio' : 'ariiti-platform');
-  const repoUrl = activeEvent?.repo?.html_url || (isPersonal ? 'https://github.com/yihune1234' : 'https://github.com/AriitiMarket');
+  const repoName = activeEvent?.repo?.name?.split('/')[1] || activeEvent?.repo?.name || (isPersonal ? 'myportfolio' : 'organization-repo');
+  const repoUrl = activeEvent?.repo?.html_url || (isPersonal ? personalUrl : orgUrl);
 
   return (
     <div className="inline-flex flex-wrap items-center gap-1.5 p-1 rounded-full bg-[var(--card-surface,#3A3836)] border border-white/[0.08] backdrop-blur-md shadow-lg shadow-black/40">
@@ -90,7 +95,7 @@ export function HeroGitHubPulse() {
           title="Organization Platform Identity"
         >
           <span className={`w-1.5 h-1.5 rounded-full ${orgConnected ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}`} />
-          <span>ARIITI ORG</span>
+          <span>{orgUsername}</span>
         </button>
       </div>
 

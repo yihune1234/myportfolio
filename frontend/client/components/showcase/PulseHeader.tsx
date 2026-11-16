@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { DualScope, GitHubHealthResponse } from '@/lib/githubApi';
+import { useGitHubSettings } from '@/hooks/useGitHubSettings';
 import { Sparkles, Terminal, Activity, ShieldCheck, RefreshCw, ExternalLink } from 'lucide-react';
 
 interface PulseHeaderProps {
@@ -20,6 +21,12 @@ export function PulseHeader({
   onRefresh,
   isRefreshing
 }: PulseHeaderProps) {
+  const { data: settings } = useGitHubSettings();
+  const personalLogin = health?.sources?.personal?.username || settings?.githubUsername || 'yihune1234';
+  const orgLogin = health?.sources?.organization?.name || settings?.githubOrg || 'AriitiMarket';
+  const personalUrl = `https://github.com/${personalLogin}`;
+  const orgUrl = `https://github.com/${orgLogin}`;
+
   const isHealthy =
     health?.status === 'healthy' ||
     health?.status === 'degraded' ||
@@ -56,27 +63,27 @@ export function PulseHeader({
 
           {/* Account Chips */}
           <a
-            href="https://github.com/yihune1234"
+            href={personalUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] hover:bg-[var(--primary-accent,#FFDD9B)]/20 transition-all"
-            title="Verified Personal Account: yihune1234"
+            title={`Verified Personal Account: ${personalLogin}`}
           >
             <ShieldCheck className="w-3.5 h-3.5 text-[var(--primary-accent,#FFDD9B)]" />
-            <span>@yihune1234</span>
+            <span>@{personalLogin}</span>
             <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
           </a>
 
           {orgStatus !== 'unconfigured' && (
             <a
-              href="https://github.com/AriitiMarket"
+              href={orgUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-300 hover:bg-amber-500/20 transition-all"
-              title="Verified Organization Account: AriitiMarket"
+              title={`Verified Organization Account: ${orgLogin}`}
             >
               <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-              <span>@AriitiMarket</span>
+              <span>@{orgLogin}</span>
               <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
             </a>
           )}

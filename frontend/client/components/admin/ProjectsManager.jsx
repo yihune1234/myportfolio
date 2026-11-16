@@ -975,7 +975,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                                 : "bg-white/[0.04] text-[#B7C0D1] hover:bg-white/[0.08]"
                             }`}
                           >
-                            Personal Lab (yihune1234)
+                            Personal Lab
                           </button>
                           <button
                             type="button"
@@ -986,7 +986,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                                 : "bg-white/[0.04] text-[#B7C0D1] hover:bg-white/[0.08]"
                             }`}
                           >
-                            Ariiti Tech Org (AriitiMarket)
+                            Organization Platform
                           </button>
                         </div>
                       </div>

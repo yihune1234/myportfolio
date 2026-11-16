@@ -22,6 +22,11 @@ export default function AboutSection() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const personalLogin = overview?.accounts?.personal?.login || "yihune1234";
+  const orgLogin = overview?.accounts?.organization?.login || "AriitiMarket";
+  const orgUrl = overview?.accounts?.organization?.html_url || `https://github.com/${orgLogin}`;
+  const orgName = overview?.accounts?.organization?.name || "Ariiti Tech";
+
   return (
     <section
       id="about"
@@ -128,22 +133,22 @@ export default function AboutSection() {
               </div>
 
               <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
-                Directing open platform repositories under <code className="text-amber-300 font-mono bg-amber-500/10 px-1 rounded">@AriitiMarket</code>.
+                Directing open platform repositories under <code className="text-amber-300 font-mono bg-amber-500/10 px-1 rounded">@{orgLogin}</code>.
                 Building modular digital commerce infrastructure, developer integration SDKs, and high-concurrency payment gateways.
               </p>
             </div>
 
             <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20 flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-mono text-[#64748B] block">CONTRIBUTOR ROLE</span>
+                <span className="text-[10px] font-mono text-[#A8A29E] block">CONTRIBUTOR ROLE</span>
                 <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">Platform Architecture Lead</span>
               </div>
               <a
-                href="https://github.com/AriitiMarket"
+                href={orgUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-colors"
-                title="View Organization on GitHub"
+                title={`View @${orgLogin} on GitHub`}
               >
                 <ExternalLink size={14} />
               </a>
@@ -233,7 +238,7 @@ export default function AboutSection() {
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-[var(--primary-accent,#FFDD9B)]/25">
                   <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[var(--primary-accent,#FFDD9B)] mb-1">
                     <CheckCircle2 size={13} />
-                    <span>Personal Lab (@yihune1234)</span>
+                    <span>Personal Lab (@{personalLogin})</span>
                   </div>
                   <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
                     100% individual authorship, autonomous prototyping, and dedicated research repositories.
@@ -243,7 +248,7 @@ export default function AboutSection() {
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20">
                   <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400 mb-1">
                     <CheckCircle2 size={13} />
-                    <span>Ariiti Tech (@AriitiMarket)</span>
+                    <span>{orgName} (@{orgLogin})</span>
                   </div>
                   <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
                     Multi-contributor platform engineering, shared pull request reviews, and ecosystem tooling.

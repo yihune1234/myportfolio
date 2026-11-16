@@ -48,6 +48,12 @@ export default function HeroSection({
     (e) => e.source_scope === "ORGANIZATION"
   );
 
+  const personalLogin = overview?.accounts?.personal?.login || health?.sources?.personal?.username || "yihune1234";
+  const personalUrl = overview?.accounts?.personal?.html_url || `https://github.com/${personalLogin}`;
+  const orgLogin = overview?.accounts?.organization?.login || health?.sources?.organization?.name || "AriitiMarket";
+  const orgUrl = overview?.accounts?.organization?.html_url || `https://github.com/${orgLogin}`;
+  const orgName = overview?.accounts?.organization?.name || "Ariiti Tech Org";
+
   const formatRelativeTime = (iso?: string) => {
     if (!iso) return "recently";
     const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
@@ -139,14 +145,14 @@ export default function HeroSection({
               {/* Direct Profile Badges */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
                 <a
-                  href="https://github.com/yihune1234"
+                  href={personalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#403C38)] hover:bg-[var(--card-elevated,#4A4642)] border border-white/[0.08] hover:border-[var(--primary-accent,#FFDD9B)]/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
-                  title="Personal GitHub Profile"
+                  title={`Personal GitHub Profile: @${personalLogin}`}
                 >
                   <Github size={13} className="text-[var(--primary-accent,#FFDD9B)]" />
-                  <span>@yihune1234</span>
+                  <span>@{personalLogin}</span>
                 </a>
 
                 <a
@@ -161,14 +167,14 @@ export default function HeroSection({
                 </a>
 
                 <a
-                  href="https://github.com/AriitiMarket"
+                  href={orgUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#403C38)] hover:bg-[var(--card-elevated,#4A4642)] border border-white/[0.08] hover:border-amber-500/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
-                  title="Ariiti Tech Organization"
+                  title={`Organization: @${orgLogin}`}
                 >
                   <Building2 size={13} className="text-amber-400" />
-                  <span>@AriitiMarket</span>
+                  <span>@{orgLogin}</span>
                 </a>
               </div>
             </motion.div>
@@ -238,7 +244,7 @@ export default function HeroSection({
                       <div className="flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
                         <span className="text-[10px] font-mono font-bold text-[var(--primary-accent,#FFDD9B)] uppercase tracking-wider">
-                          Personal Lab (@yihune1234)
+                          Personal Lab (@{personalLogin})
                         </span>
                       </div>
                       <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]">
@@ -262,7 +268,7 @@ export default function HeroSection({
                       <div className="flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                         <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider">
-                          Ariiti Tech Org (@AriitiMarket)
+                          {orgName} (@{orgLogin})
                         </span>
                       </div>
                       <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]">

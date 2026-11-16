@@ -76,7 +76,23 @@ app.use((req, res) => {
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ MongoDB connected successfully'))
+    .then(async () => {
+        console.log('✅ MongoDB connected successfully');
+        try {
+            const SiteSettings = require('./models/SiteSettings');
+            const { githubService } = require('./services/github/githubService');
+            const settings = await SiteSettings.findOne({ key: 'site_settings' });
+            if (settings) {
+                githubService.updateConfig({
+                    username: settings.githubUsername,
+                    org: settings.githubOrg
+                });
+                console.log(`📡 GitHub accounts initialized: User=${settings.githubUsername}, Org=${settings.githubOrg}`);
+            }
+        } catch (initErr) {
+            console.error('Warning initializing GitHub config from SiteSettings:', initErr.message);
+        }
+    })
     .catch(err => {
         console.error('❌ MongoDB connection error:', err);
         process.exit(1);

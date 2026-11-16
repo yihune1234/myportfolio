@@ -15,11 +15,13 @@ import {
   Sparkles,
   FileText,
   Palette,
+  Github,
 } from "lucide-react";
 import { ProjectsManager } from "./ProjectsManager";
 import { MessagesManager } from "./MessagesManager";
 import { AdminSettings } from "./AdminSettings";
 import { ThemeSelector } from "./ThemeSelector";
+import { GitHubAccountManager } from "./GitHubAccountManager";
 import ProjectSectionsManager from "./ProjectSectionsManager";
 import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 
@@ -56,6 +58,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
     { id: "projects", label: "Projects", icon: FolderKanban },
     { id: "sections", label: "Project Sections", icon: FileText },
     { id: "messages", label: "Messages", icon: MessageSquare },
+    { id: "github", label: "GitHub Accounts", icon: Github },
     { id: "theme", label: "Theme Selector", icon: Palette },
     { id: "settings", label: "Settings", icon: Settings },
   ];
@@ -214,6 +217,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
                 )}
                 {activeTab === "sections" && <ProjectSectionsManager />}
                 {activeTab === "messages" && <MessagesManager />}
+                {activeTab === "github" && <GitHubAccountManager />}
                 {activeTab === "theme" && <ThemeSelector />}
                 {activeTab === "settings" && <AdminSettings />}
               </motion.div>

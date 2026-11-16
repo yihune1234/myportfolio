@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
+import { useGitHubSettings } from "@/hooks/useGitHubSettings";
 import { Briefcase, Building2, ExternalLink, Calendar, MapPin, Tag } from "lucide-react";
 
 export default function ExperienceSection() {
+  const { data: settings } = useGitHubSettings();
+  const orgLogin = settings?.githubOrg || "AriitiMarket";
+  const orgUrl = `https://github.com/${orgLogin}`;
+
   const personalExperiences = [
     {
       position: "Software Engineering Intern",
@@ -41,10 +46,10 @@ export default function ExperienceSection() {
 
   const organizationExperience = {
     role: "Platform Architecture & Engineering Contributor",
-    organization: "Ariiti Tech Ecosystem (@AriitiMarket)",
+    organization: `Ariiti Tech Ecosystem (@${orgLogin})`,
     period: "2024 — Present",
     scope: "Organization Development Activities",
-    url: "https://github.com/AriitiMarket",
+    url: orgUrl,
     gradient: "from-amber-400 to-amber-500",
     activities: [
       "Modular repository structure and distributed API architecture design across platform repos",

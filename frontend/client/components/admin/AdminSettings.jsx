@@ -23,6 +23,7 @@ import {
 import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 import { useToast } from "../../hooks/use-toast";
 import { ThemeSelector } from "./ThemeSelector";
+import { GitHubAccountManager } from "./GitHubAccountManager";
 
 export function AdminSettings() {
   const [admin, setAdmin] = useState(null);
@@ -322,43 +323,19 @@ export function AdminSettings() {
         {/* Brand Theme Selector */}
         <ThemeSelector />
 
-        {/* GitHub Integration Settings */}
+        {/* Dedicated GitHub Account Management */}
+        <GitHubAccountManager />
+
+        {/* GitHub Showcase & Feature Visibility */}
         <FormSection
-          title="GitHub Integration"
-          desc="Configure dual-identity accounts, public visibility flags, and automatic telemetry synchronization"
+          title="GitHub Feature Flags & Showcase Integration"
+          desc="Control public visibility flags and live showcase components"
           icon={Github}
         >
-          <form onSubmit={handleUpdateGithubSettings} className="space-y-6">
-            {/* Account Identifiers */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <InputField
-                label="Personal GitHub Account"
-                icon={Github}
-                placeholder="yihune1234"
-                value={githubSettings.githubUsername}
-                onChange={(e) =>
-                  setGithubSettings({
-                    ...githubSettings,
-                    githubUsername: e.target.value,
-                  })
-                }
-                required
-              />
-              <InputField
-                label="Organization Account"
-                icon={Github}
-                placeholder="AriitiMarket"
-                value={githubSettings.githubOrg}
-                onChange={(e) =>
-                  setGithubSettings({
-                    ...githubSettings,
-                    githubOrg: e.target.value,
-                  })
-                }
-                required
-              />
-            </div>
-
+          <form
+            onSubmit={handleUpdateGithubSettings}
+            className="space-y-4 sm:space-y-6"
+          >
             {/* Visibility Controls */}
             <div className="space-y-3 p-4 bg-[#07090E] rounded-xl border border-white/[0.06]">
               <h4 className="text-xs font-bold text-[#F5F7FA] uppercase tracking-wider mb-2">

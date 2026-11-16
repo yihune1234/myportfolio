@@ -200,6 +200,84 @@ router.get('/github-settings', auth, async (req, res) => {
     }
 });
 
+// Validate GitHub username (admin only)
+router.post('/github-validate', auth, async (req, res) => {
+    try {
+        const { username, expectedType } = req.body; // expectedType: 'User' | 'Organization'
+        if (!username || typeof username !== 'string' || !username.trim()) {
+            return res.status(400).json({ success: false, valid: false, message: 'Username is required' });
+        }
+
+        const trimmed = username.trim();
+        const { isValidGitHubHandle } = require('../middleware/githubValidation');
+        if (!isValidGitHubHandle(trimmed)) {
+            return res.status(400).json({
+                success: false,
+                valid: false,
+                message: 'Invalid GitHub handle format. Must be 1-39 alphanumeric characters or single hyphens.'
+            });
+        }
+
+        // Query GitHub API
+        let accountData;
+        try {
+            const apiRes = await githubService.client.getUser(trimmed);
+            accountData = apiRes.data;
+        } catch (err) {
+            if (err.statusCode === 404 || err.name === 'GitHubNotFoundError') {
+                return res.status(404).json({
+                    success: false,
+                    valid: false,
+                    message: `GitHub account "${trimmed}" was not found.`
+                });
+            }
+            if (err.statusCode === 403 || err.name === 'GitHubRateLimitError') {
+                return res.status(403).json({
+                    success: false,
+                    valid: false,
+                    message: 'GitHub API rate limit exceeded. Please try again later.'
+                });
+            }
+            return res.status(502).json({
+                success: false,
+                valid: false,
+                message: `Failed to connect to GitHub API: ${err.message}`
+            });
+        }
+
+        const actualType = accountData.type; // 'User' or 'Organization'
+        if (expectedType && expectedType !== actualType) {
+            return res.status(400).json({
+                success: false,
+                valid: false,
+                actualType,
+                expectedType,
+                message: expectedType === 'Organization'
+                    ? `Account "${trimmed}" is a personal User account, not an Organization.`
+                    : `Account "${trimmed}" is an Organization, not a personal User account.`
+            });
+        }
+
+        res.json({
+            success: true,
+            valid: true,
+            account: {
+                login: accountData.login,
+                name: accountData.name || accountData.login,
+                avatar_url: accountData.avatar_url,
+                html_url: accountData.html_url,
+                type: accountData.type,
+                public_repos: accountData.public_repos,
+                bio: accountData.bio || '',
+                location: accountData.location || ''
+            }
+        });
+    } catch (error) {
+        console.error('Error validating GitHub account:', error);
+        res.status(500).json({ success: false, message: 'Server validation error', error: error.message });
+    }
+});
+
 // Update GitHub settings (admin only)
 router.put('/github-settings', auth, async (req, res) => {
     try {
@@ -208,6 +286,10 @@ router.put('/github-settings', auth, async (req, res) => {
             githubOrg,
             personalVisibility,
             orgVisibility,
+            personalEnabled,
+            orgEnabled,
+            personalValidatedUrl,
+            orgValidatedUrl,
             showHeroPulse,
             showSkillsIntegration,
             showEngineeringShowcase,
@@ -221,10 +303,29 @@ router.put('/github-settings', auth, async (req, res) => {
             settings = new SiteSettings({ key: 'site_settings' });
         }
 
-        if (githubUsername !== undefined) settings.githubUsername = githubUsername.trim();
-        if (githubOrg !== undefined) settings.githubOrg = githubOrg.trim();
+        let usernameChanged = false;
+        let orgChanged = false;
+
+        if (githubUsername !== undefined && githubUsername.trim() !== settings.githubUsername) {
+            settings.githubUsername = githubUsername.trim();
+            settings.personalValidatedUrl = personalValidatedUrl || `https://github.com/${githubUsername.trim()}`;
+            usernameChanged = true;
+        } else if (personalValidatedUrl !== undefined) {
+            settings.personalValidatedUrl = personalValidatedUrl;
+        }
+
+        if (githubOrg !== undefined && githubOrg.trim() !== settings.githubOrg) {
+            settings.githubOrg = githubOrg.trim();
+            settings.orgValidatedUrl = orgValidatedUrl || `https://github.com/${githubOrg.trim()}`;
+            orgChanged = true;
+        } else if (orgValidatedUrl !== undefined) {
+            settings.orgValidatedUrl = orgValidatedUrl;
+        }
+
         if (personalVisibility !== undefined) settings.personalVisibility = Boolean(personalVisibility);
         if (orgVisibility !== undefined) settings.orgVisibility = Boolean(orgVisibility);
+        if (personalEnabled !== undefined) settings.personalEnabled = Boolean(personalEnabled);
+        if (orgEnabled !== undefined) settings.orgEnabled = Boolean(orgEnabled);
         if (showHeroPulse !== undefined) settings.showHeroPulse = Boolean(showHeroPulse);
         if (showSkillsIntegration !== undefined) settings.showSkillsIntegration = Boolean(showSkillsIntegration);
         if (showEngineeringShowcase !== undefined) settings.showEngineeringShowcase = Boolean(showEngineeringShowcase);
@@ -234,7 +335,25 @@ router.put('/github-settings', auth, async (req, res) => {
         settings.updatedAt = new Date();
 
         await settings.save();
-        githubService.cache.clear();
+
+        if (usernameChanged || orgChanged) {
+            githubService.updateConfig({
+                username: settings.githubUsername,
+                org: settings.githubOrg
+            });
+            if (usernameChanged) {
+                githubService.cache.invalidateScope('PERSONAL');
+            }
+            if (orgChanged) {
+                githubService.cache.invalidateScope('ORGANIZATION');
+            }
+            githubService.cache.delPattern('github:overview:*');
+            githubService.cache.delPattern('github:languages:*');
+
+            // Trigger sync in background to hydrate new account data
+            githubScheduler.runOnce(usernameChanged && orgChanged ? 'account_changes' : (usernameChanged ? 'username_change' : 'org_change'))
+                .catch(e => console.error('Auto sync error following account change:', e));
+        }
 
         res.json({ success: true, message: 'GitHub settings saved successfully', settings });
     } catch (error) {

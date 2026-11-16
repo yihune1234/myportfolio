@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useGitHubSettings } from "@/hooks/useGitHubSettings";
 import {
   Building2,
   ExternalLink,
@@ -17,6 +18,10 @@ import {
 } from "lucide-react";
 
 export default function PlatformShowcase() {
+  const { data: settings } = useGitHubSettings();
+  const orgLogin = settings?.githubOrg || "AriitiMarket";
+  const orgUrl = `https://github.com/${orgLogin}`;
+
   const featuredCapabilities = [
     "Multi-tenant schema isolation with tenant-scoped MongoDB & PostgreSQL clusters",
     "Sub-50ms API response latency via Redis cache indexing & ETag validations",
@@ -49,7 +54,7 @@ export default function PlatformShowcase() {
         "Biometric merchant authentication and hardware barcode integration",
       ],
       tech: ["React Native", "Expo SDK", "SQLite", "WatermelonDB", "JWT"],
-      url: "https://github.com/AriitiMarket",
+      url: orgUrl,
     },
     {
       title: "Distributed Microservices & Event Gateway",
@@ -64,7 +69,7 @@ export default function PlatformShowcase() {
         "Integrated telemetry and centralized error propagation logging",
       ],
       tech: ["Node.js", "Redis", "Nginx", "Docker Compose", "Prometheus"],
-      url: "https://github.com/AriitiMarket",
+      url: orgUrl,
     },
   ];
 
@@ -160,7 +165,7 @@ export default function PlatformShowcase() {
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/[0.06]">
                 <a
-                  href="https://github.com/AriitiMarket"
+                  href={orgUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D] rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2 shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/20 active:scale-95"

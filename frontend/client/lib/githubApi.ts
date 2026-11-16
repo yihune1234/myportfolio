@@ -241,6 +241,8 @@ export async function fetchGitHubHealth(): Promise<GitHubHealthResponse> {
 }
 
 export interface GitHubPublicSettings {
+  githubUsername?: string;
+  githubOrg?: string;
   personalVisibility: boolean;
   orgVisibility: boolean;
   showHeroPulse: boolean;

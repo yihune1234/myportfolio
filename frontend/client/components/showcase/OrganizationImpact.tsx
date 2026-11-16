@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { GitHubProfile, GitHubRepository, GitHubActivityEvent } from '@/lib/githubApi';
+import { useGitHubSettings } from '@/hooks/useGitHubSettings';
 import { Building2, Star, GitFork, ExternalLink, ShieldCheck, Activity } from 'lucide-react';
 
 interface OrganizationImpactProps {
@@ -16,6 +17,10 @@ export function OrganizationImpact({
   orgActivity,
   isLoading
 }: OrganizationImpactProps) {
+  const { data: settings } = useGitHubSettings();
+  const orgNameFallback = settings?.githubOrg || 'Organization';
+  const orgUrlFallback = settings?.githubOrg ? `https://github.com/${settings.githubOrg}` : 'https://github.com';
+
   const totalStars = React.useMemo(() => {
     return orgRepos.reduce((acc, r) => acc + (r.stars || 0), 0);
   }, [orgRepos]);
@@ -66,18 +71,18 @@ export function OrganizationImpact({
             <div>
               <div className="flex items-center gap-1.5">
                 <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary,#FFFFFF)] tracking-tight">
-                  {orgProfile?.name || orgProfile?.login || 'AriitiMarket'}
+                  {orgProfile?.name || orgProfile?.login || orgNameFallback}
                 </h3>
                 <ShieldCheck className="w-4 h-4 text-amber-400" />
               </div>
               <p className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">
-                @{orgProfile?.login || 'AriitiMarket'} &bull; Verified Organization
+                @{orgProfile?.login || orgNameFallback} &bull; Verified Organization
               </p>
             </div>
           </div>
 
           <a
-            href={orgProfile?.html_url || 'https://github.com/AriitiMarket'}
+            href={orgProfile?.html_url || orgUrlFallback}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-xs font-mono text-amber-300 transition-all"
