@@ -85,10 +85,13 @@ class GitHubClient {
             });
         }
 
+        const cleanToken = this.token ? String(this.token).replace(/[\r\n\t\s]/g, '') : '';
+        const validToken = cleanToken.startsWith('eyJ') ? '' : cleanToken;
+
         const headers = {
             'Accept': 'application/vnd.github.v3+json',
             'User-Agent': this.userAgent,
-            ...(this.token ? { 'Authorization': `Bearer ${this.token}` } : {}),
+            ...(validToken ? { 'Authorization': `Bearer ${validToken}` } : {}),
             ...(options.etag ? { 'If-None-Match': options.etag } : {}),
             ...options.headers
         };

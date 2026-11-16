@@ -3,11 +3,17 @@
  * Centralized settings for GitHub API client, caching, and account identifiers.
  */
 
+const rawToken = (process.env.GITHUB_TOKEN || '').replace(/[\r\n\t\s]/g, '');
+if (rawToken.startsWith('eyJ')) {
+    console.warn('⚠️  [GitHubConfig] Warning: GITHUB_TOKEN starts with "eyJ", which is a JWT token, not a GitHub Personal Access Token (PAT). GitHub requires a token starting with "ghp_" or "github_pat_". Ignoring invalid JWT token to prevent GitHub authentication errors.');
+}
+
 const githubConfig = {
     // Accounts
-    username: (process.env.GITHUB_USERNAME || 'yihune1234').trim(),
-    org: (process.env.GITHUB_ORG || 'AriitiMarket').trim(),
-    token: (process.env.GITHUB_TOKEN || '').trim(),
+    username: (process.env.GITHUB_USERNAME || 'yihune1234').replace(/[\r\n\t\s]/g, ''),
+    org: (process.env.GITHUB_ORG || 'AriitiMarket').replace(/[\r\n\t\s]/g, ''),
+    // Only use token if it is not an accidentally pasted JWT token
+    token: rawToken.startsWith('eyJ') ? '' : rawToken,
 
     // API Base URL
     apiBaseUrl: (process.env.GITHUB_API_BASE_URL || 'https://api.github.com').replace(/\/$/, ''),
