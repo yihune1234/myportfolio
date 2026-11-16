@@ -37,6 +37,9 @@ export const API_ENDPOINTS = {
   MESSAGES_MARK_READ: (id: string) => `${API_URL}/api/messages/${id}/read`,
   MESSAGES_DELETE: (id: string) => `${API_URL}/api/messages/${id}`,
   MESSAGES_REPLY: (id: string) => `${API_URL}/api/messages/${id}/reply`,
+
+  // AI Assistant
+  AI_CHAT: `${API_URL}/api/ai/chat`,
 };
 
 /**
