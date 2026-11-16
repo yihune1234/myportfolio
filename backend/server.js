@@ -52,6 +52,7 @@ app.use('/api/projects', require('./routes/projects'));
 app.use('/api/project-sections', require('./routes/projectSections'));
 app.use('/api/section-media', require('./routes/sectionMedia'));
 app.use('/api/messages', require('./routes/messages'));
+app.use('/api/github', require('./routes/githubRoutes'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
