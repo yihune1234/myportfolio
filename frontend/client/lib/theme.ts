@@ -28,8 +28,8 @@ export const DEFAULT_THEME: ThemeConfig = {
   primaryText: "#FFFFFF",     // White
   secondaryText: "#FFF1D8",   // Warm Ivory
   secondaryAccent: "#FFDD9B", // Golden Cream
-  cardSurface: "#3A3836",     // Harmonious Dark Charcoal Card
-  cardElevated: "#444240",    // Elevated Dark Charcoal Surface
+  cardSurface: "#403C38",     // Card Surface
+  cardElevated: "#4A4642",    // Elevated Charcoal Surface
   border: "rgba(255, 221, 155, 0.18)",
 };
 

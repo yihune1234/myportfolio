@@ -42,14 +42,14 @@ export function PulseHeader({
             <span className="relative flex h-2 w-2">
               {isHealthy ? (
                 <>
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary-accent,#FFDD9B)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary-accent,#FFDD9B)]"></span>
                 </>
               ) : (
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
               )}
             </span>
-            <span className={isHealthy ? 'text-emerald-400 font-semibold' : 'text-amber-400 font-semibold'}>
+            <span className={isHealthy ? 'text-[var(--primary-accent,#FFDD9B)] font-semibold' : 'text-amber-400 font-semibold'}>
               {isHealthy ? 'GITHUB PULSE ACTIVE' : 'CACHED / RECONNECTING'}
             </span>
           </div>
@@ -59,10 +59,10 @@ export function PulseHeader({
             href="https://github.com/yihune1234"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-300 hover:bg-emerald-500/20 transition-all"
+            className="group flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] hover:bg-[var(--primary-accent,#FFDD9B)]/20 transition-all"
             title="Verified Personal Account: yihune1234"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[var(--primary-accent,#FFDD9B)]" />
             <span>@yihune1234</span>
             <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
           </a>
@@ -104,12 +104,12 @@ export function PulseHeader({
       {/* Main Section Heading */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-emerald-400 mb-2 font-semibold">
+          <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[var(--primary-accent,#FFDD9B)] mb-2 font-semibold">
             <Terminal className="w-3.5 h-3.5" />
             Verified GitHub Integration
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight">
-            Live Engineering & <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Innovation</span>
+            Live Engineering & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8]">Innovation</span>
           </h2>
           <p className="text-sm sm:text-base text-[var(--text-secondary,#FFF1D8)] mt-2 max-w-2xl leading-relaxed">
             Real-time public GitHub activity, verifiable codebase metrics, language distributions,
@@ -118,7 +118,7 @@ export function PulseHeader({
         </div>
 
         {/* Dual Identity Switcher Pill */}
-        <div className="inline-flex p-1.5 rounded-2xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] shadow-inner self-start md:self-auto">
+        <div className="inline-flex p-1.5 rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-inner self-start md:self-auto">
           {scopes.map((s) => {
             const isActive = scope === s.id;
             return (
@@ -127,7 +127,7 @@ export function PulseHeader({
                 onClick={() => onScopeChange(s.id)}
                 className={`relative px-4 py-2 rounded-xl text-xs font-mono font-bold tracking-wider transition-all duration-300 ${
                   isActive
-                    ? 'text-[var(--bg-base,#302E2D)] shadow-md'
+                    ? 'text-[#302E2D] shadow-md'
                     : 'text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.03]'
                 }`}
               >
@@ -136,10 +136,10 @@ export function PulseHeader({
                     layoutId="scopeHighlight"
                     className={`absolute inset-0 rounded-xl ${
                       s.id === 'PERSONAL'
-                        ? 'bg-gradient-to-r from-emerald-400 to-teal-400 shadow-[0_0_20px_rgba(52,211,153,0.35)]'
+                        ? 'bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-[0_0_20px_rgba(255,221,155,0.35)]'
                         : s.id === 'ORGANIZATION'
                         ? 'bg-gradient-to-r from-amber-400 to-amber-500 shadow-[0_0_20px_rgba(251,191,36,0.35)]'
-                        : 'bg-gradient-to-r from-emerald-400 via-teal-400 to-amber-400 shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                        : 'bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] via-[#FFE8B8] to-amber-400 shadow-[0_0_20px_rgba(255,221,155,0.35)]'
                     }`}
                     transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                   />

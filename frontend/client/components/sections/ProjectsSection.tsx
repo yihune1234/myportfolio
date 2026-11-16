@@ -78,7 +78,7 @@ export default function ProjectsSection() {
         {/* Section Header & Filter */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
+            <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold block mb-2">
               Production Portfolio
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
@@ -90,12 +90,12 @@ export default function ProjectsSection() {
           </div>
 
           {/* Scope Filters */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] backdrop-blur-md self-start md:self-auto shadow-inner">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] backdrop-blur-md self-start md:self-auto shadow-inner">
             <button
               onClick={() => setSelectedScope("ALL")}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedScope === "ALL"
-                  ? "bg-white/[0.08] text-[var(--text-primary,#FFFFFF)] border border-white/[0.1] shadow-sm"
+                  ? "bg-white/[0.1] text-[var(--text-primary,#FFFFFF)] border border-white/[0.15] shadow-sm"
                   : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
               }`}
             >
@@ -105,11 +105,11 @@ export default function ProjectsSection() {
               onClick={() => setSelectedScope("PERSONAL")}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedScope === "PERSONAL"
-                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
+                  ? "bg-[var(--primary-accent,#FFDD9B)]/20 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/40 shadow-sm"
                   : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
               }`}
             >
-              <User size={13} className="text-emerald-400" />
+              <User size={13} className="text-[var(--primary-accent,#FFDD9B)]" />
               <span>Personal</span>
             </button>
             <button
@@ -181,7 +181,7 @@ export default function ProjectsSection() {
                   onMouseEnter={() => setHoveredId(project._id)}
                   onMouseLeave={() => setHoveredId(null)}
                   className={`card-slate rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 ${
-                    isOrg ? "hover:border-amber-500/35" : "hover:border-emerald-500/35"
+                    isOrg ? "hover:border-amber-500/35" : "hover:border-[var(--primary-accent,#FFDD9B)]/35"
                   }`}
                 >
                   {/* Screenshot Carousel Frame */}
@@ -197,7 +197,7 @@ export default function ProjectsSection() {
 
                     {/* Featured / Pinned Badge */}
                     {project.pinned && (
-                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1 px-2.5 py-1 bg-emerald-500 text-[10px] font-mono font-bold text-[var(--bg-base,#302E2D)] uppercase tracking-wider rounded-md shadow-lg shadow-emerald-500/30">
+                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1 px-2.5 py-1 bg-[var(--primary-accent,#FFDD9B)] text-[10px] font-mono font-bold text-[#302E2D] uppercase tracking-wider rounded-md shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/30">
                         <Pin size={10} className="fill-current" />
                         Featured
                       </div>
@@ -209,7 +209,7 @@ export default function ProjectsSection() {
                         className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded backdrop-blur-md uppercase tracking-wider ${
                           isOrg
                             ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                            : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                            : "bg-[var(--primary-accent,#FFDD9B)]/20 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/40"
                         }`}
                       >
                         {isOrg ? "Ariiti Org" : "Personal Lab"}
@@ -219,7 +219,7 @@ export default function ProjectsSection() {
 
                   {/* Card Body */}
                   <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary,#FFFFFF)] group-hover:text-emerald-300 transition-colors leading-snug mb-2 font-heading">
+                    <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary,#FFFFFF)] group-hover:text-[var(--primary-accent,#FFDD9B)] transition-colors leading-snug mb-2 font-heading">
                       {project.title}
                     </h3>
 
@@ -238,7 +238,7 @@ export default function ProjectsSection() {
                         </span>
                       ))}
                       {project.technologies?.length > 3 && (
-                        <span className="text-[11px] font-mono px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded text-emerald-400 font-medium">
+                        <span className="text-[11px] font-mono px-2 py-0.5 bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 rounded text-[var(--primary-accent,#FFDD9B)] font-medium">
                           +{project.technologies.length - 3}
                         </span>
                       )}
@@ -250,7 +250,7 @@ export default function ProjectsSection() {
                         <div className="flex items-center gap-3">
                           {linkedRepo.primary_language && (
                             <span className="flex items-center gap-1.5 text-[var(--text-primary,#FFFFFF)] font-medium">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
                               {linkedRepo.primary_language}
                             </span>
                           )}

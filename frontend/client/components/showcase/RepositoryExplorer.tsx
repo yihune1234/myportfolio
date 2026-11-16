@@ -132,8 +132,8 @@ export function RepositoryExplorer({
             return (
               <div
                 key={`${repo.source_scope}-${repo.id}`}
-                className={`group relative p-5 rounded-2xl bg-[var(--card-surface,#3A3836)] hover:bg-[var(--card-elevated,#444240)] border border-white/[0.08] transition-all duration-300 flex flex-col justify-between ${
-                  isOrg ? 'hover:border-amber-500/40' : 'hover:border-emerald-500/40'
+                className={`group relative p-5 rounded-2xl bg-[var(--card-surface,#403C38)] hover:bg-[var(--card-elevated,#4A4642)] border border-white/[0.08] transition-all duration-300 flex flex-col justify-between ${
+                  isOrg ? 'hover:border-amber-500/40' : 'hover:border-[var(--primary-accent,#FFDD9B)]/40'
                 }`}
               >
                 <div>
@@ -143,7 +143,7 @@ export function RepositoryExplorer({
                       className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold border ${
                         isOrg
                           ? 'bg-amber-500/10 border-amber-500/20 text-amber-300'
-                          : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
+                          : 'bg-[var(--primary-accent,#FFDD9B)]/10 border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)]'
                       }`}
                     >
                       {isOrg ? <Building2 className="w-3 h-3" /> : <User className="w-3 h-3" />}
@@ -155,7 +155,7 @@ export function RepositoryExplorer({
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`p-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.08] text-[var(--text-secondary,#FFF1D8)] transition-colors ${
-                        isOrg ? 'hover:text-amber-400' : 'hover:text-emerald-400'
+                        isOrg ? 'hover:text-amber-400' : 'hover:text-[var(--primary-accent,#FFDD9B)]'
                       }`}
                       title={`Open ${repo.full_name} on GitHub`}
                     >
@@ -165,7 +165,7 @@ export function RepositoryExplorer({
 
                   {/* Repository Name */}
                   <h4 className={`text-base font-bold text-[var(--text-primary,#FFFFFF)] transition-colors leading-snug mb-1.5 truncate ${
-                    isOrg ? 'group-hover:text-amber-400' : 'group-hover:text-emerald-400'
+                    isOrg ? 'group-hover:text-amber-400' : 'group-hover:text-[var(--primary-accent,#FFDD9B)]'
                   }`}>
                     {repo.name}
                   </h4>

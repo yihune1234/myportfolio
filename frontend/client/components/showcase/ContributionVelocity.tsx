@@ -47,8 +47,8 @@ export function ContributionVelocity({ events, isLoading, scope }: ContributionV
       label: 'Push Events',
       value: counts.pushes,
       icon: GitCommit,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-500/10 border-emerald-500/20',
+      color: 'text-[var(--primary-accent,#FFDD9B)]',
+      bg: 'bg-[var(--primary-accent,#FFDD9B)]/10 border-[var(--primary-accent,#FFDD9B)]/25',
     },
     {
       label: 'New Repos / Branches',

@@ -42,7 +42,7 @@ export default function SkillsSection() {
       id: "backend",
       title: "Backend Engineering",
       icon: Server,
-      accent: "text-emerald-400 border-emerald-500/30",
+      accent: "text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/30",
       scope: "ALL",
       skills: ["Node.js", "Express", "Django", "PHP", "REST APIs", "Microservices", "Event-Driven Arch"],
       telemetryNote: "Core API runtime across 35+ repositories",
@@ -51,7 +51,7 @@ export default function SkillsSection() {
       id: "frontend",
       title: "Frontend Engineering",
       icon: Globe,
-      accent: "text-emerald-400 border-emerald-500/30",
+      accent: "text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/30",
       scope: "ALL",
       skills: ["React", "TypeScript", "Next.js", "Tailwind CSS", "TanStack Query", "Vite", "Framer Motion"],
       telemetryNote: "Primary client stack for SPAs & dashboards",
@@ -69,7 +69,7 @@ export default function SkillsSection() {
       id: "mobile",
       title: "Mobile & Offline-First",
       icon: Smartphone,
-      accent: "text-sky-400 border-sky-500/30",
+      accent: "text-amber-300 border-amber-500/30",
       scope: "PERSONAL",
       skills: ["React Native", "Expo", "Capacitor", "WatermelonDB", "Background Sync", "Mobile Push"],
       telemetryNote: "Personal research in disconnected mobile sync",
@@ -78,7 +78,7 @@ export default function SkillsSection() {
       id: "security",
       title: "Cybersecurity & Systems",
       icon: Shield,
-      accent: "text-emerald-400 border-emerald-500/30",
+      accent: "text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/30",
       scope: "PERSONAL",
       skills: ["JWT & Bcrypt", "RBAC", "Network Defense", "Input Sanitization", "HTTPS/TLS", "OWASP Standards"],
       telemetryNote: "Applied defense & encryption patterns",
@@ -96,7 +96,7 @@ export default function SkillsSection() {
       id: "devops",
       title: "DevOps & Infrastructure",
       icon: Cloud,
-      accent: "text-teal-400 border-teal-500/30",
+      accent: "text-[#FFF1D8] border-white/20",
       scope: "ALL",
       skills: ["Docker", "Linux Administration", "CI/CD Workflows", "Nginx", "Git Version Control", "Monitoring"],
       telemetryNote: "Containerized deployment pipelines",
@@ -124,7 +124,7 @@ export default function SkillsSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
+            <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold block mb-2">
               Architectural Domain Stack
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
@@ -136,12 +136,12 @@ export default function SkillsSection() {
           </div>
 
           {/* Scope Filter Switcher */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] backdrop-blur-md self-start md:self-auto shadow-inner">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] backdrop-blur-md self-start md:self-auto shadow-inner">
             <button
               onClick={() => setSelectedScope("ALL")}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedScope === "ALL"
-                  ? "bg-white/[0.08] text-[var(--text-primary,#FFFFFF)] border border-white/[0.1] shadow-sm"
+                  ? "bg-white/[0.1] text-[var(--text-primary,#FFFFFF)] border border-white/[0.15] shadow-sm"
                   : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
               }`}
             >
@@ -151,11 +151,11 @@ export default function SkillsSection() {
               onClick={() => setSelectedScope("PERSONAL")}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedScope === "PERSONAL"
-                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
+                  ? "bg-[var(--primary-accent,#FFDD9B)]/20 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/40 shadow-sm"
                   : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
               }`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
               <span>Personal</span>
             </button>
             <button
@@ -232,7 +232,7 @@ export default function SkillsSection() {
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-emerald-400">
+                <div className="p-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-[var(--primary-accent,#FFDD9B)]">
                   <Binary size={18} />
                 </div>
                 <div>
@@ -247,7 +247,7 @@ export default function SkillsSection() {
 
               <div className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)] self-start sm:self-auto">
                 Total Volume:{" "}
-                <span className="text-emerald-400 font-bold">
+                <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">
                   {langLoading ? "Analyzing..." : langData?.formatted_total_bytes || "25.4 MB"}
                 </span>
               </div>

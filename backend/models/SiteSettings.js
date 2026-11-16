@@ -19,8 +19,8 @@ const siteSettingsSchema = new mongoose.Schema({
         primaryText: { type: String, default: '#FFFFFF' },
         secondaryText: { type: String, default: '#FFF1D8' },
         secondaryAccent: { type: String, default: '#FFDD9B' },
-        cardSurface: { type: String, default: '#3A3836' },
-        cardElevated: { type: String, default: '#444240' },
+        cardSurface: { type: String, default: '#403C38' },
+        cardElevated: { type: String, default: '#4A4642' },
         border: { type: String, default: 'rgba(255, 221, 155, 0.18)' },
         updatedAt: { type: Date, default: Date.now }
     },

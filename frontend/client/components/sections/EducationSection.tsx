@@ -47,13 +47,13 @@ export default function EducationSection() {
           viewport={{ once: true }}
           className="mb-14 text-center lg:text-left"
         >
-          <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
+          <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold block mb-2">
             Academic Engineering Foundation
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
             Education & Theoretical Rigor
           </h2>
-          <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-2 font-body">
+          <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-2 font-body mx-auto lg:mx-0">
             Computer science principles, software architecture methodologies, and systems engineering education.
           </p>
         </motion.div>
@@ -64,12 +64,12 @@ export default function EducationSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-2 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between"
+            className="lg:col-span-2 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-white/[0.06]"
           >
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block mb-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block mb-1">
                     Undergraduate Degree Program
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-black text-[var(--text-primary,#FFFFFF)] leading-tight font-heading">
@@ -79,22 +79,22 @@ export default function EducationSection() {
                     Haramaya University &bull; College of Computing & Informatics
                   </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-emerald-500/30 text-emerald-400 w-fit">
+                <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-[var(--primary-accent,#FFDD9B)]/30 text-[var(--primary-accent,#FFDD9B)] w-fit">
                   <GraduationCap size={28} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-5 border-y border-white/[0.06] mb-6 text-xs font-mono">
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.04]">
-                  <span className="text-[10px] text-[#64748B] block mb-0.5">STATUS</span>
-                  <span className="text-emerald-400 font-bold">In Progress // Senior</span>
+                  <span className="text-[10px] text-[#A8A29E] block mb-0.5">STATUS</span>
+                  <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">In Progress // Senior</span>
                 </div>
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.04]">
-                  <span className="text-[10px] text-[#64748B] block mb-0.5">DISCIPLINE</span>
+                  <span className="text-[10px] text-[#A8A29E] block mb-0.5">DISCIPLINE</span>
                   <span className="text-[var(--text-primary,#FFFFFF)] font-bold">Software Architecture</span>
                 </div>
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.04]">
-                  <span className="text-[10px] text-[#64748B] block mb-0.5">LOCATION</span>
+                  <span className="text-[10px] text-[#A8A29E] block mb-0.5">LOCATION</span>
                   <span className="text-[var(--text-secondary,#FFF1D8)] font-bold">Haramaya, Ethiopia</span>
                 </div>
               </div>
@@ -105,8 +105,8 @@ export default function EducationSection() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2 pt-6 text-xs font-mono text-[#64748B]">
-              <Calendar size={13} className="text-emerald-400" />
+            <div className="flex items-center gap-2 pt-6 text-xs font-mono text-[#A8A29E]">
+              <Calendar size={13} className="text-[var(--primary-accent,#FFDD9B)]" />
               <span>Full-Time Academic Program &bull; Verified Student Enrollment</span>
             </div>
           </motion.div>
@@ -117,11 +117,11 @@ export default function EducationSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between"
+            className="card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-white/[0.06]"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-5">
-                <BookOpen size={18} className="text-emerald-400" />
+                <BookOpen size={18} className="text-[var(--primary-accent,#FFDD9B)]" />
                 <h4 className="text-base font-bold text-[var(--text-primary,#FFFFFF)] font-heading">
                   Core Study Areas
                 </h4>
@@ -133,7 +133,7 @@ export default function EducationSection() {
                     key={idx}
                     className="flex items-center gap-2.5 p-2 rounded-lg bg-[var(--bg-base,#302E2D)] border border-white/[0.04] text-xs font-mono text-[var(--text-secondary,#FFF1D8)]"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)] flex-shrink-0" />
                     <span className="truncate">{area}</span>
                   </div>
                 ))}
@@ -250,7 +250,7 @@ export function ContactSection() {
           viewport={{ once: true }}
           className="mb-14 text-center"
         >
-          <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
+          <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold block mb-2">
             Initiate Contact
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
@@ -271,17 +271,17 @@ export function ContactSection() {
               <div className="space-y-4">
                 {contactInfo.map((info, idx) => (
                   <div key={idx} className="flex items-center gap-3.5 group">
-                    <div className="p-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] text-emerald-400 group-hover:border-emerald-500/30 transition-colors">
+                    <div className="p-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] text-[var(--primary-accent,#FFDD9B)] group-hover:border-[var(--primary-accent,#FFDD9B)]/30 transition-colors">
                       <info.icon size={16} />
                     </div>
                     <div>
-                      <p className="text-[10px] font-mono text-[#64748B] uppercase tracking-wider">
+                      <p className="text-[10px] font-mono text-[#A8A29E] uppercase tracking-wider">
                         {info.label}
                       </p>
                       {info.href ? (
                         <a
                           href={info.href}
-                          className="font-mono text-xs font-semibold text-[var(--text-primary,#FFFFFF)] hover:text-emerald-400 transition-colors"
+                          className="font-mono text-xs font-semibold text-[var(--text-primary,#FFFFFF)] hover:text-[var(--primary-accent,#FFDD9B)] transition-colors"
                         >
                           {info.value}
                         </a>
@@ -297,7 +297,7 @@ export function ContactSection() {
             </div>
 
             <div className="card-slate rounded-2xl p-6">
-              <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-bold block mb-2">
+              <span className="text-[10px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-wider font-bold block mb-2">
                 Response SLA
               </span>
               <p className="text-xs text-[var(--text-secondary,#FFF1D8)] leading-relaxed font-body">
@@ -325,7 +325,7 @@ export function ContactSection() {
                     exit={{ opacity: 0 }}
                     className="absolute inset-0 z-20 bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-xl flex flex-col items-center justify-center text-center p-8 rounded-2xl"
                   >
-                    <div className="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-4 border border-emerald-500/30 text-emerald-400">
+                    <div className="w-16 h-16 bg-[var(--primary-accent,#FFDD9B)]/10 rounded-2xl flex items-center justify-center mb-4 border border-[var(--primary-accent,#FFDD9B)]/30 text-[var(--primary-accent,#FFDD9B)]">
                       <CheckCircle2 size={32} />
                     </div>
                     <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)] mb-2 font-heading">
@@ -348,7 +348,7 @@ export function ContactSection() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Ada Lovelace"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#64748B] text-xs font-mono"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                     required
                   />
                 </div>
@@ -363,7 +363,7 @@ export function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="ada@domain.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#64748B] text-xs font-mono"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                     required
                   />
                 </div>
@@ -378,7 +378,7 @@ export function ContactSection() {
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="System Architecture / Role Inquiry"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#64748B] text-xs font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                   required
                 />
               </div>
@@ -393,7 +393,7 @@ export function ContactSection() {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Describe your project, timeline, or engineering opportunity..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none resize-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#64748B] text-xs font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none resize-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                   required
                 />
               </div>
@@ -401,10 +401,10 @@ export function ContactSection() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-[var(--bg-base,#302E2D)] rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50"
+                className="w-full py-3 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D] rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/20 active:scale-95 disabled:opacity-50"
               >
                 {loading ? (
-                  <Loader className="w-4 h-4 animate-spin text-[var(--bg-base,#302E2D)]" />
+                  <Loader className="w-4 h-4 animate-spin text-[#302E2D]" />
                 ) : (
                   <>
                     <span>Dispatch Transmission</span>

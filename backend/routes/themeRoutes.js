@@ -9,8 +9,8 @@ const DEFAULT_THEME = {
     primaryText: '#FFFFFF',
     secondaryText: '#FFF1D8',
     secondaryAccent: '#FFDD9B',
-    cardSurface: '#3A3836',
-    cardElevated: '#444240',
+    cardSurface: '#403C38',
+    cardElevated: '#4A4642',
     border: 'rgba(255, 221, 155, 0.18)'
 };
 

@@ -9,8 +9,8 @@ export const DESIGN_TOKENS = {
     // Background and Surface System
     bg: {
       base: "#302E2D",             // Warm Dark Charcoal (Default)
-      surface: "#3A3836",          // Warm Dark Charcoal Card Surface
-      elevatedSurface: "#444240",  // Elevated Charcoal Surface
+      surface: "#403C38",          // Warm Dark Charcoal Card Surface
+      elevatedSurface: "#4A4642",  // Elevated Charcoal Surface
       secondary: "#292726",        // Secondary dark charcoal section surface
       overlay: "rgba(48, 46, 45, 0.88)",
     },

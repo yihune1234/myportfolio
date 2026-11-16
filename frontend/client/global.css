@@ -8,8 +8,8 @@
   :root {
     /* Default Brand Colors: Warm Dark Charcoal & Golden Cream */
     --bg-base: #302E2D;              /* Warm Dark Charcoal (Default) */
-    --card-surface: #3A3836;         /* Harmonious Dark Charcoal Card Surface */
-    --card-elevated: #444240;        /* Elevated Dark Charcoal Surface */
+    --card-surface: #403C38;         /* Card Surface */
+    --card-elevated: #4A4642;        /* Elevated Dark Charcoal Surface */
     --primary-accent: #FFDD9B;       /* Warm Golden Cream Accent (Default) */
     --secondary-accent: #FFDD9B;     /* Golden Cream Secondary Accent (Default) */
     --text-primary: #FFFFFF;         /* Pure White Primary Text (Default) */
@@ -20,7 +20,7 @@
     --background: 20 3% 18%;         /* #302E2D */
     --foreground: 0 0% 100%;         /* #FFFFFF */
 
-    --card: 20 4% 22%;               /* #3A3836 */
+    --card: 30 7% 24%;               /* #403C38 */
     --card-foreground: 0 0% 100%;
 
     --popover: 20 3% 18%;
@@ -32,7 +32,7 @@
     --secondary: 40 100% 80%;        /* #FFDD9B */
     --secondary-foreground: 20 3% 18%;
 
-    --muted: 20 4% 26%;              /* #444240 */
+    --muted: 30 6% 27%;              /* #4A4642 */
     --muted-foreground: 38 100% 92%; /* #FFF1D8 */
 
     --accent: 20 4% 24%;

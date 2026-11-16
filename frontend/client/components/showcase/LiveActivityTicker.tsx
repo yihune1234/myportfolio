@@ -14,7 +14,7 @@ function getEventBadge(type: string) {
     case 'PushEvent':
       return {
         label: 'PUSH',
-        color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+        color: 'text-[var(--primary-accent,#FFDD9B)] bg-[var(--primary-accent,#FFDD9B)]/10 border-[var(--primary-accent,#FFDD9B)]/25',
         icon: GitCommit,
       };
     case 'CreateEvent':

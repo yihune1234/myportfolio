@@ -40,7 +40,7 @@ export default function AboutSection() {
           viewport={{ once: true }}
           className="mb-14 text-center lg:text-left"
         >
-          <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold">
+          <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold">
             Engineering Identity & Bento Overview
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] mt-2 mb-3 tracking-tight font-heading">
@@ -62,15 +62,15 @@ export default function AboutSection() {
             transition={{ duration: 0.5 }}
             className="lg:col-span-7 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-colors" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-2xl group-hover:bg-[var(--primary-accent,#FFDD9B)]/10 transition-colors" />
 
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <div className="p-2.5 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)]">
                   <ShieldCheck size={22} />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block">
                     Domain 01 // Core Specialization
                   </span>
                   <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
@@ -88,16 +88,16 @@ export default function AboutSection() {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-4 border-t border-white/[0.06] text-xs font-mono">
               <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04]">
-                <span className="text-[10px] text-[#64748B] block">AUTH SPEC</span>
+                <span className="text-[10px] text-[#A8A29E] block">AUTH SPEC</span>
                 <span className="text-[var(--text-primary,#FFFFFF)] font-semibold">JWT + Argon2</span>
               </div>
               <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04]">
-                <span className="text-[10px] text-[#64748B] block">API STYLE</span>
+                <span className="text-[10px] text-[#A8A29E] block">API STYLE</span>
                 <span className="text-[var(--text-primary,#FFFFFF)] font-semibold">RESTful / RPC</span>
               </div>
               <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04] col-span-2 sm:col-span-1">
-                <span className="text-[10px] text-[#64748B] block">DEFENSE</span>
-                <span className="text-emerald-400 font-semibold">CORS & RateLimit</span>
+                <span className="text-[10px] text-[#A8A29E] block">DEFENSE</span>
+                <span className="text-[var(--primary-accent,#FFDD9B)] font-semibold">CORS & RateLimit</span>
               </div>
             </div>
           </motion.div>
@@ -206,11 +206,11 @@ export default function AboutSection() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  <div className="p-2.5 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)]">
                     <Binary size={22} />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block">
                       Domain 04 // Verified Telemetry
                     </span>
                     <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
@@ -230,8 +230,8 @@ export default function AboutSection() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-emerald-500/20">
-                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-400 mb-1">
+                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-[var(--primary-accent,#FFDD9B)]/25">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[var(--primary-accent,#FFDD9B)] mb-1">
                     <CheckCircle2 size={13} />
                     <span>Personal Lab (@yihune1234)</span>
                   </div>
@@ -252,9 +252,9 @@ export default function AboutSection() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-xs font-mono text-[#64748B] pt-3 border-t border-white/[0.06]">
+            <div className="flex items-center justify-between text-xs font-mono text-[#A8A29E] pt-3 border-t border-white/[0.06]">
               <span>ETag-Cached Multi-Source Aggregation</span>
-              <span className="text-emerald-400 font-semibold">Zero Fake Metrics</span>
+              <span className="text-[var(--primary-accent,#FFDD9B)] font-semibold">Zero Fake Metrics</span>
             </div>
           </motion.div>
         </div>

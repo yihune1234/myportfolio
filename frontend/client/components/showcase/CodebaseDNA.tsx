@@ -45,7 +45,7 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
         {/* Header with info button */}
         <div className="flex items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-emerald-400">
+            <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[var(--primary-accent,#FFDD9B)]">
               <Binary className="w-4 h-4" />
             </div>
             <div>

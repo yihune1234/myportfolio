@@ -87,16 +87,16 @@ export default function HeroSection({
             >
               {/* Telemetry Status Ribbon */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-6">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--card-surface,#3A3836)] border border-emerald-500/30 text-emerald-300 text-xs font-mono backdrop-blur-md shadow-sm">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--card-surface,#403C38)] border border-[var(--primary-accent,#FFDD9B)]/30 text-[var(--primary-accent,#FFDD9B)] text-xs font-mono backdrop-blur-md shadow-sm">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary-accent,#FFDD9B)] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary-accent,#FFDD9B)]"></span>
                   </span>
                   <span>ARCHITECTURAL TELEMETRY ENGINE</span>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] text-xs font-mono">
-                  <Radio size={12} className="text-emerald-400" />
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] text-xs font-mono">
+                  <Radio size={12} className="text-[var(--primary-accent,#FFDD9B)]" />
                   <span>Personal Lab &bull; Ariiti Tech Hub</span>
                 </div>
               </div>
@@ -105,7 +105,7 @@ export default function HeroSection({
               <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-black text-[var(--text-primary,#FFFFFF)] mb-6 tracking-tight leading-[1.05]">
                 Engineering Scalable Systems.{" "}
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] via-[#FFF1D8] to-[var(--primary-accent,#FFDD9B)]">
                   Yihune Belay
                 </span>
               </h1>
@@ -121,7 +121,7 @@ export default function HeroSection({
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-8">
                 <button
                   onClick={onContactClick}
-                  className="group relative px-7 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-[var(--bg-base,#302E2D)] rounded-xl font-bold text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95"
+                  className="group relative px-7 py-3.5 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:from-[#FFE8B8] hover:to-[var(--primary-accent,#FFDD9B)] text-[#302E2D] rounded-xl font-bold text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/20 active:scale-95"
                 >
                   <span>Let's Work Together</span>
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -129,7 +129,7 @@ export default function HeroSection({
 
                 <button
                   onClick={onProjectsClick}
-                  className="px-7 py-3.5 bg-[var(--card-surface,#3A3836)] text-[var(--text-primary,#FFFFFF)] border border-white/[0.08] hover:border-emerald-500/40 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2 group hover:bg-[var(--card-elevated,#444240)]"
+                  className="px-7 py-3.5 bg-[var(--card-surface,#403C38)] text-[var(--text-primary,#FFFFFF)] border border-white/[0.08] hover:border-[var(--primary-accent,#FFDD9B)]/40 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2 group hover:bg-[var(--card-elevated,#4A4642)]"
                 >
                   <span>Explore Architecture</span>
                   <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform text-[var(--text-secondary,#FFF1D8)]" />
@@ -142,10 +142,10 @@ export default function HeroSection({
                   href="https://github.com/yihune1234"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#3A3836)] hover:bg-[var(--card-elevated,#444240)] border border-white/[0.08] hover:border-emerald-500/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#403C38)] hover:bg-[var(--card-elevated,#4A4642)] border border-white/[0.08] hover:border-[var(--primary-accent,#FFDD9B)]/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
                   title="Personal GitHub Profile"
                 >
-                  <Github size={13} className="text-emerald-400" />
+                  <Github size={13} className="text-[var(--primary-accent,#FFDD9B)]" />
                   <span>@yihune1234</span>
                 </a>
 
@@ -153,7 +153,7 @@ export default function HeroSection({
                   href="https://linkedin.com/in/yihune-belay"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#3A3836)] hover:bg-[var(--card-elevated,#444240)] border border-white/[0.08] hover:border-sky-500/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#403C38)] hover:bg-[var(--card-elevated,#4A4642)] border border-white/[0.08] hover:border-sky-500/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
                   title="LinkedIn Profile"
                 >
                   <Linkedin size={13} className="text-sky-400" />
@@ -164,7 +164,7 @@ export default function HeroSection({
                   href="https://github.com/AriitiMarket"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#3A3836)] hover:bg-[var(--card-elevated,#444240)] border border-white/[0.08] hover:border-amber-500/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card-surface,#403C38)] hover:bg-[var(--card-elevated,#4A4642)] border border-white/[0.08] hover:border-amber-500/30 text-xs font-mono text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] transition-all"
                   title="Ariiti Tech Organization"
                 >
                   <Building2 size={13} className="text-amber-400" />
@@ -184,27 +184,27 @@ export default function HeroSection({
             >
               <div className="card-slate rounded-2xl p-5 sm:p-6 relative overflow-hidden backdrop-blur-xl border border-white/[0.08]">
                 {/* Architectural Corner Nodes */}
-                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-emerald-500/60" />
+                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[var(--primary-accent,#FFDD9B)]/60" />
                 <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-amber-500/60" />
-                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-emerald-500/60" />
+                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[var(--primary-accent,#FFDD9B)]/60" />
                 <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-amber-500/60" />
 
                 {/* Telemetry Header */}
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-4">
                   <div className="flex items-center gap-2">
-                    <Activity size={16} className="text-emerald-400 animate-pulse" />
+                    <Activity size={16} className="text-[var(--primary-accent,#FFDD9B)] animate-pulse" />
                     <span className="font-mono text-[11px] font-bold text-[var(--text-primary,#FFFFFF)] tracking-wider uppercase">
                       GitHub Telemetry HUD
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] text-[#64748B]">
+                  <span className="font-mono text-[10px] text-[#A8A29E]">
                     NODE: 5002 // REST
                   </span>
                 </div>
 
                 {/* Profile Snapshot & Identifiers */}
                 <div className="flex items-center gap-4 p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-white/[0.05] mb-4">
-                  <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[var(--bg-base,#302E2D)] border border-emerald-500/30 flex-shrink-0">
+                  <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[var(--bg-base,#302E2D)] border border-[var(--primary-accent,#FFDD9B)]/40 flex-shrink-0">
                     <img
                       src="https://cdn.builder.io/api/v1/image/assets%2F729ed1e6158f4fddaa5c79dd9410d623%2F1fd6f14adfa546439d0e1614fe59db76?format=webp&width=200&height=200"
                       alt="Yihune Belay"
@@ -217,14 +217,14 @@ export default function HeroSection({
                       <span className="font-bold text-sm text-[var(--text-primary,#FFFFFF)] truncate">
                         Yihune Belay
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-bold">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--primary-accent,#FFDD9B)]/15 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/30 font-bold">
                         VERIFIED
                       </span>
                     </div>
                     <span className="text-[11px] font-mono text-[var(--text-secondary,#FFF1D8)] block truncate">
                       Software Engineering &bull; Haramaya Univ.
                     </span>
-                    <span className="text-[10px] font-mono text-[#64748B]">
+                    <span className="text-[10px] font-mono text-[#A8A29E]">
                       Addis Ababa, Ethiopia
                     </span>
                   </div>
@@ -233,11 +233,11 @@ export default function HeroSection({
                 {/* Dual Identity Status Streams */}
                 <div className="space-y-2.5 mb-4">
                   {/* Personal Stream */}
-                  <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/70 border border-emerald-500/20 flex flex-col gap-1.5">
+                  <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/70 border border-[var(--primary-accent,#FFDD9B)]/25 flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                        <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
+                        <span className="text-[10px] font-mono font-bold text-[var(--primary-accent,#FFDD9B)] uppercase tracking-wider">
                           Personal Lab (@yihune1234)
                         </span>
                       </div>
@@ -250,14 +250,14 @@ export default function HeroSection({
                       <span className="text-[var(--text-primary,#FFFFFF)] font-medium truncate max-w-[200px]">
                         {personalEvent?.repo?.name?.split("/")[1] || "myportfolio"}
                       </span>
-                      <span className="text-[10px] text-[#64748B]">
+                      <span className="text-[10px] text-[#A8A29E]">
                         {formatRelativeTime(personalEvent?.created_at)}
                       </span>
                     </div>
                   </div>
 
                   {/* Organization Stream */}
-                  <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/70 border border-amber-500/20 flex flex-col gap-1.5">
+                  <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/70 border border-amber-500/25 flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
@@ -274,7 +274,7 @@ export default function HeroSection({
                       <span className="text-[var(--text-primary,#FFFFFF)] font-medium truncate max-w-[200px]">
                         {orgEvent?.repo?.name?.split("/")[1] || "ariiti-market-api"}
                       </span>
-                      <span className="text-[10px] text-[#64748B]">
+                      <span className="text-[10px] text-[#A8A29E]">
                         {formatRelativeTime(orgEvent?.created_at)}
                       </span>
                     </div>
@@ -290,13 +290,13 @@ export default function HeroSection({
 
                   {/* Multi-segment mini bar */}
                   <div className="h-1.5 w-full rounded-full bg-white/[0.05] overflow-hidden flex gap-0.5 mb-2">
-                    <div className="h-full bg-amber-400 rounded-full" style={{ width: "42%" }} />
-                    <div className="h-full bg-indigo-400 rounded-full" style={{ width: "28%" }} />
-                    <div className="h-full bg-sky-400 rounded-full" style={{ width: "18%" }} />
-                    <div className="h-full bg-emerald-400 rounded-full" style={{ width: "12%" }} />
+                    <div className="h-full bg-[var(--primary-accent,#FFDD9B)] rounded-full" style={{ width: "42%" }} />
+                    <div className="h-full bg-amber-400 rounded-full" style={{ width: "28%" }} />
+                    <div className="h-full bg-[#FFF1D8]/60 rounded-full" style={{ width: "18%" }} />
+                    <div className="h-full bg-stone-500 rounded-full" style={{ width: "12%" }} />
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B]">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-[#A8A29E]">
                     <span>JS 42%</span>
                     <span>PHP 28%</span>
                     <span>TS 18%</span>
@@ -305,12 +305,12 @@ export default function HeroSection({
                 </div>
 
                 {/* Telemetry Footer */}
-                <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] pt-2 border-t border-white/[0.05]">
+                <div className="flex items-center justify-between text-[10px] font-mono text-[#A8A29E] pt-2 border-t border-white/[0.05]">
                   <div className="flex items-center gap-1.5">
-                    <Clock size={11} className="text-emerald-400" />
+                    <Clock size={11} className="text-[var(--primary-accent,#FFDD9B)]" />
                     <span>Sync: {formatRelativeTime(overview?.last_synchronized_at)}</span>
                   </div>
-                  <span className="text-emerald-400/80 font-bold">CACHE ETAG: OK</span>
+                  <span className="text-[var(--primary-accent,#FFDD9B)]/90 font-bold">CACHE ETAG: OK</span>
                 </div>
               </div>
             </motion.div>
