@@ -1,8 +1,47 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Palette, Check, Sparkles, RotateCcw } from "lucide-react";
+import { Palette, Check, Sparkles } from "lucide-react";
 import { usePortfolioTheme } from "@/hooks/usePortfolioTheme";
-import { THEME_PRESETS, DEFAULT_THEME, ThemePreset } from "@/lib/theme";
+import { THEME_PRESETS, ThemePreset } from "@/lib/theme";
+
+interface ThemeIconItem {
+  id: string;
+  name: string;
+  bg: string;
+  accent: string;
+  preset: ThemePreset;
+}
+
+const THEME_ICONS: ThemeIconItem[] = [
+  {
+    id: "warm-charcoal",
+    name: "Charcoal",
+    bg: "#302E2D",
+    accent: "#FFDD9B",
+    preset: THEME_PRESETS[0],
+  },
+  {
+    id: "architectural-obsidian",
+    name: "Emerald",
+    bg: "#07090E",
+    accent: "#10B981",
+    preset: THEME_PRESETS[1],
+  },
+  {
+    id: "midnight-slate",
+    name: "Midnight",
+    bg: "#0F172A",
+    accent: "#38BDF8",
+    preset: THEME_PRESETS[2],
+  },
+  {
+    id: "pure-dark",
+    name: "Mint",
+    bg: "#0B0C10",
+    accent: "#66FCF1",
+    preset: THEME_PRESETS[3],
+  },
+];
 
 export function PublicThemeSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,129 +70,99 @@ export function PublicThemeSwitcher() {
     setIsOpen(false);
   };
 
-  const handleReset = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    previewTheme(DEFAULT_THEME);
-    setIsOpen(false);
-  };
-
   return (
     <div className="relative" ref={containerRef}>
-      {/* Trigger Button */}
+      {/* Icon-Only Trigger Button */}
       <motion.button
         type="button"
-        whileTap={{ scale: 0.95 }}
+        whileTap={{ scale: 0.92 }}
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-mono font-bold transition-all duration-300 border ${
+        className={`relative flex items-center justify-center p-2.5 rounded-full transition-all duration-200 border ${
           isOpen
-            ? "bg-[var(--card-surface,#3A3836)] text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/50 shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/20"
-            : "bg-[var(--card-surface,#3A3836)]/80 text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] border-[var(--border-color,rgba(255,221,155,0.18))] hover:border-[var(--primary-accent,#FFDD9B)]/40 hover:bg-[var(--card-surface,#3A3836)]"
+            ? "bg-[var(--card-surface,#3A3836)] border-[var(--primary-accent,#FFDD9B)]/60 text-[var(--primary-accent,#FFDD9B)] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
+            : "bg-[var(--card-surface,#3A3836)]/80 hover:bg-[var(--card-surface,#3A3836)] border-[var(--border-color,rgba(255,221,155,0.18))] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
         }`}
-        title="Change portfolio theme"
-        aria-label="Theme Selector"
+        title="Switch Theme"
+        aria-label="Switch Theme Palette"
       >
-        <Palette className="w-3.5 h-3.5 text-[var(--primary-accent,#FFDD9B)]" />
-        <span className="hidden sm:inline text-[11px] font-sans font-medium">Theme</span>
-        {/* Active Theme Color Swatch Pill */}
+        <Palette className="w-4 h-4 text-[var(--primary-accent,#FFDD9B)]" />
+        {/* Active Theme Color Dot Indicator */}
         <span
-          className="w-2.5 h-2.5 rounded-full border border-white/20 shadow-sm"
-          style={{ backgroundColor: theme?.primary || DEFAULT_THEME.primary }}
+          className="absolute top-1 right-1 w-2 h-2 rounded-full ring-1 ring-black/40 shadow-sm"
+          style={{ backgroundColor: theme?.primary || "#FFDD9B" }}
         />
       </motion.button>
 
-      {/* Popover Dropdown */}
+      {/* Clean Icon-Based Dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+            initial={{ opacity: 0, y: 6, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+            exit={{ opacity: 0, y: 6, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-2 w-72 sm:w-80 p-3 rounded-2xl bg-[var(--card-surface,#3A3836)] border border-[var(--border-color,rgba(255,221,155,0.25))] backdrop-blur-2xl shadow-2xl shadow-black/60 z-50 overflow-hidden"
+            className="absolute right-0 mt-2 p-2.5 rounded-2xl bg-[var(--card-surface,#3A3836)] border border-[var(--border-color,rgba(255,221,155,0.25))] backdrop-blur-2xl shadow-2xl shadow-black/60 z-50 min-w-[200px]"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/[0.08]">
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[var(--primary-accent,#FFDD9B)]" />
-                <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">
-                  Portfolio Color Theme
-                </span>
-              </div>
-              {activePresetId !== "warm-charcoal" && (
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="inline-flex items-center gap-1 text-[10px] font-mono text-[var(--primary-accent,#FFDD9B)] hover:underline"
-                >
-                  <RotateCcw className="w-2.5 h-2.5" />
-                  Reset
-                </button>
-              )}
+            {/* Header: minimal with sparkles icon */}
+            <div className="flex items-center gap-1.5 px-1 pb-2 mb-2 border-b border-white/[0.08]">
+              <Sparkles className="w-3 h-3 text-[var(--primary-accent,#FFDD9B)]" />
+              <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-[var(--text-secondary,#FFF1D8)]">
+                Palette
+              </span>
             </div>
 
-            {/* Presets List */}
-            <div className="space-y-1.5">
-              {THEME_PRESETS.map((preset) => {
-                const isSelected = activePresetId === preset.id;
+            {/* 4 Icon Swatches Grid */}
+            <div className="grid grid-cols-4 gap-1.5">
+              {THEME_ICONS.map((item) => {
+                const isSelected = activePresetId === item.id;
                 return (
                   <button
-                    key={preset.id}
+                    key={item.id}
                     type="button"
-                    onClick={() => handleSelect(preset)}
-                    className={`w-full flex items-center justify-between p-2.5 rounded-xl transition-all duration-200 text-left border ${
+                    onClick={() => handleSelect(item.preset)}
+                    className={`group flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all duration-200 border ${
                       isSelected
-                        ? "bg-[var(--bg-base,#302E2D)] border-[var(--primary-accent,#FFDD9B)]/40 shadow-sm"
-                        : "bg-white/[0.02] hover:bg-white/[0.06] border-transparent"
+                        ? "bg-[var(--bg-base,#302E2D)] border-[var(--primary-accent,#FFDD9B)]/50 shadow-sm"
+                        : "bg-white/[0.02] hover:bg-white/[0.08] border-transparent hover:border-white/10"
                     }`}
+                    title={item.name}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {/* Color Preview Swatch */}
-                      <div
-                        className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 border border-white/10 shadow-sm"
-                        style={{ backgroundColor: preset.theme.background }}
-                      >
-                        <span
-                          className="w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: preset.theme.primary }}
+                    {/* Dual-color Swatch Icon */}
+                    <div
+                      className={`relative w-8 h-8 rounded-full flex items-center justify-center border transition-transform duration-200 group-hover:scale-105 shadow-sm ${
+                        isSelected
+                          ? "border-[var(--primary-accent,#FFDD9B)] ring-2 ring-[var(--primary-accent,#FFDD9B)]/30"
+                          : "border-white/20"
+                      }`}
+                      style={{ backgroundColor: item.bg }}
+                    >
+                      {/* Inner accent dot or checkmark */}
+                      {isSelected ? (
+                        <Check
+                          className="w-4 h-4 stroke-[3]"
+                          style={{ color: item.accent }}
                         />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)] truncate">
-                            {preset.name.split(" (")[0]}
-                          </span>
-                          {preset.isDefault && (
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--primary-accent,#FFDD9B)]/20 text-[var(--primary-accent,#FFDD9B)]">
-                              Official
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[10px] text-[var(--text-secondary,#FFF1D8)]/70 truncate">
-                          {preset.id === "warm-charcoal"
-                            ? "Warm Charcoal & Golden Cream"
-                            : preset.id === "architectural-obsidian"
-                            ? "Obsidian & Emerald Green"
-                            : preset.id === "midnight-slate"
-                            ? "Midnight Navy & Sky Cyan"
-                            : "Pure Dark & Neon Mint"}
-                        </p>
-                      </div>
+                      ) : (
+                        <span
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: item.accent }}
+                        />
+                      )}
                     </div>
 
-                    {isSelected && (
-                      <span className="w-5 h-5 rounded-full bg-[var(--primary-accent,#FFDD9B)] flex items-center justify-center flex-shrink-0 ml-2">
-                        <Check className="w-3 h-3 text-[#302E2D] stroke-[3]" />
-                      </span>
-                    )}
+                    {/* Short 1-word label */}
+                    <span
+                      className={`text-[10px] font-mono font-semibold transition-colors ${
+                        isSelected
+                          ? "text-[var(--primary-accent,#FFDD9B)] font-bold"
+                          : "text-[var(--text-secondary,#FFF1D8)]/70 group-hover:text-[var(--text-primary,#FFFFFF)]"
+                      }`}
+                    >
+                      {item.name}
+                    </span>
                   </button>
                 );
               })}
-            </div>
-
-            {/* Quick footnote */}
-            <div className="mt-2.5 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/60">
-              <span>Instant preview</span>
-              <span className="text-[var(--primary-accent,#FFDD9B)]">One-click switch</span>
             </div>
           </motion.div>
         )}
