@@ -152,6 +152,52 @@ async function getOrganizationActivity(req, res) {
     }
 }
 
+/**
+ * GET /api/github/health
+ * Synchronization monitoring, source availability, cache metrics, and scheduler status
+ */
+async function getHealth(req, res) {
+    try {
+        const health = await githubService.getHealth();
+        res.json(health);
+    } catch (err) {
+        handleGitHubError(err, res);
+    }
+}
+
+/**
+ * POST /api/github/webhook
+ * GitHub webhook receiver with event-driven cache invalidation
+ */
+async function handleWebhook(req, res) {
+    try {
+        const event = req.headers['x-github-event'] || 'unknown';
+        const payload = req.body || {};
+
+        // GitHub ping event (sent on initial webhook registration)
+        if (event === 'ping') {
+            return res.json({
+                message: 'GitHub webhook ping received successfully',
+                zen: payload.zen || null,
+                hook_id: payload.hook_id || null
+            });
+        }
+
+        const result = githubService.handleWebhookEvent(event, payload);
+        res.json({
+            success: true,
+            message: `Webhook event "${event}" processed successfully`,
+            ...result
+        });
+    } catch (err) {
+        console.error('Error handling GitHub webhook:', err);
+        res.status(500).json({
+            message: 'Failed to process webhook event',
+            error: err.message
+        });
+    }
+}
+
 module.exports = {
     getOverview,
     getPersonal,
@@ -159,5 +205,7 @@ module.exports = {
     getPersonalActivity,
     getOrganization,
     getOrganizationRepos,
-    getOrganizationActivity
+    getOrganizationActivity,
+    getHealth,
+    handleWebhook
 };

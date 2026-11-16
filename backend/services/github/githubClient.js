@@ -24,12 +24,13 @@ class GitHubNotFoundError extends GitHubAPIError {
 }
 
 class GitHubRateLimitError extends GitHubAPIError {
-    constructor(resetTime, remaining = 0) {
+    constructor(resetTime, remaining = 0, retryAfter = null) {
         const resetDate = resetTime ? new Date(resetTime * 1000).toISOString() : 'soon';
-        super(`GitHub API rate limit exceeded. Resets at ${resetDate}`, 429, { resetTime, resetDate, remaining });
+        super(`GitHub API rate limit exceeded. Resets at ${resetDate}${retryAfter ? ` (Retry after ${retryAfter}s)` : ''}`, 429, { resetTime, resetDate, remaining, retryAfter });
         this.name = 'GitHubRateLimitError';
         this.resetTime = resetTime;
         this.resetDate = resetDate;
+        this.retryAfter = retryAfter;
     }
 }
 
@@ -88,6 +89,7 @@ class GitHubClient {
             'Accept': 'application/vnd.github.v3+json',
             'User-Agent': this.userAgent,
             ...(this.token ? { 'Authorization': `Bearer ${this.token}` } : {}),
+            ...(options.etag ? { 'If-None-Match': options.etag } : {}),
             ...options.headers
         };
 
@@ -111,16 +113,30 @@ class GitHubClient {
             clearTimeout(timeoutId);
         }
 
-        // Extract rate limiting headers
+        // Extract rate limiting and response headers
+        const retryAfter = response.headers.get('retry-after');
         const rateLimit = {
             limit: parseInt(response.headers.get('x-ratelimit-limit') || '0', 10),
             remaining: parseInt(response.headers.get('x-ratelimit-remaining') || '0', 10),
-            reset: parseInt(response.headers.get('x-ratelimit-reset') || '0', 10)
+            reset: parseInt(response.headers.get('x-ratelimit-reset') || '0', 10),
+            retryAfter: retryAfter ? parseInt(retryAfter, 10) : null
         };
+        const responseEtag = response.headers.get('etag');
+
+        // Handle HTTP 304 Not Modified
+        if (response.status === 304) {
+            return {
+                data: null,
+                notModified: true,
+                status: 304,
+                etag: responseEtag || options.etag,
+                rateLimit
+            };
+        }
 
         // Handle rate limiting response (403 or 429 with rate limit message/header)
         if (response.status === 429 || (response.status === 403 && rateLimit.remaining === 0)) {
-            throw new GitHubRateLimitError(rateLimit.reset, rateLimit.remaining);
+            throw new GitHubRateLimitError(rateLimit.reset, rateLimit.remaining, rateLimit.retryAfter);
         }
 
         let bodyText = '';
@@ -151,7 +167,7 @@ class GitHubClient {
             const errorMsg = parsedData?.message || response.statusText || 'GitHub API request failed';
             // Also check if GitHub returned rate limit message inside 403 body
             if (response.status === 403 && /rate limit/i.test(errorMsg)) {
-                throw new GitHubRateLimitError(rateLimit.reset, rateLimit.remaining);
+                throw new GitHubRateLimitError(rateLimit.reset, rateLimit.remaining, rateLimit.retryAfter);
             }
             throw new GitHubAPIError(errorMsg, response.status, parsedData);
         }
@@ -159,6 +175,8 @@ class GitHubClient {
         return {
             data: parsedData,
             status: response.status,
+            etag: responseEtag,
+            notModified: false,
             rateLimit
         };
     }
@@ -166,15 +184,16 @@ class GitHubClient {
     /**
      * Fetch user profile: GET /users/:username
      */
-    async getUser(username) {
-        return this.request(`/users/${encodeURIComponent(username)}`);
+    async getUser(username, options = {}) {
+        return this.request(`/users/${encodeURIComponent(username)}`, options);
     }
 
     /**
      * Fetch user public repos: GET /users/:username/repos
      */
-    async getUserRepos(username, params = {}) {
+    async getUserRepos(username, params = {}, options = {}) {
         return this.request(`/users/${encodeURIComponent(username)}/repos`, {
+            ...options,
             params: {
                 type: 'public',
                 sort: params.sort || 'updated',
@@ -188,8 +207,9 @@ class GitHubClient {
     /**
      * Fetch user public activity: GET /users/:username/events/public
      */
-    async getUserEvents(username, params = {}) {
+    async getUserEvents(username, params = {}, options = {}) {
         return this.request(`/users/${encodeURIComponent(username)}/events/public`, {
+            ...options,
             params: {
                 page: params.page || 1,
                 per_page: params.per_page || githubConfig.defaultPerPage
@@ -200,15 +220,16 @@ class GitHubClient {
     /**
      * Fetch organization profile: GET /orgs/:org
      */
-    async getOrg(org) {
-        return this.request(`/orgs/${encodeURIComponent(org)}`);
+    async getOrg(org, options = {}) {
+        return this.request(`/orgs/${encodeURIComponent(org)}`, options);
     }
 
     /**
      * Fetch organization public repos: GET /orgs/:org/repos
      */
-    async getOrgRepos(org, params = {}) {
+    async getOrgRepos(org, params = {}, options = {}) {
         return this.request(`/orgs/${encodeURIComponent(org)}/repos`, {
+            ...options,
             params: {
                 type: 'public',
                 sort: params.sort || 'updated',
@@ -222,8 +243,9 @@ class GitHubClient {
     /**
      * Fetch organization public activity: GET /orgs/:org/events
      */
-    async getOrgEvents(org, params = {}) {
+    async getOrgEvents(org, params = {}, options = {}) {
         return this.request(`/orgs/${encodeURIComponent(org)}/events`, {
+            ...options,
             params: {
                 page: params.page || 1,
                 per_page: params.per_page || githubConfig.defaultPerPage

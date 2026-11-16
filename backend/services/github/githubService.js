@@ -1,7 +1,7 @@
 /**
  * GitHub Integration Service
- * High-level orchestration for GitHub data retrieval, caching, normalization,
- * aggregation, and fault-tolerant partial failure handling.
+ * High-level orchestration for GitHub data retrieval, smart caching, conditional requests (ETags),
+ * aggregation, fault-tolerant partial failure handling, and webhook cache invalidation.
  */
 
 const githubConfig = require('../../config/githubConfig');
@@ -22,15 +22,99 @@ class GitHubService {
      * @param {Object} [options.client]
      * @param {Object} [options.cache]
      * @param {Object} [options.config]
+     * @param {Object} [options.scheduler]
      */
     constructor(options = {}) {
         this.client = options.client || githubClient;
         this.cache = options.cache || githubCache;
         this.config = options.config || githubConfig;
+        this.scheduler = options.scheduler || null; // Injected or referenced later
+    }
+
+    /**
+     * Helper to perform conditional fetch with ETag support and smart cache management
+     * @private
+     */
+    async _fetchWithCache({
+        cacheKey,
+        ttlMs,
+        forceRefresh,
+        fetchFn,
+        mapFn,
+        allowStale = true
+    }) {
+        const existing = this.cache.getEntry(cacheKey, { allowStale: true });
+
+        // 1. Return fresh cache hit if not expired and not force refreshed
+        if (existing && !existing.metadata.is_expired && !forceRefresh) {
+            return {
+                data: existing.value,
+                cached: true,
+                cache_status: 'HIT',
+                last_synchronized_at: existing.metadata.last_synchronized_at,
+                last_successful_update: existing.metadata.last_successful_update
+            };
+        }
+
+        // 2. Prepare request with ETag (conditional request If-None-Match)
+        const fetchOptions = {
+            etag: existing?.metadata?.etag || null
+        };
+
+        try {
+            const response = await fetchFn(fetchOptions);
+
+            // Handle HTTP 304 Not Modified
+            if (response.notModified && existing) {
+                this.cache.touch(cacheKey, ttlMs, response.etag);
+                return {
+                    data: existing.value,
+                    cached: true,
+                    cache_status: 'NOT_MODIFIED_304',
+                    last_synchronized_at: new Date().toISOString(),
+                    last_successful_update: existing.metadata.last_successful_update,
+                    rateLimit: response.rateLimit
+                };
+            }
+
+            // Map and store new data
+            const mapped = mapFn(response.data);
+            const nowIso = new Date().toISOString();
+
+            this.cache.set(cacheKey, mapped, ttlMs, {
+                etag: response.etag,
+                last_successful_update: nowIso
+            });
+
+            return {
+                data: mapped,
+                cached: false,
+                cache_status: 'MISS',
+                last_synchronized_at: nowIso,
+                last_successful_update: nowIso,
+                rateLimit: response.rateLimit
+            };
+        } catch (err) {
+            // Serve stale data if external API fails but we have cached data
+            if (allowStale && existing?.value) {
+                console.warn(`⚠️  [GitHubService] Request failed for ${cacheKey}. Serving stale cache: ${err.message}`);
+                return {
+                    data: existing.value,
+                    cached: true,
+                    cache_status: 'STALE',
+                    stale: true,
+                    last_synchronized_at: existing.metadata.last_synchronized_at,
+                    last_successful_update: existing.metadata.last_successful_update,
+                    warning: err.message
+                };
+            }
+            throw err;
+        }
     }
 
     /**
      * Retrieve personal GitHub profile
+     * Default TTL: 30 minutes
      */
     async getPersonalProfile(options = {}) {
         const username = this.config.username;
@@ -39,20 +123,20 @@ class GitHubService {
         }
 
         const cacheKey = `github:personal:profile:${username}`;
-        if (!options.forceRefresh) {
-            const cached = this.cache.get(cacheKey);
-            if (cached) return { data: cached, cached: true };
-        }
+        const ttlMs = this.config.ttlProfileMs;
 
-        const response = await this.client.getUser(username);
-        const mapped = mapProfile(response.data, 'PERSONAL');
-        this.cache.set(cacheKey, mapped, this.config.cacheTtlMs);
-
-        return { data: mapped, cached: false, rateLimit: response.rateLimit };
+        return this._fetchWithCache({
+            cacheKey,
+            ttlMs,
+            forceRefresh: options.forceRefresh,
+            fetchFn: (opt) => this.client.getUser(username, opt),
+            mapFn: (data) => mapProfile(data, 'PERSONAL')
+        });
     }
 
     /**
      * Retrieve personal public repositories
+     * Default TTL: 15 minutes
      */
     async getPersonalRepos(pagination = {}, options = {}) {
         const username = this.config.username;
@@ -66,33 +150,36 @@ class GitHubService {
         const direction = pagination.direction || 'desc';
 
         const cacheKey = `github:personal:repos:${username}:${page}:${perPage}:${sort}:${direction}`;
-        if (!options.forceRefresh) {
-            const cached = this.cache.get(cacheKey);
-            if (cached) return { ...cached, cached: true };
-        }
+        const ttlMs = this.config.ttlReposMs;
 
-        const response = await this.client.getUserRepos(username, { page, per_page: perPage, sort, direction });
-        const repos = mapRepositories(response.data, 'PERSONAL');
+        const result = await this._fetchWithCache({
+            cacheKey,
+            ttlMs,
+            forceRefresh: options.forceRefresh,
+            fetchFn: (opt) => this.client.getUserRepos(username, { page, per_page: perPage, sort, direction }, opt),
+            mapFn: (data) => mapRepositories(data, 'PERSONAL')
+        });
 
-        const result = {
-            repos,
+        return {
+            repos: result.data,
             pagination: {
                 page,
                 per_page: perPage,
-                count: repos.length,
+                count: result.data ? result.data.length : 0,
                 sort,
                 direction
             },
-            rateLimit: response.rateLimit,
-            cached: false
+            cached: result.cached,
+            cache_status: result.cache_status,
+            last_synchronized_at: result.last_synchronized_at,
+            last_successful_update: result.last_successful_update,
+            rateLimit: result.rateLimit
         };
-
-        this.cache.set(cacheKey, result, this.config.cacheTtlMs);
-        return result;
     }
 
     /**
      * Retrieve personal public activity
+     * Default TTL: 5 minutes
      */
     async getPersonalActivity(pagination = {}, options = {}) {
         const username = this.config.username;
@@ -104,31 +191,34 @@ class GitHubService {
         const perPage = pagination.per_page || this.config.defaultPerPage;
 
         const cacheKey = `github:personal:activity:${username}:${page}:${perPage}`;
-        if (!options.forceRefresh) {
-            const cached = this.cache.get(cacheKey);
-            if (cached) return { ...cached, cached: true };
-        }
+        const ttlMs = this.config.ttlActivityMs;
 
-        const response = await this.client.getUserEvents(username, { page, per_page: perPage });
-        const activity = mapEvents(response.data, 'PERSONAL');
+        const result = await this._fetchWithCache({
+            cacheKey,
+            ttlMs,
+            forceRefresh: options.forceRefresh,
+            fetchFn: (opt) => this.client.getUserEvents(username, { page, per_page: perPage }, opt),
+            mapFn: (data) => mapEvents(data, 'PERSONAL')
+        });
 
-        const result = {
-            activity,
+        return {
+            activity: result.data,
             pagination: {
                 page,
                 per_page: perPage,
-                count: activity.length
+                count: result.data ? result.data.length : 0
             },
-            rateLimit: response.rateLimit,
-            cached: false
+            cached: result.cached,
+            cache_status: result.cache_status,
+            last_synchronized_at: result.last_synchronized_at,
+            last_successful_update: result.last_successful_update,
+            rateLimit: result.rateLimit
         };
-
-        this.cache.set(cacheKey, result, this.config.cacheTtlMs);
-        return result;
     }
 
     /**
      * Retrieve organization profile
+     * Default TTL: 30 minutes
      */
     async getOrgProfile(options = {}) {
         const org = this.config.org;
@@ -137,20 +227,20 @@ class GitHubService {
         }
 
         const cacheKey = `github:org:profile:${org}`;
-        if (!options.forceRefresh) {
-            const cached = this.cache.get(cacheKey);
-            if (cached) return { data: cached, cached: true };
-        }
+        const ttlMs = this.config.ttlProfileMs;
 
-        const response = await this.client.getOrg(org);
-        const mapped = mapProfile(response.data, 'ORGANIZATION');
-        this.cache.set(cacheKey, mapped, this.config.cacheTtlMs);
-
-        return { data: mapped, cached: false, rateLimit: response.rateLimit };
+        return this._fetchWithCache({
+            cacheKey,
+            ttlMs,
+            forceRefresh: options.forceRefresh,
+            fetchFn: (opt) => this.client.getOrg(org, opt),
+            mapFn: (data) => mapProfile(data, 'ORGANIZATION')
+        });
     }
 
     /**
      * Retrieve organization public repositories
+     * Default TTL: 15 minutes
      */
     async getOrgRepos(pagination = {}, options = {}) {
         const org = this.config.org;
@@ -164,33 +254,36 @@ class GitHubService {
         const direction = pagination.direction || 'desc';
 
         const cacheKey = `github:org:repos:${org}:${page}:${perPage}:${sort}:${direction}`;
-        if (!options.forceRefresh) {
-            const cached = this.cache.get(cacheKey);
-            if (cached) return { ...cached, cached: true };
-        }
+        const ttlMs = this.config.ttlReposMs;
 
-        const response = await this.client.getOrgRepos(org, { page, per_page: perPage, sort, direction });
-        const repos = mapRepositories(response.data, 'ORGANIZATION');
+        const result = await this._fetchWithCache({
+            cacheKey,
+            ttlMs,
+            forceRefresh: options.forceRefresh,
+            fetchFn: (opt) => this.client.getOrgRepos(org, { page, per_page: perPage, sort, direction }, opt),
+            mapFn: (data) => mapRepositories(data, 'ORGANIZATION')
+        });
 
-        const result = {
-            repos,
+        return {
+            repos: result.data,
             pagination: {
                 page,
                 per_page: perPage,
-                count: repos.length,
+                count: result.data ? result.data.length : 0,
                 sort,
                 direction
             },
-            rateLimit: response.rateLimit,
-            cached: false
+            cached: result.cached,
+            cache_status: result.cache_status,
+            last_synchronized_at: result.last_synchronized_at,
+            last_successful_update: result.last_successful_update,
+            rateLimit: result.rateLimit
         };
-
-        this.cache.set(cacheKey, result, this.config.cacheTtlMs);
-        return result;
     }
 
     /**
      * Retrieve organization public activity
+     * Default TTL: 5 minutes
      */
     async getOrgActivity(pagination = {}, options = {}) {
         const org = this.config.org;
@@ -202,38 +295,48 @@ class GitHubService {
         const perPage = pagination.per_page || this.config.defaultPerPage;
 
         const cacheKey = `github:org:activity:${org}:${page}:${perPage}`;
-        if (!options.forceRefresh) {
-            const cached = this.cache.get(cacheKey);
-            if (cached) return { ...cached, cached: true };
-        }
+        const ttlMs = this.config.ttlActivityMs;
 
-        const response = await this.client.getOrgEvents(org, { page, per_page: perPage });
-        const activity = mapEvents(response.data, 'ORGANIZATION');
+        const result = await this._fetchWithCache({
+            cacheKey,
+            ttlMs,
+            forceRefresh: options.forceRefresh,
+            fetchFn: (opt) => this.client.getOrgEvents(org, { page, per_page: perPage }, opt),
+            mapFn: (data) => mapEvents(data, 'ORGANIZATION')
+        });
 
-        const result = {
-            activity,
+        return {
+            activity: result.data,
             pagination: {
                 page,
                 per_page: perPage,
-                count: activity.length
+                count: result.data ? result.data.length : 0
             },
-            rateLimit: response.rateLimit,
-            cached: false
+            cached: result.cached,
+            cache_status: result.cache_status,
+            last_synchronized_at: result.last_synchronized_at,
+            last_successful_update: result.last_successful_update,
+            rateLimit: result.rateLimit
         };
-
-        this.cache.set(cacheKey, result, this.config.cacheTtlMs);
-        return result;
     }
 
     /**
      * Aggregated portfolio overview
+     * Default TTL: 5 minutes
      * Resilient to partial failure: if personal fails or org fails, the other is preserved.
      */
     async getOverview(options = {}) {
         const cacheKey = `github:overview:${this.config.username}:${this.config.org || 'none'}`;
-        if (!options.forceRefresh) {
-            const cached = this.cache.get(cacheKey);
-            if (cached) return { ...cached, cached: true };
+        const existing = this.cache.getEntry(cacheKey, { allowStale: true });
+
+        if (existing && !existing.metadata.is_expired && !options.forceRefresh) {
+            return {
+                ...existing.value,
+                cached: true,
+                cache_status: 'HIT',
+                last_synchronized_at: existing.metadata.last_synchronized_at,
+                last_successful_update: existing.metadata.last_successful_update
+            };
         }
 
         // Parallel requests using Promise.allSettled for fault isolation
@@ -311,6 +414,7 @@ class GitHubService {
             .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
             .slice(0, 10);
 
+        const nowIso = new Date().toISOString();
         const overview = {
             status: {
                 personal: personalStatus,
@@ -332,12 +436,114 @@ class GitHubService {
             },
             featured_repos: featuredRepos,
             recent_activity: recentActivity,
-            generated_at: new Date().toISOString(),
-            cached: false
+            last_synchronized_at: nowIso,
+            last_successful_update: nowIso,
+            cached: false,
+            cache_status: 'MISS'
         };
 
-        this.cache.set(cacheKey, overview, this.config.cacheTtlMs);
+        this.cache.set(cacheKey, overview, this.config.ttlOverviewMs, {
+            last_successful_update: nowIso
+        });
+
         return overview;
+    }
+
+    /**
+     * Invalidate caches affected by a webhook event
+     * @param {string} event - e.g. 'push', 'repository', 'release'
+     * @param {Object} payload - GitHub event payload
+     * @returns {Object} invalidation summary
+     */
+    handleWebhookEvent(event, payload = {}) {
+        const repoOwner = payload.repository?.owner?.login || payload.organization?.login || '';
+        const repoName = payload.repository?.name || '';
+        const scopes = [];
+
+        if (repoOwner.toLowerCase() === this.config.username.toLowerCase()) {
+            this.cache.invalidateScope('PERSONAL');
+            scopes.push('PERSONAL');
+        } else if (this.config.org && repoOwner.toLowerCase() === this.config.org.toLowerCase()) {
+            this.cache.invalidateScope('ORGANIZATION');
+            scopes.push('ORGANIZATION');
+        } else {
+            // General invalidation for overview
+            this.cache.delPattern('github:overview');
+            scopes.push('OVERVIEW');
+        }
+
+        console.log(`📡 [GitHubWebhook] Processed event "${event}" on ${repoOwner}/${repoName}. Invalidated: ${scopes.join(', ')}`);
+
+        return {
+            event,
+            repository: payload.repository?.full_name || null,
+            invalidated_scopes: scopes,
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    /**
+     * Aggregated monitoring and health status endpoint
+     * @returns {Promise<Object>}
+     */
+    async getHealth() {
+        const personalEntry = this.cache.getEntry(`github:personal:profile:${this.config.username}`, { allowStale: true });
+        const orgEntry = this.config.org ? this.cache.getEntry(`github:org:profile:${this.config.org}`, { allowStale: true }) : null;
+
+        let rateLimitData = null;
+        try {
+            const rlRes = await this.client.getRateLimit();
+            rateLimitData = rlRes.data?.rate || null;
+        } catch (e) {
+            // Safe fallback if rate limit check fails
+        }
+
+        const schedulerStatus = this.scheduler ? this.scheduler.getStatus() : {
+            enabled: this.config.syncEnabled,
+            status: this.config.syncEnabled ? 'idle' : 'disabled'
+        };
+
+        const personalOk = !personalEntry?.value || !personalEntry.metadata.is_expired;
+        const overallStatus = personalOk ? 'healthy' : 'degraded';
+
+        return {
+            status: overallStatus,
+            sources: {
+                personal: {
+                    username: this.config.username,
+                    status: 'ok',
+                    last_synchronized: personalEntry?.metadata?.last_synchronized_at || null,
+                    last_successful_update: personalEntry?.metadata?.last_successful_update || null
+                },
+                organization: {
+                    name: this.config.org || null,
+                    status: this.config.org ? 'ok' : 'unconfigured',
+                    last_synchronized: orgEntry?.metadata?.last_synchronized_at || null,
+                    last_successful_update: orgEntry?.metadata?.last_successful_update || null
+                }
+            },
+            scheduler: schedulerStatus,
+            cache: {
+                ...this.cache.getStats(),
+                ttls: {
+                    profile_ms: this.config.ttlProfileMs,
+                    repos_ms: this.config.ttlReposMs,
+                    activity_ms: this.config.ttlActivityMs,
+                    overview_ms: this.config.ttlOverviewMs
+                }
+            },
+            rate_limit: rateLimitData ? {
+                limit: rateLimitData.limit,
+                remaining: rateLimitData.remaining,
+                reset: rateLimitData.reset,
+                reset_at: new Date(rateLimitData.reset * 1000).toISOString()
+            } : null,
+            webhook: {
+                configured: this.config.webhookEnabled,
+                deliveries_tracked: this.cache.deliveries.size
+            },
+            timestamp: new Date().toISOString()
+        };
     }
 }
 

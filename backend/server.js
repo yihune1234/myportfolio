@@ -37,7 +37,11 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf;
+    }
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -85,15 +89,19 @@ mongoose.connection.on('disconnected', () => {
     console.log('⚠️  MongoDB disconnected');
 });
 
+const { githubScheduler } = require('./services/github/githubScheduler');
+
 const PORT = process.env.PORT || 5001;
 const server = app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📍 API available at http://localhost:${PORT}/api`);
+    githubScheduler.start();
 });
 
 
 process.on('SIGTERM', () => {
     console.log('SIGTERM signal received: closing HTTP server');
+    githubScheduler.stop();
     server.close(() => {
         console.log('HTTP server closed');
         mongoose.connection.close(false, () => {

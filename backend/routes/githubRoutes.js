@@ -7,6 +7,13 @@ const express = require('express');
 const router = express.Router();
 const githubController = require('../controllers/githubController');
 const { validatePagination, validateOrgConfigured } = require('../middleware/githubValidation');
+const { verifyWebhookSignature } = require('../middleware/githubWebhook');
+
+// Monitoring and Health Check
+router.get('/health', githubController.getHealth);
+
+// Webhook Receiver (optional event-driven synchronization)
+router.post('/webhook', verifyWebhookSignature, githubController.handleWebhook);
 
 // Portfolio Aggregation
 router.get('/overview', githubController.getOverview);

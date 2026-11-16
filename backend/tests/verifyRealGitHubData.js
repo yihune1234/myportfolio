@@ -141,6 +141,47 @@ async function runLiveVerification() {
             return null;
         });
 
+        // 8. GET /api/github/health (Phase 2 monitoring)
+        await check('GET /api/github/health', `${baseUrl}/health`, (data) => {
+            if (!data.status) return 'Missing health status';
+            if (!data.sources?.personal || !data.sources?.organization) return 'Missing sources status';
+            if (!data.cache?.ttls) return 'Missing cache ttls';
+            if (!data.scheduler) return 'Missing scheduler status';
+            if (data.webhook?.configured === undefined) return 'Missing webhook status';
+            return null;
+        });
+
+        // 9. POST /api/github/webhook (Phase 2 webhook ping)
+        const crypto = require('crypto');
+        const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET || 'phase2_test_webhook_secret_key';
+        const pingPayload = JSON.stringify({ zen: 'Practicality beats purity.', hook_id: 123456 });
+        const pingSignature = 'sha256=' + crypto.createHmac('sha256', webhookSecret).update(pingPayload).digest('hex');
+
+        process.stdout.write('Testing POST /api/github/webhook (ping)... ');
+        try {
+            const res = await fetch(`${baseUrl}/webhook`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Hub-Signature-256': pingSignature,
+                    'X-GitHub-Event': 'ping',
+                    'X-GitHub-Delivery': `deliv-ping-${Date.now()}`
+                },
+                body: pingPayload
+            });
+            const data = await res.json();
+            if (res.ok && data.message?.includes('ping')) {
+                console.log(`✅ Passed (${res.status})`);
+                results.push({ name: 'POST /api/github/webhook (ping)', passed: true, status: res.status });
+            } else {
+                console.log(`❌ Failed: ${JSON.stringify(data)}`);
+                results.push({ name: 'POST /api/github/webhook (ping)', passed: false, status: res.status });
+            }
+        } catch (e) {
+            console.log(`❌ Exception: ${e.message}`);
+            results.push({ name: 'POST /api/github/webhook (ping)', passed: false, error: e.message });
+        }
+
         console.log('\n--- VERIFICATION SUMMARY ---');
         const passedCount = results.filter(r => r.passed).length;
         console.log(`Total Endpoints Tested: ${results.length}`);
