@@ -12,6 +12,18 @@ const siteSettingsSchema = new mongoose.Schema({
     autoSyncEnabled: { type: Boolean, default: true },
     syncIntervalMs: { type: Number, default: 900000 },
     featuredRepos: [{ type: String }],
+    theme: {
+        preset: { type: String, default: 'warm-charcoal' },
+        background: { type: String, default: '#302E2D' },
+        primary: { type: String, default: '#FFDD9B' },
+        primaryText: { type: String, default: '#FFFFFF' },
+        secondaryText: { type: String, default: '#FFF1D8' },
+        secondaryAccent: { type: String, default: '#FFDD9B' },
+        cardSurface: { type: String, default: '#3A3836' },
+        cardElevated: { type: String, default: '#444240' },
+        border: { type: String, default: 'rgba(255, 221, 155, 0.18)' },
+        updatedAt: { type: Date, default: Date.now }
+    },
     updatedAt: { type: Date, default: Date.now }
 });
 

@@ -40,7 +40,7 @@ export default function PlatformShowcase() {
   return (
     <section
       id="platforms"
-      className="section-padding relative overflow-hidden bg-[#07090E] border-t border-white/[0.08]"
+      className="section-padding relative overflow-hidden bg-[var(--bg-base,#302E2D)] border-t border-white/[0.08]"
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
@@ -57,10 +57,10 @@ export default function PlatformShowcase() {
           <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
             Cross-Platform Capabilities
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-[#F8FAFC] tracking-tight font-heading">
+          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
             Platform Capabilities & Infrastructure
           </h2>
-          <p className="text-[#94A3B8] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mt-2 font-body">
+          <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mt-2 font-body">
             Architecting across web clients, native mobile platforms, and distributed backend clusters with unified data contracts.
           </p>
         </motion.div>
@@ -78,11 +78,11 @@ export default function PlatformShowcase() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className={`p-3 rounded-xl bg-[#07090E] border ${platform.accent}`}>
+                    <div className={`p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border ${platform.accent}`}>
                       <platform.icon size={22} />
                     </div>
                     <div>
-                      <h3 className="text-lg sm:text-xl font-bold text-[#F8FAFC]">
+                      <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
                         {platform.title}
                       </h3>
                       <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">
@@ -92,7 +92,7 @@ export default function PlatformShowcase() {
                   </div>
                 </div>
 
-                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed mb-6 font-body">
+                <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6 font-body">
                   {platform.desc}
                 </p>
               </div>
@@ -101,7 +101,7 @@ export default function PlatformShowcase() {
                 {platform.features.map((feature, fIdx) => (
                   <span
                     key={fIdx}
-                    className="px-2.5 py-1 rounded-lg bg-[#07090E] border border-white/[0.06] text-[11px] font-mono text-[#94A3B8] group-hover:text-[#F8FAFC] transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-[var(--bg-base,#302E2D)] border border-white/[0.06] text-[11px] font-mono text-[var(--text-secondary,#FFF1D8)] group-hover:text-[var(--text-primary,#FFFFFF)] transition-colors"
                   >
                     {feature}
                   </span>

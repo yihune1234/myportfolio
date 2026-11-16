@@ -67,7 +67,7 @@ export default function ProjectsSection() {
   return (
     <section
       id="projects"
-      className="section-padding relative overflow-hidden bg-[#07090E] border-t border-white/[0.08]"
+      className="section-padding relative overflow-hidden bg-[var(--bg-base,#302E2D)] border-t border-white/[0.08]"
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
@@ -81,22 +81,22 @@ export default function ProjectsSection() {
             <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
               Production Portfolio
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black text-[#F8FAFC] tracking-tight font-heading">
+            <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
               Featured Systems & Applications
             </h2>
-            <p className="text-[#94A3B8] text-sm sm:text-base max-w-xl leading-relaxed mt-2 font-body">
+            <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-xl leading-relaxed mt-2 font-body">
               Production-grade software platforms, backend microservices, and mobile architectures linked with live repository telemetry.
             </p>
           </div>
 
           {/* Scope Filters */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[#0E131F] border border-white/[0.08] backdrop-blur-md self-start md:self-auto shadow-inner">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] backdrop-blur-md self-start md:self-auto shadow-inner">
             <button
               onClick={() => setSelectedScope("ALL")}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedScope === "ALL"
-                  ? "bg-white/[0.08] text-[#F8FAFC] border border-white/[0.1] shadow-sm"
-                  : "text-[#94A3B8] hover:text-[#F8FAFC]"
+                  ? "bg-white/[0.08] text-[var(--text-primary,#FFFFFF)] border border-white/[0.1] shadow-sm"
+                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
               }`}
             >
               All Projects ({projectList.length})
@@ -106,7 +106,7 @@ export default function ProjectsSection() {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedScope === "PERSONAL"
                   ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
-                  : "text-[#94A3B8] hover:text-[#F8FAFC]"
+                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
               }`}
             >
               <User size={13} className="text-emerald-400" />
@@ -117,7 +117,7 @@ export default function ProjectsSection() {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedScope === "ORGANIZATION"
                   ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm"
-                  : "text-[#94A3B8] hover:text-[#F8FAFC]"
+                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
               }`}
             >
               <Building2 size={13} className="text-amber-400" />
@@ -129,10 +129,10 @@ export default function ProjectsSection() {
         {error ? (
           <div className="text-center py-20 px-8 card-slate rounded-2xl max-w-2xl mx-auto border border-red-500/30">
             <p className="text-xl text-red-400 font-bold mb-3 font-heading">Failed to load projects</p>
-            <p className="text-[#94A3B8] mb-6 text-sm">{error}</p>
+            <p className="text-[var(--text-secondary,#FFF1D8)] mb-6 text-sm">{error}</p>
             <button
               onClick={() => refetch()}
-              className="px-6 py-2.5 bg-white/[0.06] border border-white/[0.1] text-[#F8FAFC] font-mono text-xs font-bold rounded-lg hover:bg-white/[0.1] transition-all uppercase"
+              className="px-6 py-2.5 bg-white/[0.06] border border-white/[0.1] text-[var(--text-primary,#FFFFFF)] font-mono text-xs font-bold rounded-lg hover:bg-white/[0.1] transition-all uppercase"
             >
               Retry Query
             </button>
@@ -143,7 +143,7 @@ export default function ProjectsSection() {
           </div>
         ) : sorted.length === 0 ? (
           <div className="text-center py-24 card-slate rounded-2xl">
-            <p className="text-[#94A3B8] font-mono text-sm">
+            <p className="text-[var(--text-secondary,#FFF1D8)] font-mono text-sm">
               No projects found for {selectedScope.toLowerCase()} scope. Check back soon!
             </p>
           </div>
@@ -185,7 +185,7 @@ export default function ProjectsSection() {
                   }`}
                 >
                   {/* Screenshot Carousel Frame */}
-                  <div className="relative w-full aspect-[16/10] overflow-hidden bg-[#07090E]">
+                  <div className="relative w-full aspect-[16/10] overflow-hidden bg-[var(--bg-base,#302E2D)]">
                     <ProjectCardCarousel
                       images={slides}
                       title={project.title}
@@ -197,7 +197,7 @@ export default function ProjectsSection() {
 
                     {/* Featured / Pinned Badge */}
                     {project.pinned && (
-                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1 px-2.5 py-1 bg-emerald-500 text-[10px] font-mono font-bold text-[#07090E] uppercase tracking-wider rounded-md shadow-lg shadow-emerald-500/30">
+                      <div className="absolute top-3 left-3 z-20 flex items-center gap-1 px-2.5 py-1 bg-emerald-500 text-[10px] font-mono font-bold text-[var(--bg-base,#302E2D)] uppercase tracking-wider rounded-md shadow-lg shadow-emerald-500/30">
                         <Pin size={10} className="fill-current" />
                         Featured
                       </div>
@@ -219,11 +219,11 @@ export default function ProjectsSection() {
 
                   {/* Card Body */}
                   <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-base sm:text-lg font-bold text-[#F8FAFC] group-hover:text-emerald-300 transition-colors leading-snug mb-2 font-heading">
+                    <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary,#FFFFFF)] group-hover:text-emerald-300 transition-colors leading-snug mb-2 font-heading">
                       {project.title}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed line-clamp-2 mb-4 flex-1 font-body">
+                    <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed line-clamp-2 mb-4 flex-1 font-body">
                       {project.description}
                     </p>
 
@@ -232,7 +232,7 @@ export default function ProjectsSection() {
                       {project.technologies?.slice(0, 3).map((tech, i) => (
                         <span
                           key={i}
-                          className="text-[11px] font-mono px-2 py-0.5 bg-[#07090E] border border-white/[0.06] rounded text-[#94A3B8] font-medium"
+                          className="text-[11px] font-mono px-2 py-0.5 bg-[var(--bg-base,#302E2D)] border border-white/[0.06] rounded text-[var(--text-secondary,#FFF1D8)] font-medium"
                         >
                           {tech}
                         </span>
@@ -246,10 +246,10 @@ export default function ProjectsSection() {
 
                     {/* Live GitHub Telemetry Overlay */}
                     {linkedRepo && (
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#07090E]/90 border border-white/[0.06] mb-4 text-xs font-mono text-[#94A3B8]">
+                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-[var(--bg-base,#302E2D)]/90 border border-white/[0.06] mb-4 text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
                         <div className="flex items-center gap-3">
                           {linkedRepo.primary_language && (
-                            <span className="flex items-center gap-1.5 text-[#F8FAFC] font-medium">
+                            <span className="flex items-center gap-1.5 text-[var(--text-primary,#FFFFFF)] font-medium">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                               {linkedRepo.primary_language}
                             </span>
@@ -258,7 +258,7 @@ export default function ProjectsSection() {
                             <Star size={11} className="fill-amber-400/40" />
                             {linkedRepo.stars}
                           </span>
-                          <span className="flex items-center gap-1 text-[#94A3B8]">
+                          <span className="flex items-center gap-1 text-[var(--text-secondary,#FFF1D8)]">
                             <GitFork size={11} />
                             {linkedRepo.forks}
                           </span>
@@ -276,7 +276,7 @@ export default function ProjectsSection() {
                     <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">
                       <button
                         onClick={() => (window.location.href = `/project/${project._id}`)}
-                        className="flex-1 py-2 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-[#07090E] rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/15"
+                        className="flex-1 py-2 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-[var(--bg-base,#302E2D)] rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/15"
                       >
                         <span>View Architecture</span>
                         <ArrowUpRight size={13} />
@@ -288,7 +288,7 @@ export default function ProjectsSection() {
                             href={project.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 bg-[#07090E] text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.06] border border-white/[0.08] rounded-xl transition-all"
+                            className="p-2 bg-[var(--bg-base,#302E2D)] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.06] border border-white/[0.08] rounded-xl transition-all"
                             title="GitHub Repository"
                           >
                             <Github size={14} />
@@ -299,7 +299,7 @@ export default function ProjectsSection() {
                             href={project.demoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 bg-[#07090E] text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.06] border border-white/[0.08] rounded-xl transition-all"
+                            className="p-2 bg-[var(--bg-base,#302E2D)] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.06] border border-white/[0.08] rounded-xl transition-all"
                             title="Live Demo"
                           >
                             <ExternalLink size={14} />

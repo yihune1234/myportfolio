@@ -211,12 +211,12 @@ export default function ProjectModal() {
   return (
     <Dialog open={isModalOpen} onOpenChange={(open) => !open && closeModal()}>
       <DialogOverlay className="bg-black/85 backdrop-blur-md z-[60]" />
-      <DialogContent className="bg-[#07090E] border-white/[0.08] z-[60] max-w-7xl w-full h-[95vh] overflow-hidden p-0 gap-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 data-[state=open]:slide-in-from-top data-[state=closed]:slide-out-to-top duration-300">
+      <DialogContent className="bg-[var(--bg-base,#302E2D)] border-white/[0.08] z-[60] max-w-7xl w-full h-[95vh] overflow-hidden p-0 gap-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 data-[state=open]:slide-in-from-top data-[state=closed]:slide-out-to-top duration-300">
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-white/[0.08] bg-[#07090E]/95 backdrop-blur-xl sticky top-0 z-10">
+          <div className="flex items-center justify-between p-4 border-b border-white/[0.08] bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-xl sticky top-0 z-10">
             <button
               onClick={closeModal}
-              className="flex items-center gap-2 text-[#94A3B8] hover:text-emerald-400 transition-colors"
+              className="flex items-center gap-2 text-[var(--text-secondary,#FFF1D8)] hover:text-emerald-400 transition-colors"
             >
               <ArrowLeft size={18} />
               <span className="hidden sm:inline text-sm font-medium">Back to Projects</span>
@@ -224,9 +224,9 @@ export default function ProjectModal() {
 
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 px-2">
               <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-emerald-500 to-teal-400 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md shadow-emerald-500/20">
-                <span className="text-[#07090E] font-bold text-xs sm:text-sm">P</span>
+                <span className="text-[var(--bg-base,#302E2D)] font-bold text-xs sm:text-sm">P</span>
               </div>
-              <span className="font-bold text-[#F8FAFC] text-sm sm:text-base truncate max-w-[140px] sm:max-w-sm">
+              <span className="font-bold text-[var(--text-primary,#FFFFFF)] text-sm sm:text-base truncate max-w-[140px] sm:max-w-sm">
                 {project.title}
               </span>
             </div>
@@ -239,7 +239,7 @@ export default function ProjectModal() {
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-[#94A3B8] hover:text-emerald-400 transition-colors"
+                  className="p-2 text-[var(--text-secondary,#FFF1D8)] hover:text-emerald-400 transition-colors"
                   aria-label="GitHub"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -253,7 +253,7 @@ export default function ProjectModal() {
                   href={project.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-[#94A3B8] hover:text-emerald-400 transition-colors"
+                  className="p-2 text-[var(--text-secondary,#FFF1D8)] hover:text-emerald-400 transition-colors"
                   aria-label="Live Demo"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -262,7 +262,7 @@ export default function ProjectModal() {
               )}
               <button
                 onClick={closeModal}
-                className="p-2 text-[#94A3B8] hover:text-red-400 transition-colors"
+                className="p-2 text-[var(--text-secondary,#FFF1D8)] hover:text-red-400 transition-colors"
                 aria-label="Close modal"
               >
                 <X size={18} />
@@ -275,33 +275,33 @@ export default function ProjectModal() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                 <div className="lg:col-span-2 space-y-6">
                   <div>
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#F8FAFC] mb-4">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--text-primary,#FFFFFF)] mb-4">
                       About This Project
                     </h2>
-                    <div className="text-sm sm:text-base text-[#94A3B8] leading-relaxed whitespace-pre-line space-y-4">
+                    <div className="text-sm sm:text-base text-[var(--text-secondary,#FFF1D8)] leading-relaxed whitespace-pre-line space-y-4">
                       {project.description}
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4 sm:space-y-6">
-                  <div className="bg-[#0E131F] border border-white/[0.08] rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl shadow-black/40">
+                  <div className="bg-[var(--card-surface,#3A3836)] border border-white/[0.08] rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl shadow-black/40">
                     <h3 className="text-xs sm:text-sm font-bold text-emerald-400 mb-3 sm:mb-4 uppercase tracking-wider font-mono">
                       Project Telemetry
                     </h3>
                     <div className="space-y-3 sm:space-y-4">
                       {project.role && (
                         <div>
-                          <span className="text-[10px] sm:text-xs font-bold text-[#94A3B8]/60 uppercase tracking-wider block mb-1">
+                          <span className="text-[10px] sm:text-xs font-bold text-[var(--text-secondary,#FFF1D8)]/60 uppercase tracking-wider block mb-1">
                             Role
                           </span>
-                          <span className="text-sm sm:text-base font-bold text-[#F8FAFC]">
+                          <span className="text-sm sm:text-base font-bold text-[var(--text-primary,#FFFFFF)]">
                             {project.role}
                           </span>
                         </div>
                       )}
                       <div>
-                        <span className="text-[10px] sm:text-xs font-bold text-[#94A3B8]/60 uppercase tracking-wider block mb-1.5">
+                        <span className="text-[10px] sm:text-xs font-bold text-[var(--text-secondary,#FFF1D8)]/60 uppercase tracking-wider block mb-1.5">
                           Technologies
                         </span>
                         <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -316,33 +316,33 @@ export default function ProjectModal() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-[10px] sm:text-xs font-bold text-[#94A3B8]/60 uppercase tracking-wider block mb-1">
+                        <span className="text-[10px] sm:text-xs font-bold text-[var(--text-secondary,#FFF1D8)]/60 uppercase tracking-wider block mb-1">
                           Screenshots
                         </span>
-                        <span className="text-sm sm:text-base font-bold text-[#F8FAFC]">
+                        <span className="text-sm sm:text-base font-bold text-[var(--text-primary,#FFFFFF)]">
                           {slides.length} image{slides.length !== 1 ? "s" : ""}
                         </span>
                       </div>
 
                       {/* Live GitHub Telemetry */}
                       {matchedRepo && (
-                        <div className="p-3 rounded-xl bg-[#07090E] border border-white/[0.08] space-y-2 mt-2">
+                        <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] space-y-2 mt-2">
                           <span className="text-[10px] font-mono text-emerald-400 font-semibold block uppercase tracking-wider">
                             Verified GitHub Telemetry
                           </span>
-                          <div className="flex items-center justify-between text-xs font-mono text-[#94A3B8]">
+                          <div className="flex items-center justify-between text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
                             <span>Primary Language</span>
-                            <span className="text-[#F8FAFC] font-medium">
+                            <span className="text-[var(--text-primary,#FFFFFF)] font-medium">
                               {matchedRepo.primary_language || "N/A"}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between text-xs font-mono text-[#94A3B8]">
+                          <div className="flex items-center justify-between text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
                             <span>Stars / Forks</span>
                             <span className="text-amber-400 font-bold">
                               {matchedRepo.stars} ★ / {matchedRepo.forks} ⑂
                             </span>
                           </div>
-                          <div className="flex items-center justify-between text-[11px] font-mono text-[#94A3B8]/60">
+                          <div className="flex items-center justify-between text-[11px] font-mono text-[var(--text-secondary,#FFF1D8)]/60">
                             <span>Last Pushed</span>
                             <span>
                               {new Date(matchedRepo.pushed_at).toLocaleDateString(
@@ -365,7 +365,7 @@ export default function ProjectModal() {
                           href={project.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-2.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[#94A3B8] hover:text-[#F8FAFC] rounded-xl text-xs sm:text-sm font-bold text-center transition-all flex items-center justify-center gap-2"
+                          className="w-full py-2.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] rounded-xl text-xs sm:text-sm font-bold text-center transition-all flex items-center justify-center gap-2"
                         >
                           <Github size={16} />
                           View Source Code
@@ -376,7 +376,7 @@ export default function ProjectModal() {
                           href={project.demoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-[#07090E] rounded-xl text-xs sm:text-sm font-bold text-center transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                          className="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-[var(--bg-base,#302E2D)] rounded-xl text-xs sm:text-sm font-bold text-center transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
                         >
                           <ExternalLink size={16} />
                           Live Demo
@@ -390,14 +390,14 @@ export default function ProjectModal() {
               {slides.length > 0 && (
                 <div className="mt-10 sm:mt-14 lg:mt-16">
                   <div className="flex items-center gap-3 mb-5 sm:mb-6 lg:mb-8">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#0E131F] border border-white/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/10 flex items-center justify-center flex-shrink-0">
                       <ImageIcon size={16} className="sm:w-[18px] sm:h-[18px] text-emerald-400" />
                     </div>
                     <div>
-                      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#F8FAFC]">
+                      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--text-primary,#FFFFFF)]">
                         Project Gallery
                       </h2>
-                      <p className="text-xs sm:text-sm text-[#94A3B8]">
+                      <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)]">
                         {slides.length} screenshot{slides.length !== 1 ? "s" : ""}
                       </p>
                     </div>
@@ -411,7 +411,7 @@ export default function ProjectModal() {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.3) }}
                         viewport={{ once: true, margin: "-50px" }}
-                        className={`relative group cursor-pointer rounded-xl overflow-hidden bg-[#0E131F] border border-white/[0.08] hover:border-emerald-500/40 transition-all duration-500 ${
+                        className={`relative group cursor-pointer rounded-xl overflow-hidden bg-[var(--card-surface,#3A3836)] border border-white/[0.08] hover:border-emerald-500/40 transition-all duration-500 ${
                           index === 0 && slides.length >= 3
                             ? "sm:col-span-2"
                             : ""
@@ -441,10 +441,10 @@ export default function ProjectModal() {
                           </div>
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <div className="p-2 sm:p-2.5 bg-emerald-500/90 rounded-full shadow-lg transform group-hover:scale-110 transition-transform">
-                              <ZoomIn size={14} className="sm:w-4 sm:h-4 text-[#07090E]" />
+                              <ZoomIn size={14} className="sm:w-4 sm:h-4 text-[var(--bg-base,#302E2D)]" />
                             </div>
                           </div>
-                          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 px-1.5 sm:px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[9px] sm:text-[10px] font-mono font-bold text-[#94A3B8] border border-white/[0.08]">
+                          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 px-1.5 sm:px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[9px] sm:text-[10px] font-mono font-bold text-[var(--text-secondary,#FFF1D8)] border border-white/[0.08]">
                             #{index + 1}
                           </div>
                         </div>

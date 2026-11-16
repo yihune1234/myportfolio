@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 import { useToast } from "../../hooks/use-toast";
+import { ThemeSelector } from "./ThemeSelector";
 
 export function AdminSettings() {
   const [admin, setAdmin] = useState(null);
@@ -317,6 +318,9 @@ export function AdminSettings() {
             </motion.button>
           </form>
         </FormSection>
+
+        {/* Brand Theme Selector */}
+        <ThemeSelector />
 
         {/* GitHub Integration Settings */}
         <FormSection

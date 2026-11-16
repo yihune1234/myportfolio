@@ -255,4 +255,63 @@ router.post('/github-sync', auth, async (req, res) => {
     }
 });
 
+// Get current theme (admin)
+router.get('/theme', auth, async (req, res) => {
+    try {
+        let settings = await SiteSettings.findOne({ key: 'site_settings' });
+        if (!settings) {
+            settings = await SiteSettings.create({ key: 'site_settings' });
+        }
+        res.json({ success: true, theme: settings.theme });
+    } catch (error) {
+        console.error('Error fetching admin theme:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Update portfolio theme (admin only)
+router.put('/theme', auth, async (req, res) => {
+    try {
+        const {
+            preset,
+            background,
+            primary,
+            primaryText,
+            secondaryText,
+            secondaryAccent,
+            cardSurface,
+            cardElevated,
+            border
+        } = req.body;
+
+        let settings = await SiteSettings.findOne({ key: 'site_settings' });
+        if (!settings) {
+            settings = new SiteSettings({ key: 'site_settings' });
+        }
+
+        if (!settings.theme) {
+            settings.theme = {};
+        }
+
+        if (preset !== undefined) settings.theme.preset = preset;
+        if (background !== undefined) settings.theme.background = background.trim();
+        if (primary !== undefined) settings.theme.primary = primary.trim();
+        if (primaryText !== undefined) settings.theme.primaryText = primaryText.trim();
+        if (secondaryText !== undefined) settings.theme.secondaryText = secondaryText.trim();
+        if (secondaryAccent !== undefined) settings.theme.secondaryAccent = secondaryAccent.trim();
+        if (cardSurface !== undefined) settings.theme.cardSurface = cardSurface.trim();
+        if (cardElevated !== undefined) settings.theme.cardElevated = cardElevated.trim();
+        if (border !== undefined) settings.theme.border = border.trim();
+        settings.theme.updatedAt = new Date();
+        settings.updatedAt = new Date();
+
+        await settings.save();
+
+        res.json({ success: true, message: 'Portfolio theme updated successfully', theme: settings.theme });
+    } catch (error) {
+        console.error('Error saving portfolio theme:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
 module.exports = router;

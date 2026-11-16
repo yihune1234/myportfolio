@@ -14,10 +14,12 @@ import {
   LayoutDashboard,
   Sparkles,
   FileText,
+  Palette,
 } from "lucide-react";
 import { ProjectsManager } from "./ProjectsManager";
 import { MessagesManager } from "./MessagesManager";
 import { AdminSettings } from "./AdminSettings";
+import { ThemeSelector } from "./ThemeSelector";
 import ProjectSectionsManager from "./ProjectSectionsManager";
 import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 
@@ -54,6 +56,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
     { id: "projects", label: "Projects", icon: FolderKanban },
     { id: "sections", label: "Project Sections", icon: FileText },
     { id: "messages", label: "Messages", icon: MessageSquare },
+    { id: "theme", label: "Theme Selector", icon: Palette },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
@@ -178,7 +181,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
                   whileHover={{ x: 4 }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${
                     activeTab === tab.id
-                      ? "bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] shadow-lg shadow-[#FF8A00]/20"
+                      ? "bg-gradient-to-r from-[#FFDD9B] to-[#FFE8B8] text-[#302E2D] shadow-lg shadow-[#FFDD9B]/20"
                       : "text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.04]"
                   }`}
                 >
@@ -211,6 +214,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
                 )}
                 {activeTab === "sections" && <ProjectSectionsManager />}
                 {activeTab === "messages" && <MessagesManager />}
+                {activeTab === "theme" && <ThemeSelector />}
                 {activeTab === "settings" && <AdminSettings />}
               </motion.div>
             </AnimatePresence>

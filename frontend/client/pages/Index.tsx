@@ -90,10 +90,10 @@ export default function Index() {
       </main>
 
       {/* Architectural Telemetry Footer */}
-      <footer className="relative overflow-hidden border-t border-white/[0.08] bg-[#07090E]">
+      <footer className="relative overflow-hidden border-t border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--bg-base,#302E2D)]">
         {/* Subtle Ambient Radial Lighting */}
-        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 translate-y-1/2 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-96 h-96 bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 translate-y-1/2 w-96 h-96 bg-[var(--secondary-accent,#FFDD9B)]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute inset-0 dot-matrix-grid opacity-15 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 relative z-10">
@@ -101,9 +101,9 @@ export default function Index() {
             {/* Brand & Monogram */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-10 h-10 rounded-xl bg-[#0E131F] border border-white/10 flex items-center justify-center shadow-lg shadow-black/40 group">
+                <div className="w-10 h-10 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/10 flex items-center justify-center shadow-lg shadow-black/40 group">
                   <svg
-                    className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform duration-300"
+                    className="w-5 h-5 text-[var(--primary-accent,#FFDD9B)] group-hover:scale-110 transition-transform duration-300"
                     viewBox="0 0 32 32"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -123,37 +123,37 @@ export default function Index() {
                     />
                     <path
                       d="M16 6H25C27.5 6 27.5 12 25 12H16"
-                      stroke="#F59E0B"
+                      stroke="var(--secondary-accent, #FFDD9B)"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
                     <path
                       d="M16 12H26C28.5 12 28.5 18 26 18H16"
-                      stroke="#F59E0B"
+                      stroke="var(--secondary-accent, #FFDD9B)"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
                   </svg>
                 </div>
                 <div>
-                  <span className="font-black text-xl text-[#F8FAFC] tracking-tight block">
+                  <span className="font-black text-xl text-[var(--text-primary,#FFFFFF)] tracking-tight block">
                     Yihune Belay
                   </span>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--primary-accent,#FFDD9B)]">
                     Architectural Telemetry & Venture Hub
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-sm mb-5">
+              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed max-w-sm mb-5">
                 Full-stack software engineer & distributed systems architect. Specializing in high-throughput backend APIs, security engineering, and multi-tenant commerce platforms.
               </p>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0E131F] border border-emerald-500/20 text-[11px] font-mono text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--card-surface,#3A3836)] border border-[var(--primary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)] animate-pulse" />
                   Personal Lab: @yihune1234
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0E131F] border border-amber-500/20 text-[11px] font-mono text-amber-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--card-surface,#3A3836)] border border-[var(--secondary-accent,#FFDD9B)]/25 text-[11px] font-mono text-[var(--secondary-accent,#FFDD9B)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--secondary-accent,#FFDD9B)]" />
                   Org Venture: @AriitiMarket
                 </span>
               </div>
@@ -161,7 +161,7 @@ export default function Index() {
 
             {/* Quick Links */}
             <div>
-              <h4 className="font-mono text-[#F8FAFC] uppercase tracking-wider text-xs mb-5 font-bold">
+              <h4 className="font-mono text-[var(--text-primary,#FFFFFF)] uppercase tracking-wider text-xs mb-5 font-bold">
                 Telemetry Nodes
               </h4>
               <ul className="space-y-2.5">
@@ -181,7 +181,7 @@ export default function Index() {
                           .getElementById(link.id)
                           ?.scrollIntoView({ behavior: "smooth" })
                       }
-                      className="text-xs text-[#94A3B8] hover:text-emerald-400 transition-colors font-mono"
+                      className="text-xs text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--primary-accent,#FFDD9B)] transition-colors font-mono"
                     >
                       → {link.name}
                     </button>
@@ -192,7 +192,7 @@ export default function Index() {
 
             {/* Connect & Security */}
             <div>
-              <h4 className="font-mono text-[#F8FAFC] uppercase tracking-wider text-xs mb-5 font-bold">
+              <h4 className="font-mono text-[var(--text-primary,#FFFFFF)] uppercase tracking-wider text-xs mb-5 font-bold">
                 Connect & Admin
               </h4>
               <div className="flex flex-col gap-4">
@@ -201,7 +201,7 @@ export default function Index() {
                     href="https://github.com/yihune1234"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-emerald-400 hover:border-emerald-500/30 transition-all duration-200"
+                    className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--primary-accent,#FFDD9B)] hover:border-[var(--primary-accent,#FFDD9B)]/30 transition-all duration-200"
                     title="Personal GitHub: @yihune1234"
                   >
                     <Github className="w-4 h-4" />
@@ -210,33 +210,33 @@ export default function Index() {
                     href="https://github.com/AriitiMarket"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-amber-400 hover:border-amber-500/30 transition-all duration-200"
+                    className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--secondary-accent,#FFDD9B)] hover:border-[var(--secondary-accent,#FFDD9B)]/30 transition-all duration-200"
                     title="Organization GitHub: @AriitiMarket"
                   >
-                    <Github className="w-4 h-4 text-amber-400/80" />
+                    <Github className="w-4 h-4 text-[var(--secondary-accent,#FFDD9B)]" />
                   </a>
                   <a
                     href="https://linkedin.com/in/yihune-belay"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-emerald-400 hover:border-emerald-500/30 transition-all duration-200"
+                    className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--primary-accent,#FFDD9B)] hover:border-[var(--primary-accent,#FFDD9B)]/30 transition-all duration-200"
                     title="LinkedIn Profile"
                   >
                     <Linkedin className="w-4 h-4" />
                   </a>
                   <button
                     onClick={() => setShowAdminPortal(true)}
-                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-white/20 transition-all duration-200"
+                    className="p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:border-white/20 transition-all duration-200"
                     title="Admin Access Portal"
                   >
                     <Lock className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#0E131F] border border-white/[0.06] text-[11px] font-mono text-[#64748B] space-y-1">
-                  <div className="flex items-center justify-between text-[#94A3B8]">
+                <div className="p-3 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.06] text-[11px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 space-y-1">
+                  <div className="flex items-center justify-between text-[var(--text-secondary,#FFF1D8)]">
                     <span>Telemetry Sync</span>
-                    <span className="text-emerald-400 font-bold">AUTOMATED</span>
+                    <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">AUTOMATED</span>
                   </div>
                   <div>Stack: React · Vite · Express · Mongo</div>
                 </div>
@@ -244,12 +244,12 @@ export default function Index() {
             </div>
           </div>
 
-          <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#64748B]">
+          <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/70">
             <p>
               © {new Date().getFullYear()} Yihune Belay. All rights reserved.
             </p>
             <p className="flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400/80" />
+              <span className="inline-block w-2 h-2 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
               Verified Telemetry Hub · Haramaya SE Alum
             </p>
           </div>

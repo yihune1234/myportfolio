@@ -25,7 +25,7 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="section-padding relative overflow-hidden bg-[#07090E] border-t border-white/[0.08]"
+      className="section-padding relative overflow-hidden bg-[var(--bg-base,#302E2D)] border-t border-white/[0.08]"
     >
       {/* Subtle Dot Matrix & Ambient Glows */}
       <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
@@ -43,10 +43,10 @@ export default function AboutSection() {
           <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold">
             Engineering Identity & Bento Overview
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-[#F8FAFC] mt-2 mb-3 tracking-tight font-heading">
+          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] mt-2 mb-3 tracking-tight font-heading">
             Architectural Focus & Organization
           </h2>
-          <p className="text-[#94A3B8] text-sm sm:text-base max-w-2xl leading-relaxed mx-auto lg:mx-0 font-body">
+          <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mx-auto lg:mx-0 font-body">
             Software engineer based in Addis Ababa, Ethiopia, pursuing Software Engineering
             at Haramaya University. Constructing resilient backend systems, secure APIs, and organizational technology at scale.
           </p>
@@ -73,13 +73,13 @@ export default function AboutSection() {
                   <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
                     Domain 01 // Core Specialization
                   </span>
-                  <h3 className="text-xl font-bold text-[#F8FAFC]">
+                  <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
                     Full-Stack & Security Architecture
                   </h3>
                 </div>
               </div>
 
-              <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
+              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
                 Specialized in architecting hardened REST APIs, token authentication flows (JWT/Bcrypt),
                 and decoupled microservice pipelines. Designing database schemas with MongoDB and PostgreSQL
                 optimized for sub-50ms execution times and strict isolation barriers.
@@ -87,15 +87,15 @@ export default function AboutSection() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-4 border-t border-white/[0.06] text-xs font-mono">
-              <div className="p-2 rounded-lg bg-[#07090E]/60 border border-white/[0.04]">
+              <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04]">
                 <span className="text-[10px] text-[#64748B] block">AUTH SPEC</span>
-                <span className="text-[#F8FAFC] font-semibold">JWT + Argon2</span>
+                <span className="text-[var(--text-primary,#FFFFFF)] font-semibold">JWT + Argon2</span>
               </div>
-              <div className="p-2 rounded-lg bg-[#07090E]/60 border border-white/[0.04]">
+              <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04]">
                 <span className="text-[10px] text-[#64748B] block">API STYLE</span>
-                <span className="text-[#F8FAFC] font-semibold">RESTful / RPC</span>
+                <span className="text-[var(--text-primary,#FFFFFF)] font-semibold">RESTful / RPC</span>
               </div>
-              <div className="p-2 rounded-lg bg-[#07090E]/60 border border-white/[0.04] col-span-2 sm:col-span-1">
+              <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04] col-span-2 sm:col-span-1">
                 <span className="text-[10px] text-[#64748B] block">DEFENSE</span>
                 <span className="text-emerald-400 font-semibold">CORS & RateLimit</span>
               </div>
@@ -121,22 +121,22 @@ export default function AboutSection() {
                   <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
                     Domain 02 // Venture Ecosystem
                   </span>
-                  <h3 className="text-xl font-bold text-[#F8FAFC]">
+                  <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
                     Ariiti Tech Platform
                   </h3>
                 </div>
               </div>
 
-              <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
+              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
                 Directing open platform repositories under <code className="text-amber-300 font-mono bg-amber-500/10 px-1 rounded">@AriitiMarket</code>.
                 Building modular digital commerce infrastructure, developer integration SDKs, and high-concurrency payment gateways.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#07090E]/80 border border-amber-500/20 flex items-center justify-between">
+            <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-mono text-[#64748B] block">CONTRIBUTOR ROLE</span>
-                <span className="text-xs font-bold text-[#F8FAFC]">Platform Architecture Lead</span>
+                <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">Platform Architecture Lead</span>
               </div>
               <a
                 href="https://github.com/AriitiMarket"
@@ -169,13 +169,13 @@ export default function AboutSection() {
                   <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-bold block">
                     Domain 03 // Edge & Mobile
                   </span>
-                  <h3 className="text-xl font-bold text-[#F8FAFC]">
+                  <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
                     Offline-First Systems
                   </h3>
                 </div>
               </div>
 
-              <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
+              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
                 Creating cross-platform mobile experiences with React Native, Expo, and Capacitor.
                 Engineering local SQLite and WatermelonDB synchronization routines to operate seamlessly
                 in intermittent internet environments across East Africa.
@@ -183,13 +183,13 @@ export default function AboutSection() {
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs font-mono">
-              <span className="px-2.5 py-1 rounded bg-[#07090E] border border-white/[0.05] text-[#F8FAFC]">
+              <span className="px-2.5 py-1 rounded bg-[var(--bg-base,#302E2D)] border border-white/[0.05] text-[var(--text-primary,#FFFFFF)]">
                 SQLite Cache
               </span>
-              <span className="px-2.5 py-1 rounded bg-[#07090E] border border-white/[0.05] text-[#F8FAFC]">
+              <span className="px-2.5 py-1 rounded bg-[var(--bg-base,#302E2D)] border border-white/[0.05] text-[var(--text-primary,#FFFFFF)]">
                 Conflict Resolution
               </span>
-              <span className="px-2.5 py-1 rounded bg-[#07090E] border border-white/[0.05] text-[#F8FAFC]">
+              <span className="px-2.5 py-1 rounded bg-[var(--bg-base,#302E2D)] border border-white/[0.05] text-[var(--text-primary,#FFFFFF)]">
                 React Native
               </span>
             </div>
@@ -213,39 +213,39 @@ export default function AboutSection() {
                     <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
                       Domain 04 // Verified Telemetry
                     </span>
-                    <h3 className="text-xl font-bold text-[#F8FAFC]">
+                    <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
                       Contribution Distinction & Scale
                     </h3>
                   </div>
                 </div>
 
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-[#94A3B8] border border-white/[0.06]">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-[var(--text-secondary,#FFF1D8)] border border-white/[0.06]">
                   25.4 MB LINGUIST
                 </span>
               </div>
 
-              <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
+              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-4">
                 A transparent separation between individual engineering experiments and organization infrastructure.
                 Public activities are fetched via verified GitHub telemetry without inflating commit metrics:
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-[#07090E]/80 border border-emerald-500/20">
+                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-emerald-500/20">
                   <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-400 mb-1">
                     <CheckCircle2 size={13} />
                     <span>Personal Lab (@yihune1234)</span>
                   </div>
-                  <p className="text-xs text-[#94A3B8]">
+                  <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
                     100% individual authorship, autonomous prototyping, and dedicated research repositories.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#07090E]/80 border border-amber-500/20">
+                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20">
                   <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400 mb-1">
                     <CheckCircle2 size={13} />
                     <span>Ariiti Tech (@AriitiMarket)</span>
                   </div>
-                  <p className="text-xs text-[#94A3B8]">
+                  <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
                     Multi-contributor platform engineering, shared pull request reviews, and ecosystem tooling.
                   </p>
                 </div>

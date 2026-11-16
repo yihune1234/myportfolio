@@ -8,28 +8,28 @@ export const DESIGN_TOKENS = {
   colors: {
     // Background and Surface System
     bg: {
-      base: "#07090E",             // Deep Obsidian Base
-      surface: "#0E131F",          // Card Surface
-      elevatedSurface: "#161D2E",  // Elevated content surface
-      secondary: "#0B0F19",        // Secondary dark section surface
-      overlay: "rgba(7, 9, 14, 0.85)",
+      base: "#302E2D",             // Warm Dark Charcoal (Default)
+      surface: "#3A3836",          // Warm Dark Charcoal Card Surface
+      elevatedSurface: "#444240",  // Elevated Charcoal Surface
+      secondary: "#292726",        // Secondary dark charcoal section surface
+      overlay: "rgba(48, 46, 45, 0.88)",
     },
 
     // Typography Colors
     text: {
-      primary: "#F8FAFC",          // Main headings & high-contrast text
-      secondary: "#94A3B8",        // Body descriptions & readable muted text
-      muted: "#64748B",            // Metadata & subtle timestamps
+      primary: "#FFFFFF",          // White Primary Text (Default)
+      secondary: "#FFF1D8",        // Warm Ivory Secondary Text (Default)
+      muted: "#E0D5C1",            // Metadata & subtle timestamps
       light: "#FFFFFF",
     },
 
     // Borders & Dividers
     border: {
-      subtle: "rgba(255, 255, 255, 0.05)",
-      default: "rgba(255, 255, 255, 0.08)",
-      hover: "rgba(255, 255, 255, 0.15)",
-      emerald: "rgba(16, 185, 129, 0.3)",
-      amber: "rgba(245, 158, 11, 0.3)",
+      subtle: "rgba(255, 241, 216, 0.10)",
+      default: "rgba(255, 221, 155, 0.18)",
+      hover: "rgba(255, 221, 155, 0.35)",
+      emerald: "rgba(255, 221, 155, 0.4)",
+      amber: "rgba(255, 221, 155, 0.4)",
     },
 
     // Dual Identity Themes
@@ -37,21 +37,21 @@ export const DESIGN_TOKENS = {
       personal: {
         label: "Personal Lab",
         handle: "@yihune1234",
-        accent: "#10B981",         // Personal Accent (Emerald)
-        accentLight: "#34D399",    // Personal Accent Light
-        badgeBg: "rgba(16, 185, 129, 0.1)",
-        badgeText: "#34D399",
-        badgeBorder: "rgba(16, 185, 129, 0.25)",
+        accent: "#FFDD9B",         // Primary Theme Accent (Warm Golden Cream)
+        accentLight: "#FFF1D8",    // Light Accent (Warm Ivory)
+        badgeBg: "rgba(255, 221, 155, 0.12)",
+        badgeText: "#FFDD9B",
+        badgeBorder: "rgba(255, 221, 155, 0.25)",
         scope: "PERSONAL",
       },
       organization: {
         label: "Ariiti Tech Platform",
         handle: "@AriitiMarket",
-        accent: "#F59E0B",         // Organization Accent (Amber)
-        accentLight: "#FBBF24",    // Organization Accent Light
-        badgeBg: "rgba(245, 158, 11, 0.1)",
-        badgeText: "#FBBF24",
-        badgeBorder: "rgba(245, 158, 11, 0.25)",
+        accent: "#FFDD9B",         // Secondary Accent (Golden Cream)
+        accentLight: "#FFF1D8",
+        badgeBg: "rgba(255, 221, 155, 0.12)",
+        badgeText: "#FFDD9B",
+        badgeBorder: "rgba(255, 221, 155, 0.25)",
         scope: "ORGANIZATION",
       },
     },
@@ -74,13 +74,13 @@ export const DESIGN_TOKENS = {
       mono: "'JetBrains Mono', 'Fira Code', monospace",
     },
     classes: {
-      heroTitle: "font-heading font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-[1.05] text-[#F8FAFC]",
-      sectionTitle: "font-heading font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-[#F8FAFC]",
-      cardTitle: "font-heading font-bold text-lg sm:text-xl text-[#F8FAFC]",
-      body: "font-body text-sm sm:text-base text-[#94A3B8] leading-relaxed",
-      bodySmall: "font-body text-xs sm:text-sm text-[#94A3B8] leading-relaxed",
-      metadata: "font-mono text-xs text-[#64748B]",
-      technical: "font-mono text-xs font-semibold text-[#F8FAFC]",
+      heroTitle: "font-heading font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-[1.05] text-[var(--text-primary,#FFFFFF)]",
+      sectionTitle: "font-heading font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-[var(--text-primary,#FFFFFF)]",
+      cardTitle: "font-heading font-bold text-lg sm:text-xl text-[var(--text-primary,#FFFFFF)]",
+      body: "font-body text-sm sm:text-base text-[var(--text-secondary,#FFF1D8)] leading-relaxed",
+      bodySmall: "font-body text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed",
+      metadata: "font-mono text-xs text-[var(--text-secondary,#FFF1D8)]/70",
+      technical: "font-mono text-xs font-semibold text-[var(--text-primary,#FFFFFF)]",
       tag: "font-mono text-[11px] font-medium tracking-wide",
     },
   },

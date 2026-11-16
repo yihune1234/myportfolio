@@ -53,6 +53,7 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/theme', require('./routes/themeRoutes'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/project-sections', require('./routes/projectSections'));
 app.use('/api/section-media', require('./routes/sectionMedia'));

@@ -71,8 +71,8 @@ export function ProjectCardCarousel({
 
   if (slides.length === 0) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-[#07090E]">
-        <Layers className="w-12 h-12 text-[#94A3B8]/20" />
+      <div className="w-full h-full flex items-center justify-center bg-[var(--bg-base,#302E2D)]">
+        <Layers className="w-12 h-12 text-[var(--text-secondary,#FFF1D8)]/20" />
       </div>
     );
   }
@@ -83,7 +83,7 @@ export function ProjectCardCarousel({
 
   return (
     <div
-      className="relative w-full h-full overflow-hidden bg-[#07090E]"
+      className="relative w-full h-full overflow-hidden bg-[var(--bg-base,#302E2D)]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -103,7 +103,7 @@ export function ProjectCardCarousel({
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#07090E]">
+            <div className="w-full h-full flex items-center justify-center bg-[var(--bg-base,#302E2D)]">
               <Layers className="w-10 h-10 text-emerald-500/20" />
             </div>
           )}
@@ -120,7 +120,7 @@ export function ProjectCardCarousel({
           <button
             type="button"
             onClick={goPrev}
-            className={`absolute left-2.5 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-lg bg-[#07090E]/80 backdrop-blur-md text-[#F8FAFC] hover:bg-emerald-500 hover:text-[#07090E] transition-all duration-200 border border-white/10 ${
+            className={`absolute left-2.5 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-lg bg-[var(--bg-base,#302E2D)]/80 backdrop-blur-md text-[var(--text-primary,#FFFFFF)] hover:bg-emerald-500 hover:text-[var(--bg-base,#302E2D)] transition-all duration-200 border border-white/10 ${
               isHovered ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 pointer-events-none"
             }`}
           >
@@ -129,7 +129,7 @@ export function ProjectCardCarousel({
           <button
             type="button"
             onClick={goNext}
-            className={`absolute right-2.5 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-lg bg-[#07090E]/80 backdrop-blur-md text-[#F8FAFC] hover:bg-emerald-500 hover:text-[#07090E] transition-all duration-200 border border-white/10 ${
+            className={`absolute right-2.5 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-lg bg-[var(--bg-base,#302E2D)]/80 backdrop-blur-md text-[var(--text-primary,#FFFFFF)] hover:bg-emerald-500 hover:text-[var(--bg-base,#302E2D)] transition-all duration-200 border border-white/10 ${
               isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"
             }`}
           >
@@ -140,7 +140,7 @@ export function ProjectCardCarousel({
 
       {/* Image counter */}
       {slides.length > 1 && (
-        <div className="absolute top-3 right-3 z-10 bg-[#07090E]/80 backdrop-blur-md px-2 py-0.5 rounded-md text-[9px] font-mono font-bold text-[#94A3B8] border border-white/10">
+        <div className="absolute top-3 right-3 z-10 bg-[var(--bg-base,#302E2D)]/80 backdrop-blur-md px-2 py-0.5 rounded-md text-[9px] font-mono font-bold text-[var(--text-secondary,#FFF1D8)] border border-white/10">
           {currentIndex + 1}/{slides.length}
         </div>
       )}
@@ -174,7 +174,7 @@ export function ProjectCardCarousel({
             e.stopPropagation();
             onOpenModal(currentIndex);
           }}
-          className={`absolute top-3 left-3 z-10 p-1.5 rounded-lg bg-[#07090E]/80 backdrop-blur-md text-[#94A3B8] hover:text-[#07090E] hover:bg-emerald-400 transition-all duration-200 border border-white/10 ${
+          className={`absolute top-3 left-3 z-10 p-1.5 rounded-lg bg-[var(--bg-base,#302E2D)]/80 backdrop-blur-md text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--bg-base,#302E2D)] hover:bg-emerald-400 transition-all duration-200 border border-white/10 ${
             isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           title="Inspect details"

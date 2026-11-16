@@ -6,34 +6,44 @@
 
 @layer base {
   :root {
-    /* Architectural Telemetry & Venture Hub Palette */
-    --background: 223 33% 4%;        /* #07090E - Deep Obsidian Base */
-    --foreground: 210 40% 98%;       /* #F8FAFC - Primary Text */
+    /* Default Brand Colors: Warm Dark Charcoal & Golden Cream */
+    --bg-base: #302E2D;              /* Warm Dark Charcoal (Default) */
+    --card-surface: #3A3836;         /* Harmonious Dark Charcoal Card Surface */
+    --card-elevated: #444240;        /* Elevated Dark Charcoal Surface */
+    --primary-accent: #FFDD9B;       /* Warm Golden Cream Accent (Default) */
+    --secondary-accent: #FFDD9B;     /* Golden Cream Secondary Accent (Default) */
+    --text-primary: #FFFFFF;         /* Pure White Primary Text (Default) */
+    --text-secondary: #FFF1D8;       /* Warm Ivory Secondary Text (Default) */
+    --border-color: rgba(255, 221, 155, 0.18);
 
-    --card: 222 38% 9%;              /* #0E131F - Card Surface */
-    --card-foreground: 210 40% 98%;
+    /* Tailwind HSL Mappings */
+    --background: 20 3% 18%;         /* #302E2D */
+    --foreground: 0 0% 100%;         /* #FFFFFF */
 
-    --popover: 223 33% 4%;
-    --popover-foreground: 210 40% 98%;
+    --card: 20 4% 22%;               /* #3A3836 */
+    --card-foreground: 0 0% 100%;
 
-    --primary: 160 84% 39%;          /* #10B981 - Personal Accent (Emerald) */
-    --primary-foreground: 223 33% 4%;
+    --popover: 20 3% 18%;
+    --popover-foreground: 0 0% 100%;
 
-    --secondary: 38 92% 50%;         /* #F59E0B - Organization Accent (Amber) */
-    --secondary-foreground: 223 33% 4%;
+    --primary: 40 100% 80%;          /* #FFDD9B */
+    --primary-foreground: 20 3% 18%; /* High-contrast dark charcoal on golden buttons */
 
-    --muted: 222 38% 12%;            /* #161D2E - Elevated Surface */
-    --muted-foreground: 215 16% 65%; /* #94A3B8 - Secondary Text */
+    --secondary: 40 100% 80%;        /* #FFDD9B */
+    --secondary-foreground: 20 3% 18%;
 
-    --accent: 222 38% 14%;
-    --accent-foreground: 210 40% 98%;
+    --muted: 20 4% 26%;              /* #444240 */
+    --muted-foreground: 38 100% 92%; /* #FFF1D8 */
+
+    --accent: 20 4% 24%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 222 38% 16%;
-    --input: 222 38% 14%;
-    --ring: 160 84% 39%;
+    --border: 40 100% 80% / 0.18;
+    --input: 20 4% 22%;
+    --ring: 40 100% 80%;
 
     --radius: 0.75rem;
   }
@@ -114,23 +124,51 @@
   }
 
   .card-slate {
-    background-color: #0E131F;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: var(--card-surface, #3A3836);
+    border: 1px solid var(--border-color, rgba(255, 221, 155, 0.18));
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
   }
 
   .card-slate:hover {
-    border-color: rgba(16, 185, 129, 0.25);
+    border-color: var(--primary-accent, rgba(255, 221, 155, 0.35));
   }
 
   .card-slate-elevated {
-    background-color: #161D2E;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--card-elevated, #444240);
+    border: 1px solid var(--border-color, rgba(255, 221, 155, 0.22));
     box-shadow: 0 14px 40px -12px rgba(0, 0, 0, 0.6);
   }
 
   .card-org-hover:hover {
-    border-color: rgba(245, 158, 11, 0.25);
+    border-color: var(--secondary-accent, rgba(255, 221, 155, 0.35));
+  }
+
+  .bg-theme-base {
+    background-color: var(--bg-base, #302E2D);
+  }
+
+  .bg-theme-card {
+    background-color: var(--card-surface, #3A3836);
+  }
+
+  .bg-theme-elevated {
+    background-color: var(--card-elevated, #444240);
+  }
+
+  .text-theme-primary {
+    color: var(--text-primary, #FFFFFF);
+  }
+
+  .text-theme-secondary {
+    color: var(--text-secondary, #FFF1D8);
+  }
+
+  .text-theme-accent {
+    color: var(--primary-accent, #FFDD9B);
+  }
+
+  .border-theme {
+    border-color: var(--border-color, rgba(255, 221, 155, 0.18));
   }
 
   .glass-morphism {

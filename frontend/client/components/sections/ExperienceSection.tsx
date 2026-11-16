@@ -66,10 +66,10 @@ export default function ExperienceSection() {
           <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold">
             Career Timeline & Involvements
           </span>
-          <h2 className="text-4xl sm:text-5xl font-black text-[#F8FAFC] mt-2 mb-4">
+          <h2 className="text-4xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] mt-2 mb-4">
             Engineering Experience
           </h2>
-          <p className="text-[#94A3B8] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
+          <p className="text-[var(--text-secondary,#FFF1D8)] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
             Professional industry internships alongside verified technical contributions to the Ariiti Tech organization.
           </p>
         </motion.div>
@@ -90,7 +90,7 @@ export default function ExperienceSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative p-6 sm:p-8 rounded-2xl bg-[#0E131F] border border-white/[0.08] hover:border-emerald-500/30 transition-all duration-300"
+              className="group relative p-6 sm:p-8 rounded-2xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] hover:border-emerald-500/30 transition-all duration-300"
             >
               <div className="relative z-10">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -98,13 +98,13 @@ export default function ExperienceSection() {
                     <div
                       className={`p-3 rounded-xl bg-gradient-to-br ${exp.gradient} shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-300`}
                     >
-                      <Briefcase className="w-5 h-5 text-[#07090E]" />
+                      <Briefcase className="w-5 h-5 text-[var(--bg-base,#302E2D)]" />
                     </div>
                     <div>
-                      <h4 className="text-lg sm:text-xl font-bold text-[#F8FAFC] group-hover:text-emerald-400 transition-colors">
+                      <h4 className="text-lg sm:text-xl font-bold text-[var(--text-primary,#FFFFFF)] group-hover:text-emerald-400 transition-colors">
                         {exp.position}
                       </h4>
-                      <p className="text-sm font-bold text-[#94A3B8] mt-0.5">
+                      <p className="text-sm font-bold text-[var(--text-secondary,#FFF1D8)] mt-0.5">
                         {exp.company}
                       </p>
                     </div>
@@ -118,7 +118,7 @@ export default function ExperienceSection() {
                       className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.04] transition-all"
                     >
                       <div className={`w-1.5 h-1.5 rounded-full ${exp.bulletColor} mt-1.5 flex-shrink-0`} />
-                      <p className="text-xs text-[#94A3B8] leading-relaxed font-medium">
+                      <p className="text-xs text-[var(--text-secondary,#FFF1D8)] leading-relaxed font-medium">
                         {resp}
                       </p>
                     </div>
@@ -142,7 +142,7 @@ export default function ExperienceSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="group relative p-6 sm:p-8 rounded-2xl bg-[#0E131F] border border-white/[0.08] hover:border-amber-500/30 transition-all duration-300"
+            className="group relative p-6 sm:p-8 rounded-2xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] hover:border-amber-500/30 transition-all duration-300"
           >
             <div className="relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -151,10 +151,10 @@ export default function ExperienceSection() {
                     <Building2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-lg sm:text-xl font-bold text-[#F8FAFC] group-hover:text-amber-300 transition-colors">
+                    <h4 className="text-lg sm:text-xl font-bold text-[var(--text-primary,#FFFFFF)] group-hover:text-amber-300 transition-colors">
                       {organizationExperience.role}
                     </h4>
-                    <p className="text-sm font-bold text-[#94A3B8] mt-0.5">
+                    <p className="text-sm font-bold text-[var(--text-secondary,#FFF1D8)] mt-0.5">
                       {organizationExperience.organization}
                     </p>
                   </div>
@@ -178,7 +178,7 @@ export default function ExperienceSection() {
                     className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.04] transition-all"
                   >
                     <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
-                    <p className="text-xs text-[#94A3B8] leading-relaxed font-medium">
+                    <p className="text-xs text-[var(--text-secondary,#FFF1D8)] leading-relaxed font-medium">
                       {act}
                     </p>
                   </div>

@@ -6,14 +6,14 @@ import { fetchGitHubHealth } from "@/lib/githubApi";
 
 function ArchitecturalMonogram() {
   return (
-    <div className="relative w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-[#0E131F] border border-emerald-500/30 group-hover:border-emerald-400/60 transition-colors shadow-lg shadow-emerald-500/10">
+    <div className="relative w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-[var(--card-surface,#3A3836)] border border-[var(--primary-accent,#FFDD9B)]/30 group-hover:border-[var(--primary-accent,#FFDD9B)]/60 transition-colors shadow-lg shadow-black/20">
       <svg
         width="24"
         height="24"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-6 h-6 text-emerald-400 group-hover:scale-105 transition-transform"
+        className="w-6 h-6 text-[var(--primary-accent,#FFDD9B)] group-hover:scale-105 transition-transform"
       >
         {/* Architectural node bracket frame */}
         <path
@@ -27,14 +27,14 @@ function ArchitecturalMonogram() {
         {/* Geometric Y */}
         <path
           d="M6.5 7.5L9.5 12V16.5"
-          stroke="#10B981"
+          stroke="var(--primary-accent, #FFDD9B)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
           d="M12.5 7.5L9.5 12"
-          stroke="#10B981"
+          stroke="var(--primary-accent, #FFDD9B)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -42,7 +42,7 @@ function ArchitecturalMonogram() {
         {/* Geometric B */}
         <path
           d="M13 7.5H16.5C17.6 7.5 18.5 8.4 18.5 9.5C18.5 10.6 17.6 11.5 16.5 11.5H13V16.5H16.8C17.9 16.5 18.8 15.6 18.8 14.5C18.8 13.4 17.9 12.5 16.8 12.5"
-          stroke="#34D399"
+          stroke="var(--secondary-accent, #FFDD9B)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -126,7 +126,7 @@ export default function Navigation() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[#07090E]/90 backdrop-blur-2xl border-b border-white/[0.08] shadow-2xl shadow-black/40 py-2.5"
+          ? "bg-[var(--bg-base,#302E2D)]/90 backdrop-blur-2xl border-b border-[var(--border-color,rgba(255,221,155,0.18))] shadow-2xl shadow-black/40 py-2.5"
           : "bg-transparent py-4"
       }`}
     >
@@ -146,7 +146,7 @@ export default function Navigation() {
 
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-heading font-black text-lg leading-tight text-[#F8FAFC] tracking-tight">
+                  <span className="font-heading font-black text-lg leading-tight text-[var(--text-primary,#FFFFFF)] tracking-tight">
                     Yihune Belay
                   </span>
                   {/* Live Status Indicator */}
@@ -155,7 +155,7 @@ export default function Navigation() {
                       isSyncing
                         ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
                         : isConnected
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        ? "bg-[var(--primary-accent,#FFDD9B)]/15 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/30"
                         : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                     }`}
                     title={isSyncing ? "GitHub Telemetry Syncing" : isConnected ? "GitHub Telemetry Connected" : "Telemetry Cached"}
@@ -165,7 +165,7 @@ export default function Navigation() {
                         isSyncing
                           ? "bg-sky-400 animate-pulse"
                           : isConnected
-                          ? "bg-emerald-400 animate-ping"
+                          ? "bg-[var(--primary-accent,#FFDD9B)] animate-ping"
                           : "bg-amber-400"
                       }`}
                     />
@@ -174,7 +174,7 @@ export default function Navigation() {
                     </span>
                   </span>
                 </div>
-                <span className="text-[10px] font-mono font-semibold tracking-wider text-[#94A3B8] uppercase">
+                <span className="text-[10px] font-mono font-semibold tracking-wider text-[var(--text-secondary,#FFF1D8)] uppercase">
                   Full-Stack Systems Engineer
                 </span>
               </div>
@@ -183,7 +183,7 @@ export default function Navigation() {
 
           {/* Navigation Links */}
           <div className="hidden lg:flex items-center gap-2 flex-1 justify-center">
-            <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#0E131F]/90 border border-white/[0.08] backdrop-blur-md shadow-inner">
+            <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[var(--card-surface,#3A3836)] border border-[var(--border-color,rgba(255,221,155,0.18))] backdrop-blur-md shadow-inner">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.id}
@@ -193,8 +193,8 @@ export default function Navigation() {
                   onClick={() => scrollToSection(item.id)}
                   className={`relative px-4 py-1.5 text-xs font-bold transition-all duration-300 rounded-full ${
                     activeSection === item.id
-                      ? "text-[#07090E] bg-gradient-to-r from-emerald-400 to-teal-400 shadow-lg shadow-emerald-500/25"
-                      : "text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.04]"
+                      ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/25"
+                      : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
                   }`}
                 >
                   <span className="relative z-10">{item.name}</span>
@@ -211,7 +211,7 @@ export default function Navigation() {
           >
             <button
               onClick={() => scrollToSection("contact")}
-              className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-teal-300 text-[#07090E] rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25 active:scale-95"
+              className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D] rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-[var(--primary-accent,#FFDD9B)]/25 active:scale-95"
             >
               <span>Let's Talk</span>
               <Sparkles className="w-3.5 h-3.5" />
@@ -219,7 +219,7 @@ export default function Navigation() {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-[#0E131F] text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.08] transition-all border border-white/[0.08]"
+              className="lg:hidden p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.08] transition-all border border-[var(--border-color,rgba(255,221,155,0.18))]"
               aria-label="Toggle menu"
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -235,7 +235,7 @@ export default function Navigation() {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-white/[0.08] bg-[#07090E]/95 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl z-50"
+            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl z-50"
           >
             <div className="p-5 space-y-1.5">
               {navItems.map((item) => (
@@ -244,8 +244,8 @@ export default function Navigation() {
                   onClick={() => scrollToSection(item.id)}
                   className={`block w-full text-left px-4 py-3 text-sm font-bold rounded-xl transition-all ${
                     activeSection === item.id
-                      ? "text-[#07090E] bg-gradient-to-r from-emerald-400 to-teal-400 shadow-md shadow-emerald-500/20"
-                      : "text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.04]"
+                      ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
+                      : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
                   }`}
                 >
                   {item.name}
@@ -254,7 +254,7 @@ export default function Navigation() {
               <div className="pt-3">
                 <button
                   onClick={() => scrollToSection("contact")}
-                  className="w-full px-5 py-3 bg-gradient-to-r from-emerald-500 to-emerald-400 text-[#07090E] rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                  className="w-full px-5 py-3 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/20"
                 >
                   Let's Talk
                   <ArrowRight className="w-4 h-4" />

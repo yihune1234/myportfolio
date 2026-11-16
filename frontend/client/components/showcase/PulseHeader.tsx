@@ -92,10 +92,10 @@ export function PulseHeader({
           <button
             onClick={onRefresh}
             disabled={isRefreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-[#F8FAFC] font-sans font-medium transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-[var(--text-primary,#FFFFFF)] font-sans font-medium transition-all disabled:opacity-50"
             title="Refresh GitHub telemetry"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-emerald-400' : 'text-[#94A3B8]'}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-emerald-400' : 'text-[var(--text-secondary,#FFF1D8)]'}`} />
             <span className="hidden sm:inline">Sync Now</span>
           </button>
         </div>
@@ -108,17 +108,17 @@ export function PulseHeader({
             <Terminal className="w-3.5 h-3.5" />
             Verified GitHub Integration
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#F8FAFC] tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight">
             Live Engineering & <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Innovation</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#94A3B8] mt-2 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-[var(--text-secondary,#FFF1D8)] mt-2 max-w-2xl leading-relaxed">
             Real-time public GitHub activity, verifiable codebase metrics, language distributions,
             and software repository activity across personal engineering research and organization projects.
           </p>
         </div>
 
         {/* Dual Identity Switcher Pill */}
-        <div className="inline-flex p-1.5 rounded-2xl bg-[#0E131F] border border-white/[0.08] shadow-inner self-start md:self-auto">
+        <div className="inline-flex p-1.5 rounded-2xl bg-[var(--card-surface,#3A3836)] border border-white/[0.08] shadow-inner self-start md:self-auto">
           {scopes.map((s) => {
             const isActive = scope === s.id;
             return (
@@ -127,8 +127,8 @@ export function PulseHeader({
                 onClick={() => onScopeChange(s.id)}
                 className={`relative px-4 py-2 rounded-xl text-xs font-mono font-bold tracking-wider transition-all duration-300 ${
                   isActive
-                    ? 'text-[#07090E] shadow-md'
-                    : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.03]'
+                    ? 'text-[var(--bg-base,#302E2D)] shadow-md'
+                    : 'text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.03]'
                 }`}
               >
                 {isActive && (
