@@ -3,6 +3,7 @@ import { Menu, X, ArrowRight, Sparkles, Activity } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubHealth } from "@/lib/githubApi";
+import { PublicThemeSwitcher } from "./PublicThemeSwitcher";
 
 function ArchitecturalMonogram() {
   return (
@@ -203,12 +204,15 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Contact Action & Mobile Menu Toggle */}
+          {/* Public Theme Switcher, Contact Action & Mobile Menu Toggle */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-3"
+            className="flex items-center gap-2.5 sm:gap-3"
           >
+            {/* Top Right Public Theme Switcher */}
+            <PublicThemeSwitcher />
+
             <button
               onClick={() => scrollToSection("contact")}
               className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D] rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-[var(--primary-accent,#FFDD9B)]/25 active:scale-95"
