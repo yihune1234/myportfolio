@@ -5,6 +5,10 @@ import {
   Cpu,
   Database,
   Code2,
+  Github,
+  Linkedin,
+  Building2,
+  ExternalLink,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { HeroGitHubPulse } from "./HeroGitHubPulse";
@@ -86,7 +90,7 @@ export default function HeroSection({
                 performance, and clean code.
               </p>
 
-              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-6">
                 <button
                   onClick={onContactClick}
                   className="group relative px-8 py-4 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-full font-bold transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden hover:shadow-[0_0_40px_rgba(255,138,0,0.35)]"
@@ -101,6 +105,40 @@ export default function HeroSection({
                   View My Work
                   <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform opacity-50" />
                 </button>
+              </div>
+
+              {/* Direct Profile Badges */}
+              <div className="flex items-center justify-center lg:justify-start gap-3">
+                <a
+                  href="https://github.com/yihune1234"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-emerald-500/30 text-xs font-mono text-[#B7C0D1] hover:text-[#F5F7FA] transition-all"
+                  title="Personal GitHub Profile"
+                >
+                  <Github size={13} className="text-emerald-400" />
+                  <span>yihune1234</span>
+                </a>
+                <a
+                  href="https://linkedin.com/in/yihune-belay"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-[#FF8A00]/30 text-xs font-mono text-[#B7C0D1] hover:text-[#F5F7FA] transition-all"
+                  title="LinkedIn Profile"
+                >
+                  <Linkedin size={13} className="text-sky-400" />
+                  <span>LinkedIn</span>
+                </a>
+                <a
+                  href="https://github.com/AriitiMarket"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-amber-500/30 text-xs font-mono text-[#B7C0D1] hover:text-[#F5F7FA] transition-all"
+                  title="Ariiti Tech Organization Profile"
+                >
+                  <Building2 size={13} className="text-amber-400" />
+                  <span>AriitiMarket</span>
+                </a>
               </div>
             </motion.div>
           </div>
@@ -147,6 +185,32 @@ export default function HeroSection({
                     </motion.div>
                   ))}
                 </div>
+              </div>
+
+              {/* Organization Platform Identity Ribbon */}
+              <div className="mt-3 p-3.5 rounded-2xl bg-[#0B1637]/90 border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 shadow-xl">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                    <Building2 size={18} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-semibold block">
+                      Organization Platform
+                    </span>
+                    <span className="text-xs font-bold text-[#F5F7FA]">
+                      Ariiti Tech &bull; @AriitiMarket
+                    </span>
+                  </div>
+                </div>
+                <a
+                  href="https://github.com/AriitiMarket"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold transition-all border border-amber-500/30 flex items-center gap-1"
+                >
+                  Explore
+                  <ExternalLink size={10} />
+                </a>
               </div>
 
               {/* Orbital Ring */}

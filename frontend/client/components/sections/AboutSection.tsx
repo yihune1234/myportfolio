@@ -110,7 +110,7 @@ export default function AboutSection() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           {highlights.map((item, index) => (
             <motion.div
               key={index}
@@ -134,6 +134,79 @@ export default function AboutSection() {
               </div>
             </motion.div>
           ))}
+        </div>
+
+        {/* Dual Identity & Contribution Distinction Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Personal Engineering Profile */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="p-6 sm:p-7 rounded-2xl bg-[#0B1637] border border-white/[0.08] relative overflow-hidden"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <Github size={20} />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
+                  Individual Engineering Identity
+                </span>
+                <h3 className="text-lg font-bold text-[#F5F7FA]">
+                  Personal Lab & Autonomous Research
+                </h3>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-[#B7C0D1] leading-relaxed mb-4">
+              Authored directly under <code className="text-emerald-300 font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded">@yihune1234</code>. Encompasses backend microservices, exploratory prototypes, algorithms, and full-stack software written independently.
+            </p>
+
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-white/[0.06] text-xs font-mono">
+              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
+                100% Personal Authorship
+              </span>
+              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
+                Full Architectural Ownership
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Organization Platform Profile */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="p-6 sm:p-7 rounded-2xl bg-[#0B1637] border border-white/[0.08] relative overflow-hidden"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <Building2 size={20} />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
+                  Organization Platform Identity
+                </span>
+                <h3 className="text-lg font-bold text-[#F5F7FA]">
+                  Ariiti Tech & Ecosystem Platform
+                </h3>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-[#B7C0D1] leading-relaxed mb-4">
+              Collaborative software initiatives under <code className="text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">@AriitiMarket</code>. Focused on distributed commerce, developer tooling, and modular production repositories with shared contribution histories.
+            </p>
+
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-white/[0.06] text-xs font-mono">
+              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
+                Multi-Contributor Architecture
+              </span>
+              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
+                Verified Contributor Role
+              </span>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
