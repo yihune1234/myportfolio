@@ -43,9 +43,9 @@ export default function EngineeringShowcase() {
       className="section-padding relative overflow-hidden bg-background border-t border-white/[0.08]"
     >
       {/* Background Ambience */}
-      <div className="absolute top-1/4 -right-32 w-[600px] h-[600px] bg-[#FF8A00] opacity-[0.03] rounded-full blur-[200px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-32 w-[500px] h-[500px] bg-[#0A1330] rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute inset-0 architecture-grid opacity-20 pointer-events-none" />
+      <div className="absolute top-1/4 -right-32 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[200px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute inset-0 dot-matrix-grid opacity-15 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
         {/* Header & Dual Identity Switcher */}

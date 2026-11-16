@@ -34,14 +34,14 @@ export function OrganizationImpact({
 
   if (!orgProfile && !isLoading) {
     return (
-      <div className="p-6 rounded-2xl bg-[#0B1637]/70 border border-white/[0.08] text-center text-xs text-[#B7C0D1]">
+      <div className="p-6 rounded-2xl bg-[#0E131F] border border-white/[0.08] text-center text-xs text-[#94A3B8]">
         Organization details not configured or unavailable.
       </div>
     );
   }
 
   return (
-    <div className="relative p-6 sm:p-7 rounded-2xl bg-[#0B1637]/70 border border-white/[0.08] backdrop-blur-xl flex flex-col justify-between overflow-hidden group">
+    <div className="relative p-6 sm:p-7 rounded-2xl bg-[#0E131F]/90 border border-white/[0.08] backdrop-blur-xl flex flex-col justify-between overflow-hidden group">
       {/* Background amber glow */}
       <div className="absolute -top-20 -left-20 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -65,12 +65,12 @@ export function OrganizationImpact({
 
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="text-base sm:text-lg font-bold text-[#F5F7FA] tracking-tight">
+                <h3 className="text-base sm:text-lg font-bold text-[#F8FAFC] tracking-tight">
                   {orgProfile?.name || orgProfile?.login || 'AriitiMarket'}
                 </h3>
                 <ShieldCheck className="w-4 h-4 text-amber-400" />
               </div>
-              <p className="text-xs text-[#B7C0D1] font-mono">
+              <p className="text-xs text-[#94A3B8] font-mono">
                 @{orgProfile?.login || 'AriitiMarket'} &bull; Verified Organization
               </p>
             </div>
@@ -88,7 +88,7 @@ export function OrganizationImpact({
         </div>
 
         {/* Bio / Description */}
-        <p className="text-xs sm:text-sm text-[#B7C0D1] leading-relaxed mb-5">
+        <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed mb-5">
           {orgProfile?.bio ||
             'E-commerce, logistics, and multi-tenant marketplace platforms built for modern commerce infrastructure.'}
         </p>
@@ -96,7 +96,7 @@ export function OrganizationImpact({
         {/* Aggregate Impact Stats */}
         <div className="grid grid-cols-3 gap-2.5 mb-5 p-3 rounded-xl bg-black/30 border border-white/[0.06]">
           <div className="text-center">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[#B7C0D1]/70">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#94A3B8]/70">
               Repositories
             </div>
             <div className="text-base sm:text-lg font-bold font-mono text-amber-400 mt-0.5">
@@ -104,18 +104,18 @@ export function OrganizationImpact({
             </div>
           </div>
           <div className="text-center border-x border-white/[0.06]">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[#B7C0D1]/70">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#94A3B8]/70">
               Total Stars
             </div>
-            <div className="text-base sm:text-lg font-bold font-mono text-[#F5F7FA] mt-0.5">
+            <div className="text-base sm:text-lg font-bold font-mono text-[#F8FAFC] mt-0.5">
               {isLoading ? '...' : totalStars}
             </div>
           </div>
           <div className="text-center">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[#B7C0D1]/70">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#94A3B8]/70">
               Total Forks
             </div>
-            <div className="text-base sm:text-lg font-bold font-mono text-[#F5F7FA] mt-0.5">
+            <div className="text-base sm:text-lg font-bold font-mono text-[#F8FAFC] mt-0.5">
               {isLoading ? '...' : totalForks}
             </div>
           </div>
@@ -123,13 +123,13 @@ export function OrganizationImpact({
 
         {/* Featured Organization Repositories */}
         <div className="space-y-2 mb-4">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-[#B7C0D1]/70 mb-2">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#94A3B8]/70 mb-2">
             Key Organization Repositories
           </div>
           {isLoading ? (
             <div className="h-14 rounded-xl bg-white/[0.03] animate-pulse" />
           ) : featuredRepos.length === 0 ? (
-            <div className="text-xs text-[#B7C0D1] py-2">No public repositories listed.</div>
+            <div className="text-xs text-[#94A3B8] py-2">No public repositories listed.</div>
           ) : (
             featuredRepos.map((repo) => (
               <a
@@ -140,14 +140,14 @@ export function OrganizationImpact({
                 className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] hover:border-amber-500/30 transition-all text-xs"
               >
                 <div className="flex items-center gap-2 truncate">
-                  <span className="font-semibold text-[#F5F7FA] truncate">{repo.name}</span>
+                  <span className="font-semibold text-[#F8FAFC] truncate">{repo.name}</span>
                   {repo.primary_language && (
-                    <span className="text-[10px] font-mono text-[#B7C0D1]/70 px-1.5 py-0.5 rounded bg-white/[0.04]">
+                    <span className="text-[10px] font-mono text-[#94A3B8]/70 px-1.5 py-0.5 rounded bg-white/[0.04]">
                       {repo.primary_language}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-xs font-mono text-[#B7C0D1] flex-shrink-0">
+                <div className="flex items-center gap-2 text-xs font-mono text-[#94A3B8] flex-shrink-0">
                   <span className="flex items-center gap-1">
                     <Star className="w-3 h-3 text-amber-400" />
                     {repo.stars}
@@ -164,8 +164,8 @@ export function OrganizationImpact({
           <div className="p-3 rounded-xl bg-amber-500/[0.06] border border-amber-500/20 flex items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2 truncate">
               <Activity className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-              <span className="text-[#B7C0D1] truncate">
-                <strong className="text-[#F5F7FA]">Latest:</strong> {latestEvent.summary}
+              <span className="text-[#94A3B8] truncate">
+                <strong className="text-[#F8FAFC]">Latest:</strong> {latestEvent.summary}
               </span>
             </div>
             <span className="text-[10px] font-mono text-amber-300/80 flex-shrink-0">
@@ -175,7 +175,7 @@ export function OrganizationImpact({
         )}
       </div>
 
-      <div className="mt-5 pt-4 border-t border-white/[0.06] text-[11px] font-mono text-[#B7C0D1]/60">
+      <div className="mt-5 pt-4 border-t border-white/[0.06] text-[11px] font-mono text-[#94A3B8]/60">
         Public open-source activity only &bull; Non-speculative metrics
       </div>
     </div>

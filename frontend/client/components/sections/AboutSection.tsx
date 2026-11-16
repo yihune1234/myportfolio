@@ -1,210 +1,260 @@
 import { motion } from "framer-motion";
-import { Layers, Cpu, ShieldCheck, GitBranch, Github, Building2, Binary } from "lucide-react";
+import {
+  Layers,
+  ShieldCheck,
+  Building2,
+  Smartphone,
+  Github,
+  Binary,
+  GitBranch,
+  Terminal,
+  ExternalLink,
+  CheckCircle2,
+  Cpu,
+} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGitHubOverview } from "@/lib/githubApi";
 
 export default function AboutSection() {
-  const highlights = [
-    {
-      icon: Layers,
-      title: "Full-Stack Engineering",
-      desc: "Scalable backend systems, RESTful APIs, and responsive frontends built with modern architectures.",
-    },
-    {
-      icon: Cpu,
-      title: "Systems Thinker",
-      desc: "Designing distributed, fault-tolerant systems with clean separation of concerns.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Security Focused",
-      desc: "Implementing auth, encryption, and secure API patterns across the stack.",
-    },
-    {
-      icon: GitBranch,
-      title: "DevOps Mindset",
-      desc: "CI/CD pipelines, containerization, cloud deployment, and infrastructure automation.",
-    },
-  ];
+  const { data: overview } = useQuery({
+    queryKey: ["github", "overview"],
+    queryFn: () => fetchGitHubOverview(),
+    staleTime: 5 * 60 * 1000,
+  });
 
   return (
     <section
       id="about"
-      className="section-padding relative overflow-hidden border-t border-white/[0.06]"
-      style={{
-        background:
-          "linear-gradient(90deg, #050816 0%, #0A1330 45%, #1A1325 100%)",
-      }}
+      className="section-padding relative overflow-hidden bg-[#07090E] border-t border-white/[0.08]"
     >
-      <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
-      <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-[#0A1330] rounded-full blur-[120px]" />
-      <div className="absolute bottom-0 right-1/4 w-[200px] h-[200px] bg-[#1A1325] rounded-full blur-[100px]" />
+      {/* Subtle Dot Matrix & Ambient Glows */}
+      <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
+      <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] ambient-emerald-glow rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-[500px] h-[500px] ambient-amber-glow rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 text-center lg:text-left"
+          className="mb-14 text-center lg:text-left"
         >
-          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
-            About Me
+          <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold">
+            Engineering Identity & Bento Overview
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black text-[#F8FAFC] mt-2 mb-3 tracking-tight font-heading">
+            Architectural Focus & Organization
           </h2>
-          <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
-            Software engineer based in Addis Ababa, Ethiopia. Currently pursuing
-            Software Engineering at Haramaya University, building production
-            systems and digital infrastructure.
+          <p className="text-[#94A3B8] text-sm sm:text-base max-w-2xl leading-relaxed mx-auto lg:mx-0 font-body">
+            Software engineer based in Addis Ababa, Ethiopia, pursuing Software Engineering
+            at Haramaya University. Constructing resilient backend systems, secure APIs, and organizational technology at scale.
           </p>
-
-          {/* Verified Engineering Identity Ribbon */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-8 max-w-4xl mx-auto lg:mx-0">
-            <a
-              href="https://github.com/yihune1234"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-3.5 rounded-xl bg-[#0B1637]/80 border border-white/[0.08] hover:border-emerald-500/30 transition-all flex items-center gap-3"
-            >
-              <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:scale-105 transition-transform">
-                <Github className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-semibold">
-                  Personal Lab
-                </div>
-                <div className="text-xs font-bold text-[#F5F7FA]">
-                  @yihune1234 &bull; 27 Public Repos
-                </div>
-              </div>
-            </a>
-
-            <a
-              href="https://github.com/AriitiMarket"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-3.5 rounded-xl bg-[#0B1637]/80 border border-white/[0.08] hover:border-amber-500/30 transition-all flex items-center gap-3"
-            >
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 group-hover:scale-105 transition-transform">
-                <Building2 className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-semibold">
-                  Organization Platform
-                </div>
-                <div className="text-xs font-bold text-[#F5F7FA]">
-                  @AriitiMarket &bull; Contributor
-                </div>
-              </div>
-            </a>
-
-            <div className="p-3.5 rounded-xl bg-[#0B1637]/80 border border-white/[0.08] flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-[#FF8A00]/10 text-[#FF8A00]">
-                <Binary className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-[#FF8A00] font-semibold">
-                  Verified Codebase
-                </div>
-                <div className="text-xs font-bold text-[#F5F7FA]">
-                  25.4 MB &bull; JS, PHP, TS Stack
-                </div>
-              </div>
-            </div>
-          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-          {highlights.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative p-6 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:bg-[#101B45] hover:border-[#FF8A00]/30 transition-all duration-500"
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#FF8A00]/5 to-[#FF6B00]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-[#FF8A00]/10 to-[#FF6B00]/10 border border-[#FF8A00]/10 w-fit mb-5 group-hover:scale-110 transition-transform duration-500">
-                  <item.icon className="w-5 h-5 text-[#FF8A00]" />
-                </div>
-                <h3 className="text-lg font-bold text-[#F5F7FA] mb-3 group-hover:text-[#FF8A00] transition-colors">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-[#B7C0D1] leading-relaxed font-medium">
-                  {item.desc}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Dual Identity & Contribution Distinction Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Personal Engineering Profile */}
+        {/* Refined Bento Grid (4 Primary Content Areas) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 mb-10">
+          {/* Bento Card 1: Full-Stack & Security Engineering (Span 7) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-6 sm:p-7 rounded-2xl bg-[#0B1637] border border-white/[0.08] relative overflow-hidden"
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-7 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <Github size={20} />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-colors" />
+
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  <ShieldCheck size={22} />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
+                    Domain 01 // Core Specialization
+                  </span>
+                  <h3 className="text-xl font-bold text-[#F8FAFC]">
+                    Full-Stack & Security Architecture
+                  </h3>
+                </div>
               </div>
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
-                  Individual Engineering Identity
-                </span>
-                <h3 className="text-lg font-bold text-[#F5F7FA]">
-                  Personal Lab & Autonomous Research
-                </h3>
-              </div>
+
+              <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
+                Specialized in architecting hardened REST APIs, token authentication flows (JWT/Bcrypt),
+                and decoupled microservice pipelines. Designing database schemas with MongoDB and PostgreSQL
+                optimized for sub-50ms execution times and strict isolation barriers.
+              </p>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#B7C0D1] leading-relaxed mb-4">
-              Authored directly under <code className="text-emerald-300 font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded">@yihune1234</code>. Encompasses backend microservices, exploratory prototypes, algorithms, and full-stack software written independently.
-            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-4 border-t border-white/[0.06] text-xs font-mono">
+              <div className="p-2 rounded-lg bg-[#07090E]/60 border border-white/[0.04]">
+                <span className="text-[10px] text-[#64748B] block">AUTH SPEC</span>
+                <span className="text-[#F8FAFC] font-semibold">JWT + Argon2</span>
+              </div>
+              <div className="p-2 rounded-lg bg-[#07090E]/60 border border-white/[0.04]">
+                <span className="text-[10px] text-[#64748B] block">API STYLE</span>
+                <span className="text-[#F8FAFC] font-semibold">RESTful / RPC</span>
+              </div>
+              <div className="p-2 rounded-lg bg-[#07090E]/60 border border-white/[0.04] col-span-2 sm:col-span-1">
+                <span className="text-[10px] text-[#64748B] block">DEFENSE</span>
+                <span className="text-emerald-400 font-semibold">CORS & RateLimit</span>
+              </div>
+            </div>
+          </motion.div>
 
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-white/[0.06] text-xs font-mono">
-              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
-                100% Personal Authorship
+          {/* Bento Card 2: Organization & Venture Development (Span 5) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="lg:col-span-5 card-slate card-org-hover rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors" />
+
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                  <Building2 size={22} />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
+                    Domain 02 // Venture Ecosystem
+                  </span>
+                  <h3 className="text-xl font-bold text-[#F8FAFC]">
+                    Ariiti Tech Platform
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
+                Directing open platform repositories under <code className="text-amber-300 font-mono bg-amber-500/10 px-1 rounded">@AriitiMarket</code>.
+                Building modular digital commerce infrastructure, developer integration SDKs, and high-concurrency payment gateways.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-[#07090E]/80 border border-amber-500/20 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-mono text-[#64748B] block">CONTRIBUTOR ROLE</span>
+                <span className="text-xs font-bold text-[#F8FAFC]">Platform Architecture Lead</span>
+              </div>
+              <a
+                href="https://github.com/AriitiMarket"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-colors"
+                title="View Organization on GitHub"
+              >
+                <ExternalLink size={14} />
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Bento Card 3: Offline-First & Mobile Systems (Span 5) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="lg:col-span-5 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-2xl group-hover:bg-sky-500/10 transition-colors" />
+
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
+                  <Smartphone size={22} />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-bold block">
+                    Domain 03 // Edge & Mobile
+                  </span>
+                  <h3 className="text-xl font-bold text-[#F8FAFC]">
+                    Offline-First Systems
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-sm text-[#94A3B8] leading-relaxed mb-6">
+                Creating cross-platform mobile experiences with React Native, Expo, and Capacitor.
+                Engineering local SQLite and WatermelonDB synchronization routines to operate seamlessly
+                in intermittent internet environments across East Africa.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 text-xs font-mono">
+              <span className="px-2.5 py-1 rounded bg-[#07090E] border border-white/[0.05] text-[#F8FAFC]">
+                SQLite Cache
               </span>
-              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
-                Full Architectural Ownership
+              <span className="px-2.5 py-1 rounded bg-[#07090E] border border-white/[0.05] text-[#F8FAFC]">
+                Conflict Resolution
+              </span>
+              <span className="px-2.5 py-1 rounded bg-[#07090E] border border-white/[0.05] text-[#F8FAFC]">
+                React Native
               </span>
             </div>
           </motion.div>
 
-          {/* Organization Platform Profile */}
+          {/* Bento Card 4: Live GitHub Engineering Summary (Span 7) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-6 sm:p-7 rounded-2xl bg-[#0B1637] border border-white/[0.08] relative overflow-hidden"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="lg:col-span-7 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <Building2 size={20} />
-              </div>
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
-                  Organization Platform Identity
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                    <Binary size={22} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block">
+                      Domain 04 // Verified Telemetry
+                    </span>
+                    <h3 className="text-xl font-bold text-[#F8FAFC]">
+                      Contribution Distinction & Scale
+                    </h3>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-[#94A3B8] border border-white/[0.06]">
+                  25.4 MB LINGUIST
                 </span>
-                <h3 className="text-lg font-bold text-[#F5F7FA]">
-                  Ariiti Tech & Ecosystem Platform
-                </h3>
+              </div>
+
+              <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
+                A transparent separation between individual engineering experiments and organization infrastructure.
+                Public activities are fetched via verified GitHub telemetry without inflating commit metrics:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                <div className="p-3 rounded-xl bg-[#07090E]/80 border border-emerald-500/20">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-400 mb-1">
+                    <CheckCircle2 size={13} />
+                    <span>Personal Lab (@yihune1234)</span>
+                  </div>
+                  <p className="text-xs text-[#94A3B8]">
+                    100% individual authorship, autonomous prototyping, and dedicated research repositories.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#07090E]/80 border border-amber-500/20">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400 mb-1">
+                    <CheckCircle2 size={13} />
+                    <span>Ariiti Tech (@AriitiMarket)</span>
+                  </div>
+                  <p className="text-xs text-[#94A3B8]">
+                    Multi-contributor platform engineering, shared pull request reviews, and ecosystem tooling.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#B7C0D1] leading-relaxed mb-4">
-              Collaborative software initiatives under <code className="text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">@AriitiMarket</code>. Focused on distributed commerce, developer tooling, and modular production repositories with shared contribution histories.
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-white/[0.06] text-xs font-mono">
-              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
-                Multi-Contributor Architecture
-              </span>
-              <span className="px-2.5 py-1 rounded bg-black/40 border border-white/[0.06] text-[#F5F7FA]">
-                Verified Contributor Role
-              </span>
+            <div className="flex items-center justify-between text-xs font-mono text-[#64748B] pt-3 border-t border-white/[0.06]">
+              <span>ETag-Cached Multi-Source Aggregation</span>
+              <span className="text-emerald-400 font-semibold">Zero Fake Metrics</span>
             </div>
           </motion.div>
         </div>

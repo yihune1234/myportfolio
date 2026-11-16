@@ -25,7 +25,7 @@ const LANGUAGE_COLORS: Record<string, string> = {
 };
 
 function getLangColor(lang: string): string {
-  return LANGUAGE_COLORS[lang] || '#FF8A00';
+  return LANGUAGE_COLORS[lang] || '#10B981';
 }
 
 export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
@@ -37,22 +37,22 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
   const reposCount = data?.repos_analyzed || 0;
 
   return (
-    <div className="relative p-6 sm:p-7 rounded-2xl bg-[#0B1637]/70 border border-white/[0.08] backdrop-blur-xl flex flex-col justify-between overflow-hidden group">
+    <div className="relative p-6 sm:p-7 rounded-2xl bg-[#0E131F]/90 border border-white/[0.08] backdrop-blur-xl flex flex-col justify-between overflow-hidden group">
       {/* Subtle background glow */}
-      <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#FF8A00]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-20 -right-20 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div>
         {/* Header with info button */}
         <div className="flex items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[#FF8A00]">
+            <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-emerald-400">
               <Binary className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-[#F5F7FA] tracking-tight">
+              <h3 className="text-base sm:text-lg font-bold text-[#F8FAFC] tracking-tight">
                 Codebase DNA
               </h3>
-              <p className="text-xs text-[#B7C0D1] font-mono">
+              <p className="text-xs text-[#94A3B8] font-mono">
                 Source Byte Volume Analysis ({scope})
               </p>
             </div>
@@ -79,10 +79,10 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
             </div>
           </div>
           <div>
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[#B7C0D1]/70">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#94A3B8]/70">
               Repositories Scanned
             </div>
-            <div className="text-lg sm:text-xl font-bold font-mono text-[#FF8A00] mt-0.5">
+            <div className="text-lg sm:text-xl font-bold font-mono text-emerald-400 mt-0.5">
               {isLoading ? '...' : `${reposCount} Repos`}
             </div>
           </div>
@@ -170,7 +170,7 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
               initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 10 }}
-              className="relative max-w-lg w-full p-6 sm:p-7 rounded-2xl bg-[#0B1637] border border-white/[0.12] shadow-2xl shadow-black/80 text-left"
+              className="relative max-w-lg w-full p-6 sm:p-7 rounded-2xl bg-[#0E131F] border border-white/[0.12] shadow-2xl shadow-black/80 text-left"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -187,10 +187,10 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
                 </h4>
               </div>
 
-              <div className="space-y-3 text-xs sm:text-sm text-[#B7C0D1] leading-relaxed">
+              <div className="space-y-3 text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
                 <p>
                   <strong>Actual Source Bytes:</strong> Values are fetched directly from GitHub's
-                  repository language endpoints (<code className="text-[#FF8A00] font-mono">/repos/:owner/:repo/languages</code>),
+                  repository language endpoints (<code className="text-emerald-400 font-mono">/repos/:owner/:repo/languages</code>),
                   which compute exact source file bytes using GitHub's Linguist library.
                 </p>
                 <p>
@@ -199,14 +199,14 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
                 <p>
                   <strong>Volume vs Proficiency:</strong> Percentages represent physical code byte distribution across stored repositories, not subjective proficiency ratings or commit counts.
                 </p>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] font-mono text-[11px] text-[#B7C0D1]">
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] font-mono text-[11px] text-[#94A3B8]">
                   Total Bytes: {totalBytes.toLocaleString()} bytes ({formattedTotal}) across {reposCount} public repositories.
                 </div>
               </div>
 
               <button
                 onClick={() => setShowMethodology(false)}
-                className="w-full mt-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-xl font-bold text-xs sm:text-sm"
+                className="w-full mt-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-400 text-[#07090E] rounded-xl font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/20"
               >
                 Understood
               </button>

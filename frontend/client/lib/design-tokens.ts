@@ -1,42 +1,35 @@
 /**
  * Design Tokens
- * Centralized design system tokens for the Ariiti Tech portfolio.
- * Provides consistent colors, background layers, typography scales,
- * and dual-identity themes (Personal Lab vs. Organization Platform).
+ * Architectural Telemetry & Venture Hub Design System.
+ * Centralized design tokens for the Yihune Belay & Ariiti Tech portfolio.
  */
 
 export const DESIGN_TOKENS = {
   colors: {
     // Background and Surface System
     bg: {
-      main: "#050816",             // Deep midnight navy
-      secondary: "#0A1330",        // Subtly lighter blue-gray
-      surface: "#0B1637",          // Controlled dark neutral card surface
-      elevatedSurface: "#101B45",  // Elevated interactive surface
-      overlay: "rgba(5, 8, 22, 0.8)",
+      base: "#07090E",             // Deep Obsidian Base
+      surface: "#0E131F",          // Card Surface
+      elevatedSurface: "#161D2E",  // Elevated content surface
+      secondary: "#0B0F19",        // Secondary dark section surface
+      overlay: "rgba(7, 9, 14, 0.85)",
     },
 
     // Typography Colors
     text: {
-      primary: "#F5F7FA",          // High-contrast off-white
-      secondary: "#B7C0D1",        // Readable muted gray
-      muted: "rgba(183, 192, 209, 0.6)",
-      accent: "#FF8A00",           // Brand highlight
+      primary: "#F8FAFC",          // Main headings & high-contrast text
+      secondary: "#94A3B8",        // Body descriptions & readable muted text
+      muted: "#64748B",            // Metadata & subtle timestamps
+      light: "#FFFFFF",
     },
 
     // Borders & Dividers
     border: {
-      subtle: "rgba(255, 255, 255, 0.06)",
+      subtle: "rgba(255, 255, 255, 0.05)",
       default: "rgba(255, 255, 255, 0.08)",
-      hover: "rgba(255, 138, 0, 0.35)",
-    },
-
-    // Brand Accents
-    brand: {
-      primary: "#FF8A00",          // Vivid engineered amber-orange
-      secondary: "#FF6B00",
-      gradient: "from-[#FF8A00] to-[#FF6B00]",
-      glow: "rgba(255, 138, 0, 0.25)",
+      hover: "rgba(255, 255, 255, 0.15)",
+      emerald: "rgba(16, 185, 129, 0.3)",
+      amber: "rgba(245, 158, 11, 0.3)",
     },
 
     // Dual Identity Themes
@@ -44,32 +37,33 @@ export const DESIGN_TOKENS = {
       personal: {
         label: "Personal Lab",
         handle: "@yihune1234",
-        accent: "#10B981",         // Emerald
-        accentMuted: "rgba(16, 185, 129, 0.15)",
+        accent: "#10B981",         // Personal Accent (Emerald)
+        accentLight: "#34D399",    // Personal Accent Light
         badgeBg: "rgba(16, 185, 129, 0.1)",
-        badgeText: "#6EE7B7",
+        badgeText: "#34D399",
         badgeBorder: "rgba(16, 185, 129, 0.25)",
         scope: "PERSONAL",
       },
       organization: {
         label: "Ariiti Tech Platform",
         handle: "@AriitiMarket",
-        accent: "#F59E0B",         // Amber
-        accentMuted: "rgba(245, 158, 11, 0.15)",
+        accent: "#F59E0B",         // Organization Accent (Amber)
+        accentLight: "#FBBF24",    // Organization Accent Light
         badgeBg: "rgba(245, 158, 11, 0.1)",
-        badgeText: "#FCD34D",
+        badgeText: "#FBBF24",
         badgeBorder: "rgba(245, 158, 11, 0.25)",
         scope: "ORGANIZATION",
       },
     },
 
-    // Telemetry & Status
+    // Status & Telemetry
     status: {
       live: "#10B981",             // Live pulsing green
       healthy: "#10B981",
       degraded: "#F59E0B",
-      error: "#EF4444",
-      cached: "rgba(183, 192, 209, 0.6)",
+      unavailable: "#EF4444",
+      syncing: "#38BDF8",
+      cached: "rgba(148, 163, 184, 0.7)",
     },
   },
 
@@ -80,19 +74,15 @@ export const DESIGN_TOKENS = {
       mono: "'JetBrains Mono', 'Fira Code', monospace",
     },
     classes: {
-      display: "font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[0.95]",
-      sectionHeading: "text-3xl sm:text-4xl md:text-5xl font-black text-[#F5F7FA] tracking-tight",
-      cardHeading: "text-lg sm:text-xl font-bold text-[#F5F7FA]",
-      body: "text-sm sm:text-base text-[#B7C0D1] leading-relaxed",
-      bodyMuted: "text-xs sm:text-sm text-[#B7C0D1]/80 leading-relaxed",
-      metadata: "text-xs font-mono text-[#B7C0D1]",
-      code: "font-mono text-xs text-[#F5F7FA]",
+      heroTitle: "font-heading font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-[1.05] text-[#F8FAFC]",
+      sectionTitle: "font-heading font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-[#F8FAFC]",
+      cardTitle: "font-heading font-bold text-lg sm:text-xl text-[#F8FAFC]",
+      body: "font-body text-sm sm:text-base text-[#94A3B8] leading-relaxed",
+      bodySmall: "font-body text-xs sm:text-sm text-[#94A3B8] leading-relaxed",
+      metadata: "font-mono text-xs text-[#64748B]",
+      technical: "font-mono text-xs font-semibold text-[#F8FAFC]",
+      tag: "font-mono text-[11px] font-medium tracking-wide",
     },
-  },
-
-  transitions: {
-    default: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    smooth: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
   },
 } as const;
 

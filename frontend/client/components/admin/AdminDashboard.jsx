@@ -63,7 +63,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl border border-white/[0.08] bg-[#0B1637]"
+          className="p-6 rounded-xl border border-white/[0.08] bg-[#0E131F]"
         >
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">
             Projects
@@ -76,7 +76,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="p-6 rounded-xl border border-white/[0.08] bg-[#0B1637]"
+          className="p-6 rounded-xl border border-white/[0.08] bg-[#0E131F]"
         >
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">
             Messages
@@ -91,11 +91,11 @@ export default function AdminDashboard({ onLogout, onBack }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="p-6 sm:p-8 rounded-xl border border-white/[0.08] bg-[#0B1637]"
+        className="p-6 sm:p-8 rounded-xl border border-white/[0.08] bg-[#0E131F]"
       >
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
-            <Sparkles className="w-5 h-5 text-[#050816]" />
+            <Sparkles className="w-5 h-5 text-[#07090E]" />
           </div>
           <div>
             <h2 className="text-lg sm:text-xl font-black text-[#F5F7FA]">
@@ -110,7 +110,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
           onClick={() => setShowAddProject(true)}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
         >
           <Plus size={16} />
           New Project
@@ -120,15 +120,15 @@ export default function AdminDashboard({ onLogout, onBack }) {
   );
 
   return (
-    <div className="min-h-screen bg-[#050816]">
+    <div className="min-h-screen bg-[#07090E]">
       {/* Top blur glow */}
       <div className="fixed top-0 left-0 right-0 h-[300px] bg-gradient-to-b from-[#FF8A00]/[0.03] to-transparent pointer-events-none" />
 
-      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#050816]/80 backdrop-blur-2xl">
+      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#07090E]/80 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
-              <LayoutDashboard className="w-4 h-4 text-[#050816]" />
+              <LayoutDashboard className="w-4 h-4 text-[#07090E]" />
             </div>
             <h1 className="text-lg sm:text-xl font-black text-[#F5F7FA]">
               Admin Panel
@@ -178,7 +178,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
                   whileHover={{ x: 4 }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${
                     activeTab === tab.id
-                      ? "bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] shadow-lg shadow-[#FF8A00]/20"
+                      ? "bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] shadow-lg shadow-[#FF8A00]/20"
                       : "text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.04]"
                   }`}
                 >

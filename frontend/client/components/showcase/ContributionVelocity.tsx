@@ -74,25 +74,25 @@ export function ContributionVelocity({ events, isLoading, scope }: ContributionV
   ];
 
   return (
-    <div className="relative p-6 sm:p-7 rounded-2xl bg-[#0B1637]/70 border border-white/[0.08] backdrop-blur-xl flex flex-col justify-between overflow-hidden">
+    <div className="relative p-6 sm:p-7 rounded-2xl bg-[#0E131F]/90 border border-white/[0.08] backdrop-blur-xl flex flex-col justify-between overflow-hidden">
       <div>
         <div className="flex items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[#FF8A00]">
+            <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-emerald-400">
               <Flame className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-[#F5F7FA] tracking-tight">
+              <h3 className="text-base sm:text-lg font-bold text-[#F8FAFC] tracking-tight">
                 Contribution Velocity
               </h3>
-              <p className="text-xs text-[#B7C0D1] font-mono">
+              <p className="text-xs text-[#94A3B8] font-mono">
                 Public Activity Action Streams ({scope})
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[11px] font-mono text-[#B7C0D1]">
-            <Calendar className="w-3.5 h-3.5 text-[#FF8A00]" />
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[11px] font-mono text-[#94A3B8]">
+            <Calendar className="w-3.5 h-3.5 text-emerald-400" />
             <span>Real REST Stream</span>
           </div>
         </div>
@@ -105,7 +105,7 @@ export function ContributionVelocity({ events, isLoading, scope }: ContributionV
               className={`p-3.5 rounded-xl border backdrop-blur-sm ${m.bg} flex flex-col justify-between transition-all`}
             >
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-[11px] font-medium text-[#B7C0D1]">
+                <span className="text-[11px] font-medium text-[#94A3B8]">
                   {m.label}
                 </span>
                 <m.icon className={`w-3.5 h-3.5 ${m.color}`} />
@@ -118,17 +118,17 @@ export function ContributionVelocity({ events, isLoading, scope }: ContributionV
         </div>
 
         {/* Honest Disclosure notice */}
-        <div className="p-3.5 rounded-xl bg-black/40 border border-white/[0.06] flex items-start gap-2.5 text-xs text-[#B7C0D1] leading-relaxed">
-          <AlertCircle className="w-4 h-4 text-[#FF8A00] flex-shrink-0 mt-0.5" />
+        <div className="p-3.5 rounded-xl bg-black/40 border border-white/[0.06] flex items-start gap-2.5 text-xs text-[#94A3B8] leading-relaxed">
+          <AlertCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
           <p>
-            <strong className="text-[#F5F7FA]">Honest Disclosure:</strong> These metrics reflect
+            <strong className="text-[#F8FAFC]">Honest Disclosure:</strong> These metrics reflect
             verified GitHub public REST event streams. GitHub limits public event feeds to the 300 most recent events.
             Values are never simulated or extrapolated into arbitrary historical commit graphs.
           </p>
         </div>
       </div>
 
-      <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-[#B7C0D1]/70">
+      <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-[#94A3B8]/70">
         <span>Verified Public Events: {counts.total}</span>
         <span>Scope: {scope}</span>
       </div>

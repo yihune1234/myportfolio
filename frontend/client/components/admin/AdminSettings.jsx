@@ -217,7 +217,7 @@ export function AdminSettings() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="border border-white/[0.06] bg-[#0B1637] rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg shadow-black/20"
+      className="border border-white/[0.06] bg-[#0E131F] rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg shadow-black/20"
     >
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
         <div className="lg:w-1/3 space-y-3 sm:space-y-4">
@@ -245,7 +245,7 @@ export function AdminSettings() {
         </div>
         <input
           {...props}
-          className="w-full pl-10 pr-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40"
+          className="w-full pl-10 pr-4 py-2.5 bg-[#07090E] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40"
         />
       </div>
     </div>
@@ -296,7 +296,7 @@ export function AdminSettings() {
                     type="email"
                     value={profileData.email}
                     disabled
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#050816]/50 border border-white/[0.06] rounded-lg text-[#B7C0D1]/60 font-medium cursor-not-allowed"
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#07090E]/50 border border-white/[0.06] rounded-lg text-[#B7C0D1]/60 font-medium cursor-not-allowed"
                   />
                 </div>
                 <p className="text-[10px] text-[#B7C0D1]/40">
@@ -310,7 +310,7 @@ export function AdminSettings() {
               disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
+              className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
             >
               <Save size={16} />
               Save Changes
@@ -356,7 +356,7 @@ export function AdminSettings() {
             </div>
 
             {/* Visibility Controls */}
-            <div className="space-y-3 p-4 bg-[#050816] rounded-xl border border-white/[0.06]">
+            <div className="space-y-3 p-4 bg-[#07090E] rounded-xl border border-white/[0.06]">
               <h4 className="text-xs font-bold text-[#F5F7FA] uppercase tracking-wider mb-2">
                 Public Portfolio Visibility Flags
               </h4>
@@ -449,7 +449,7 @@ export function AdminSettings() {
             </div>
 
             {/* Sync Configuration & Status Monitor */}
-            <div className="p-4 bg-[#050816] rounded-xl border border-white/[0.06] space-y-4">
+            <div className="p-4 bg-[#07090E] rounded-xl border border-white/[0.06] space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h4 className="text-xs font-bold text-[#F5F7FA] uppercase tracking-wider">
@@ -519,7 +519,7 @@ export function AdminSettings() {
                   disabled={savingGithub}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <Save size={16} />
                   {savingGithub ? "Saving..." : "Save GitHub Settings"}
@@ -599,7 +599,7 @@ export function AdminSettings() {
                 disabled={loading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
+                className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center gap-2 w-full sm:w-fit"
               >
                 <RotateCcw size={16} />
                 Update Password

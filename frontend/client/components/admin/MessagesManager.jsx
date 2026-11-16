@@ -128,7 +128,7 @@ export function MessagesManager() {
           <input
             type="text"
             placeholder="Search messages..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all text-sm text-[#F5F7FA] placeholder-[#B7C0D1]/40"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#07090E] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all text-sm text-[#F5F7FA] placeholder-[#B7C0D1]/40"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -149,7 +149,7 @@ export function MessagesManager() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="py-12 sm:py-16 rounded-lg border border-white/[0.06] bg-[#0B1637] flex flex-col items-center justify-center text-center space-y-3"
+                className="py-12 sm:py-16 rounded-lg border border-white/[0.06] bg-[#0E131F] flex flex-col items-center justify-center text-center space-y-3"
               >
                 <MessageSquare size={32} className="text-[#FF8A00]/30" />
                 <div>
@@ -172,15 +172,15 @@ export function MessagesManager() {
                   className={`group relative p-3 sm:p-4 rounded-lg cursor-pointer transition-all border ${
                     selectedMessage?._id === msg._id
                       ? "bg-[#FF8A00]/10 border-[#FF8A00]/30 shadow-lg shadow-[#FF8A00]/5"
-                      : "border-white/[0.06] bg-[#0B1637] hover:border-white/[0.12] hover:bg-[#101B45]"
+                      : "border-white/[0.06] bg-[#0E131F] hover:border-white/[0.12] hover:bg-[#101B45]"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs sm:text-sm font-black flex-shrink-0 ${
                         selectedMessage?._id === msg._id
-                          ? "bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] text-[#050816]"
-                          : "bg-[#050816] text-[#FF8A00] border border-white/[0.06]"
+                          ? "bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] text-[#07090E]"
+                          : "bg-[#07090E] text-[#FF8A00] border border-white/[0.06]"
                       }`}
                     >
                       {msg.name.charAt(0).toUpperCase()}
@@ -216,13 +216,13 @@ export function MessagesManager() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="rounded-lg border border-white/[0.06] bg-[#0B1637] overflow-hidden shadow-lg shadow-black/20 flex flex-col"
+                className="rounded-lg border border-white/[0.06] bg-[#0E131F] overflow-hidden shadow-lg shadow-black/20 flex flex-col"
               >
                 {/* Header */}
-                <div className="p-4 sm:p-6 border-b border-white/[0.06] bg-gradient-to-r from-[#0B1637] to-[#101B45]">
+                <div className="p-4 sm:p-6 border-b border-white/[0.06] bg-gradient-to-r from-[#0E131F] to-[#101B45]">
                   <div className="flex items-center justify-between gap-4 mb-4">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center text-[#050816] font-bold text-sm sm:text-base flex-shrink-0">
+                      <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center text-[#07090E] font-bold text-sm sm:text-base flex-shrink-0">
                         {selectedMessage.name.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
@@ -265,7 +265,7 @@ export function MessagesManager() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/[0.06]">
-                    <div className="p-3 bg-[#050816] rounded-lg">
+                    <div className="p-3 bg-[#07090E] rounded-lg">
                       <span className="text-[10px] font-bold text-[#B7C0D1]/60 block mb-1 uppercase tracking-wider">
                         Date
                       </span>
@@ -275,7 +275,7 @@ export function MessagesManager() {
                         ).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="p-3 bg-[#050816] rounded-lg">
+                    <div className="p-3 bg-[#07090E] rounded-lg">
                       <span className="text-[10px] font-bold text-[#B7C0D1]/60 block mb-1 uppercase tracking-wider">
                         Time
                       </span>
@@ -290,10 +290,10 @@ export function MessagesManager() {
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 sm:p-6 border-t border-white/[0.06] bg-[#050816]">
+                <div className="p-4 sm:p-6 border-t border-white/[0.06] bg-[#07090E]">
                   <button
                     onClick={openReply}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
                   >
                     Reply
                     <Send size={16} />
@@ -304,7 +304,7 @@ export function MessagesManager() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="h-96 rounded-lg border-2 border-dashed border-white/[0.06] bg-[#0B1637] flex flex-col items-center justify-center text-center space-y-4 p-4"
+                className="h-96 rounded-lg border-2 border-dashed border-white/[0.06] bg-[#0E131F] flex flex-col items-center justify-center text-center space-y-4 p-4"
               >
                 <MessageSquare size={40} className="text-[#FF8A00]/20" />
                 <div>
@@ -335,7 +335,7 @@ export function MessagesManager() {
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              className="w-full max-w-lg rounded-xl border border-white/[0.08] bg-[#0B1637] shadow-2xl shadow-black/60"
+              className="w-full max-w-lg rounded-xl border border-white/[0.08] bg-[#0E131F] shadow-2xl shadow-black/60"
               onClick={(e) => e.stopPropagation()}
             >
               {replySent ? (
@@ -355,7 +355,7 @@ export function MessagesManager() {
                   </p>
                   <button
                     onClick={() => setShowReplyModal(false)}
-                    className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+                    className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
                   >
                     Done
                   </button>
@@ -392,7 +392,7 @@ export function MessagesManager() {
                       <textarea
                         required
                         rows="6"
-                        className="w-full px-4 py-3 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none text-sm"
+                        className="w-full px-4 py-3 bg-[#07090E] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none text-sm"
                         placeholder="Type your reply here..."
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
@@ -411,14 +411,14 @@ export function MessagesManager() {
                       <button
                         type="submit"
                         disabled={sending || !replyText.trim()}
-                        className="flex-1 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                        className="flex-1 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
                       >
                         {sending ? (
                           <>
                             <motion.div
                               animate={{ rotate: 360 }}
                               transition={{ duration: 1, repeat: Infinity }}
-                              className="w-4 h-4 border-2 border-[#050816]/30 border-t-[#050816] rounded-full"
+                              className="w-4 h-4 border-2 border-[#07090E]/30 border-t-[#07090E] rounded-full"
                             />
                             Sending...
                           </>

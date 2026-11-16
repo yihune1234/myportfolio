@@ -455,7 +455,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
           onClick={() => openModal()}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] px-6 py-3 rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all flex items-center justify-center gap-2 w-full sm:w-fit"
+          className="bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] px-6 py-3 rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all flex items-center justify-center gap-2 w-full sm:w-fit"
         >
           <Plus size={18} />
           New Project
@@ -468,7 +468,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="col-span-full py-16 sm:py-20 rounded-xl border border-white/[0.06] bg-[#0B1637] flex flex-col items-center justify-center text-center space-y-4"
+            className="col-span-full py-16 sm:py-20 rounded-xl border border-white/[0.06] bg-[#0E131F] flex flex-col items-center justify-center text-center space-y-4"
           >
             <FolderKanban size={40} className="text-[#FF8A00]/30" />
             <div>
@@ -479,7 +479,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
             </div>
             <button
               onClick={() => openModal()}
-              className="px-6 py-2 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+              className="px-6 py-2 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
             >
               Create Project
             </button>
@@ -492,10 +492,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
               whileHover={{ y: -4 }}
-              className="group rounded-xl border border-white/[0.06] bg-[#0B1637] overflow-hidden hover:border-[#FF8A00]/25 hover:shadow-lg hover:shadow-[#FF8A00]/5 transition-all flex flex-col h-full"
+              className="group rounded-xl border border-white/[0.06] bg-[#0E131F] overflow-hidden hover:border-[#FF8A00]/25 hover:shadow-lg hover:shadow-[#FF8A00]/5 transition-all flex flex-col h-full"
             >
               {/* Image */}
-              <div className="relative aspect-video overflow-hidden bg-[#050816]">
+              <div className="relative aspect-video overflow-hidden bg-[#07090E]">
                 <CloudinaryImage
                   src={project.image}
                   alt={project.title}
@@ -504,12 +504,12 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   height={250}
                 />
                 {project.pinned && (
-                  <div className="absolute top-3 left-3 bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] px-2.5 py-1 rounded-full text-[9px] font-black text-[#050816] uppercase tracking-wider shadow-lg shadow-[#FF8A00]/30 flex items-center gap-1">
+                  <div className="absolute top-3 left-3 bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] px-2.5 py-1 rounded-full text-[9px] font-black text-[#07090E] uppercase tracking-wider shadow-lg shadow-[#FF8A00]/30 flex items-center gap-1">
                     <Pin size={10} className="fill-current" />
                     Pinned
                   </div>
                 )}
-                <div className="absolute top-3 right-3 bg-[#050816]/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-[#B7C0D1] border border-white/[0.06]">
+                <div className="absolute top-3 right-3 bg-[#07090E]/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-[#B7C0D1] border border-white/[0.06]">
                   {project.images?.length || 0} images
                 </div>
               </div>
@@ -542,7 +542,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
                 {/* Connected GitHub Repository Badge */}
                 {project.githubRepoFullName && (
-                  <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#050816] border border-white/[0.06] mb-3 text-[11px] font-mono">
+                  <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#07090E] border border-white/[0.06] mb-3 text-[11px] font-mono">
                     <div className="flex items-center gap-1.5 truncate">
                       <Github size={12} className="text-[#FF8A00] flex-shrink-0" />
                       <span className="text-[#F5F7FA] font-medium truncate">{project.githubRepoFullName}</span>
@@ -591,7 +591,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     onClick={() => handlePinToggle(project._id, project.pinned)}
                     className={`py-2 px-3 rounded-lg transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 ${
                       project.pinned
-                        ? "bg-[#FF8A00] text-[#050816] shadow-[0_0_12px_rgba(255,138,0,0.25)]"
+                        ? "bg-[#FF8A00] text-[#07090E] shadow-[0_0_12px_rgba(255,138,0,0.25)]"
                         : "bg-white/[0.04] text-[#B7C0D1] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00]"
                     }`}
                     title={
@@ -605,14 +605,14 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   </button>
                   <button
                     onClick={() => openModal(project)}
-                    className="flex-1 py-2 bg-[#FF8A00]/10 text-[#FF8A00] rounded-lg hover:bg-[#FF8A00] hover:text-[#050816] transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
+                    className="flex-1 py-2 bg-[#FF8A00]/10 text-[#FF8A00] rounded-lg hover:bg-[#FF8A00] hover:text-[#07090E] transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
                   >
                     <Edit3 size={14} />
                     <span className="hidden sm:inline">Edit</span>
                   </button>
                   <button
                     onClick={() => openImageManager(project)}
-                    className="py-2 px-3 bg-[#FF8A00]/10 text-[#FF8A00] rounded-lg hover:bg-[#FF8A00] hover:text-[#050816] transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5"
+                    className="py-2 px-3 bg-[#FF8A00]/10 text-[#FF8A00] rounded-lg hover:bg-[#FF8A00] hover:text-[#07090E] transition-all font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5"
                     title="Manage images"
                   >
                     <ImageIcon size={14} />
@@ -646,11 +646,11 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              className="w-full max-w-4xl rounded-xl border border-white/[0.08] bg-[#0B1637] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-4xl rounded-xl border border-white/[0.08] bg-[#0E131F] shadow-2xl shadow-black/60 max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="sticky top-0 p-4 sm:p-6 border-b border-white/[0.06] bg-[#0B1637] flex items-center justify-between z-10">
+              <div className="sticky top-0 p-4 sm:p-6 border-b border-white/[0.06] bg-[#0E131F] flex items-center justify-between z-10">
                 <div className="flex items-center gap-3">
                   {showImageManager && (
                     <button
@@ -695,7 +695,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     </div>
 
                     {/* Upload area */}
-                    <label className="flex items-center justify-center p-8 bg-[#050816] border-2 border-dashed border-white/[0.08] rounded-xl cursor-pointer hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.02] transition-all group">
+                    <label className="flex items-center justify-center p-8 bg-[#07090E] border-2 border-dashed border-white/[0.08] rounded-xl cursor-pointer hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.02] transition-all group">
                       <div className="text-center space-y-3">
                         <Camera
                           size={36}
@@ -725,7 +725,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
                   {/* Images Grid — Reorderable */}
                   {projectImages.length === 0 ? (
-                    <div className="text-center py-12 bg-[#050816] rounded-xl border border-white/[0.06]">
+                    <div className="text-center py-12 bg-[#07090E] rounded-xl border border-white/[0.06]">
                       <ImageIcon
                         size={40}
                         className="mx-auto text-[#FF8A00]/20 mb-3"
@@ -745,7 +745,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                         <Reorder.Item
                           key={img._id}
                           value={img}
-                          className="bg-[#050816] border border-white/[0.08] rounded-xl overflow-hidden hover:border-[#FF8A00]/25 transition-all group/item"
+                          className="bg-[#07090E] border border-white/[0.08] rounded-xl overflow-hidden hover:border-[#FF8A00]/25 transition-all group/item"
                         >
                           <div className="flex items-center gap-4 p-3">
                             {/* Drag Handle */}
@@ -754,7 +754,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                             </div>
 
                             {/* Thumbnail */}
-                            <div className="w-20 h-14 sm:w-24 sm:h-16 rounded-lg overflow-hidden bg-[#0B1637] flex-shrink-0">
+                            <div className="w-20 h-14 sm:w-24 sm:h-16 rounded-lg overflow-hidden bg-[#0E131F] flex-shrink-0">
                               <img
                                 src={img.url}
                                 alt={img.title || "Project screenshot"}
@@ -843,7 +843,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     <textarea
                       required
                       rows="4"
-                      className="w-full px-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none"
+                      className="w-full px-4 py-2.5 bg-[#07090E] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40 resize-none"
                       placeholder="Project description..."
                       value={formData.description}
                       onChange={(e) =>
@@ -884,7 +884,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   </div>
 
                   {/* GitHub Repository Association */}
-                  <div className="p-4 sm:p-5 rounded-xl bg-[#050816] border border-white/[0.08] space-y-4">
+                  <div className="p-4 sm:p-5 rounded-xl bg-[#07090E] border border-white/[0.08] space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Github size={18} className="text-[#FF8A00]" />
@@ -930,7 +930,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                               githubUrl: formData.githubUrl || matched?.html_url || "",
                             });
                           }}
-                          className="w-full px-4 py-2.5 bg-[#0B1637] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-xs sm:text-sm text-[#F5F7FA]"
+                          className="w-full px-4 py-2.5 bg-[#0E131F] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-xs sm:text-sm text-[#F5F7FA]"
                         >
                           <option value="">-- No Repository Connected --</option>
                           {githubRepos.map((repo) => (
@@ -956,7 +956,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                               githubSourceScope: e.target.value.toLowerCase().startsWith("ariitimarket") ? "ORGANIZATION" : "PERSONAL",
                             })
                           }
-                          className="w-full px-4 py-2.5 bg-[#0B1637] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-xs sm:text-sm text-[#F5F7FA] placeholder-[#B7C0D1]/40 font-mono"
+                          className="w-full px-4 py-2.5 bg-[#0E131F] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-xs sm:text-sm text-[#F5F7FA] placeholder-[#B7C0D1]/40 font-mono"
                         />
                       </div>
                     </div>
@@ -1029,7 +1029,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     <label className="text-xs font-bold text-[#B7C0D1] block mb-2">
                       Project Cover Image
                     </label>
-                    <label className="flex flex-col items-center justify-center aspect-video bg-[#050816] border-2 border-dashed border-white/[0.08] rounded-lg cursor-pointer hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.02] transition-all">
+                    <label className="flex flex-col items-center justify-center aspect-video bg-[#07090E] border-2 border-dashed border-white/[0.08] rounded-lg cursor-pointer hover:border-[#FF8A00]/30 hover:bg-[#FF8A00]/[0.02] transition-all">
                       {imagePreview ? (
                         <img
                           src={imagePreview}
@@ -1062,7 +1062,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   </div>
 
                   {/* Mini Project Checkbox */}
-                  <div className="flex items-center gap-3 p-4 bg-[#050816] rounded-lg border border-white/[0.06]">
+                  <div className="flex items-center gap-3 p-4 bg-[#07090E] rounded-lg border border-white/[0.06]">
                     <input
                       type="checkbox"
                       id="isMini"
@@ -1109,7 +1109,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                      className="flex-1 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
                     >
                       {editingProject ? "Update" : "Create"}
                     </button>
@@ -1129,7 +1129,7 @@ const InputField = ({ label, ...props }) => (
     <label className="text-xs font-bold text-[#B7C0D1] block">{label}</label>
     <input
       {...props}
-      className="w-full px-4 py-2.5 bg-[#050816] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40"
+      className="w-full px-4 py-2.5 bg-[#07090E] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-[#F5F7FA] placeholder-[#B7C0D1]/40"
     />
   </div>
 );

@@ -283,7 +283,7 @@ export default function ProjectSectionsManager() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-[#0B1637] rounded-xl border border-white/[0.08] p-6">
+      <div className="bg-[#0E131F] rounded-xl border border-white/[0.08] p-6">
         <h2 className="text-xl font-bold text-[#F5F7FA] mb-4">
           Select Project
         </h2>
@@ -292,7 +292,7 @@ export default function ProjectSectionsManager() {
           onChange={function (e) {
             setSelectedProject(e.target.value);
           }}
-          className="w-full px-4 py-2 bg-[#050816] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500"
+          className="w-full px-4 py-2 bg-[#07090E] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500"
         >
           {projects.map(function (project) {
             return (
@@ -305,7 +305,7 @@ export default function ProjectSectionsManager() {
       </div>
 
       {selectedProject && (
-        <div className="bg-[#0B1637] rounded-xl border border-white/[0.08] p-6">
+        <div className="bg-[#0E131F] rounded-xl border border-white/[0.08] p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-[#F5F7FA]">
               Project Sections
@@ -316,7 +316,7 @@ export default function ProjectSectionsManager() {
               onClick={function () {
                 setShowAddSection(true);
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
             >
               <Plus size={16} />
               Add Section
@@ -335,7 +335,7 @@ export default function ProjectSectionsManager() {
                   <motion.div
                     key={section._id}
                     layout
-                    className="bg-[#050816] rounded-lg border border-white/[0.08] p-4"
+                    className="bg-[#07090E] rounded-lg border border-white/[0.08] p-4"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -447,7 +447,7 @@ export default function ProjectSectionsManager() {
                               whileTap={{ scale: 0.98 }}
                               onClick={handleMediaUpload}
                               disabled={!mediaFiles}
-                              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-[#050816] rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-[#07090E] rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                             >
                               <Upload size={16} />
                               Upload
@@ -490,7 +490,7 @@ export default function ProjectSectionsManager() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#0B1637] rounded-xl border border-white/[0.08] p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-[#0E131F] rounded-xl border border-white/[0.08] p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-[#F5F7FA]">
@@ -524,7 +524,7 @@ export default function ProjectSectionsManager() {
                     name="title"
                     required
                     defaultValue={editingSection?.title}
-                    className="w-full px-4 py-2 bg-[#050816] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500"
+                    className="w-full px-4 py-2 bg-[#07090E] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500"
                   />
                 </div>
 
@@ -537,7 +537,7 @@ export default function ProjectSectionsManager() {
                     required
                     rows={8}
                     defaultValue={editingSection?.content}
-                    className="w-full px-4 py-2 bg-[#050816] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500 resize-none"
+                    className="w-full px-4 py-2 bg-[#07090E] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500 resize-none"
                   />
                 </div>
 
@@ -550,7 +550,7 @@ export default function ProjectSectionsManager() {
                       type="number"
                       name="order"
                       defaultValue={editingSection?.order || 0}
-                      className="w-full px-4 py-2 bg-[#050816] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500"
+                      className="w-full px-4 py-2 bg-[#07090E] border border-white/[0.08] rounded-lg text-[#F5F7FA] focus:outline-none focus:border-orange-500"
                     />
                   </div>
                   <div></div>
@@ -563,7 +563,7 @@ export default function ProjectSectionsManager() {
                       name="isVisible"
                       id="isVisible"
                       defaultChecked={editingSection?.isVisible ?? true}
-                      className="w-4 h-4 text-orange-500 bg-[#050816] border-white/[0.08] rounded focus:ring-orange-500"
+                      className="w-4 h-4 text-orange-500 bg-[#07090E] border-white/[0.08] rounded focus:ring-orange-500"
                     />
                     <label
                       htmlFor="isVisible"
@@ -578,7 +578,7 @@ export default function ProjectSectionsManager() {
                       name="isDraft"
                       id="isDraft"
                       defaultChecked={editingSection?.isDraft ?? false}
-                      className="w-4 h-4 text-orange-500 bg-[#050816] border-white/[0.08] rounded focus:ring-orange-500"
+                      className="w-4 h-4 text-orange-500 bg-[#07090E] border-white/[0.08] rounded focus:ring-orange-500"
                     />
                     <label htmlFor="isDraft" className="text-sm text-[#B7C0D1]">
                       Save as draft
@@ -591,7 +591,7 @@ export default function ProjectSectionsManager() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
                   >
                     <Save size={16} />
                     {editingSection ? "Update Section" : "Create Section"}

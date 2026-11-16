@@ -89,40 +89,90 @@ export default function Index() {
         <ContactSection />
       </main>
 
-      {/* Premium Footer */}
-      <footer className="relative overflow-hidden border-t border-white/[0.06] bg-background">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-full bg-gradient-to-b from-[#FF8A00]/5 via-[#FF6B00]/5 to-transparent blur-[100px]" />
+      {/* Architectural Telemetry Footer */}
+      <footer className="relative overflow-hidden border-t border-white/[0.08] bg-[#07090E]">
+        {/* Subtle Ambient Radial Lighting */}
+        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 translate-y-1/2 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 dot-matrix-grid opacity-15 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-            {/* Brand */}
+            {/* Brand & Monogram */}
             <div className="md:col-span-2">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] rounded-xl flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
-                  <Sparkles className="w-5 h-5 text-[#050816]" />
+              <div className="flex items-center gap-3.5 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-[#0E131F] border border-white/10 flex items-center justify-center shadow-lg shadow-black/40 group">
+                  <svg
+                    className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform duration-300"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 6L16 19L25 6"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M16 19V26"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M16 6H25C27.5 6 27.5 12 25 12H16"
+                      stroke="#F59E0B"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M16 12H26C28.5 12 28.5 18 26 18H16"
+                      stroke="#F59E0B"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </div>
-                <span className="font-black text-xl text-[#F5F7FA] tracking-tight">
-                  Yihune Belay
+                <div>
+                  <span className="font-black text-xl text-[#F8FAFC] tracking-tight block">
+                    Yihune Belay
+                  </span>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400">
+                    Architectural Telemetry & Venture Hub
+                  </span>
+                </div>
+              </div>
+              <p className="text-sm text-[#94A3B8] leading-relaxed max-w-sm mb-5">
+                Full-stack software engineer & distributed systems architect. Specializing in high-throughput backend APIs, security engineering, and multi-tenant commerce platforms.
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0E131F] border border-emerald-500/20 text-[11px] font-mono text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Personal Lab: @yihune1234
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0E131F] border border-amber-500/20 text-[11px] font-mono text-amber-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  Org Venture: @AriitiMarket
                 </span>
               </div>
-              <p className="text-sm text-[#B7C0D1] leading-relaxed max-w-sm">
-                Full-stack software engineer specializing in backend systems,
-                API architecture, and scalable digital infrastructure.
-              </p>
             </div>
 
             {/* Quick Links */}
             <div>
-              <h4 className="font-bold text-[#F5F7FA] uppercase tracking-widest text-xs mb-6">
-                Navigate
+              <h4 className="font-mono text-[#F8FAFC] uppercase tracking-wider text-xs mb-5 font-bold">
+                Telemetry Nodes
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {[
-                  { name: "Home", id: "home" },
-                  { name: "Projects", id: "projects" },
-                  { name: "Engineering", id: "engineering" },
-                  { name: "Experience", id: "experience" },
-                  { name: "Contact", id: "contact" },
+                  { name: "Overview", id: "home" },
+                  { name: "About Architecture", id: "about" },
+                  { name: "System Skills", id: "skills" },
+                  { name: "Projects Catalog", id: "projects" },
+                  { name: "Engineering Pulse", id: "engineering" },
+                  { name: "Experience Matrix", id: "experience" },
+                  { name: "Contact Terminal", id: "contact" },
                 ].map((link) => (
                   <li key={link.id}>
                     <button
@@ -131,53 +181,76 @@ export default function Index() {
                           .getElementById(link.id)
                           ?.scrollIntoView({ behavior: "smooth" })
                       }
-                      className="text-sm text-[#B7C0D1] hover:text-[#FF8A00] transition-colors font-medium"
+                      className="text-xs text-[#94A3B8] hover:text-emerald-400 transition-colors font-mono"
                     >
-                      {link.name}
+                      → {link.name}
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Connect */}
+            {/* Connect & Security */}
             <div>
-              <h4 className="font-bold text-[#F5F7FA] uppercase tracking-widest text-xs mb-6">
-                Connect
+              <h4 className="font-mono text-[#F8FAFC] uppercase tracking-wider text-xs mb-5 font-bold">
+                Connect & Admin
               </h4>
               <div className="flex flex-col gap-4">
-                <div className="flex gap-3">
+                <div className="flex gap-2.5">
                   <a
                     href="https://github.com/yihune1234"
                     target="_blank"
-                    className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-[#B7C0D1] hover:text-[#FF8A00] hover:bg-white/[0.06] hover:border-[#FF8A00]/20 transition-all duration-300"
-                    title="GitHub"
+                    rel="noopener noreferrer"
+                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-emerald-400 hover:border-emerald-500/30 transition-all duration-200"
+                    title="Personal GitHub: @yihune1234"
                   >
-                    <Github className="w-5 h-5" />
+                    <Github className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://github.com/AriitiMarket"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-amber-400 hover:border-amber-500/30 transition-all duration-200"
+                    title="Organization GitHub: @AriitiMarket"
+                  >
+                    <Github className="w-4 h-4 text-amber-400/80" />
                   </a>
                   <a
                     href="https://linkedin.com/in/yihune-belay"
                     target="_blank"
-                    className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-[#B7C0D1] hover:text-[#FF8A00] hover:bg-white/[0.06] hover:border-[#FF8A00]/20 transition-all duration-300"
-                    title="LinkedIn"
+                    rel="noopener noreferrer"
+                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-emerald-400 hover:border-emerald-500/30 transition-all duration-200"
+                    title="LinkedIn Profile"
                   >
-                    <Linkedin className="w-5 h-5" />
+                    <Linkedin className="w-4 h-4" />
                   </a>
                   <button
                     onClick={() => setShowAdminPortal(true)}
-                    className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-[#B7C0D1] hover:text-[#FF8A00] hover:bg-white/[0.06] hover:border-[#FF8A00]/20 transition-all duration-300"
-                    title="Admin Portal"
+                    className="p-2.5 rounded-xl bg-[#0E131F] border border-white/[0.08] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-white/20 transition-all duration-200"
+                    title="Admin Access Portal"
                   >
-                    <Lock className="w-5 h-5" />
+                    <Lock className="w-4 h-4" />
                   </button>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#0E131F] border border-white/[0.06] text-[11px] font-mono text-[#64748B] space-y-1">
+                  <div className="flex items-center justify-between text-[#94A3B8]">
+                    <span>Telemetry Sync</span>
+                    <span className="text-emerald-400 font-bold">AUTOMATED</span>
+                  </div>
+                  <div>Stack: React · Vite · Express · Mongo</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-white/[0.06] pt-8 text-center">
-            <p className="text-xs text-muted-foreground font-medium">
-              © 2024 Yihune Belay. Designed & Built with precision.
+          <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#64748B]">
+            <p>
+              © {new Date().getFullYear()} Yihune Belay. All rights reserved.
+            </p>
+            <p className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400/80" />
+              Verified Telemetry Hub · Haramaya SE Alum
             </p>
           </div>
         </div>

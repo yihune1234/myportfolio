@@ -9,6 +9,9 @@ import {
   CheckCircle2,
   Loader,
   Sparkles,
+  Building2,
+  Calendar,
+  Award,
 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -17,123 +20,128 @@ import { API_ENDPOINTS, apiFetch } from "@/lib/api";
 export default function EducationSection() {
   const studyAreas = [
     "Data Structures & Algorithms",
-    "Database Systems",
-    "Web Development",
-    "Mobile App Development",
-    "Network Security",
-    "Software Architecture",
-    "Cloud Computing",
-    "System Design",
-    "Software Testing",
+    "Database Systems & Modeling",
+    "Distributed Systems & Cloud",
+    "Mobile Architecture (React Native)",
+    "Network Security & Cryptography",
+    "Full-Stack Web Architectures",
+    "Software Testing & CI/CD",
+    "Object-Oriented Design Patterns",
+    "Operating Systems & Linux",
   ];
 
   return (
     <section
       id="education"
-      className="section-padding relative overflow-hidden bg-background border-t border-white/[0.06]"
+      className="section-padding relative overflow-hidden bg-[#07090E] border-t border-white/[0.08]"
     >
-      <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
-      <div className="absolute top-0 right-1/4 w-[300px] h-[300px] bg-[#FF8A00]/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] bg-[#FFB020]/5 rounded-full blur-[100px]" />
+      {/* Background Ambience */}
+      <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
+      <div className="absolute top-1/4 -right-32 w-[450px] h-[450px] ambient-emerald-glow rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-[450px] h-[450px] ambient-amber-glow rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 text-center lg:text-left"
+          className="mb-14 text-center lg:text-left"
         >
-          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
-            Education
+          <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
+            Academic Engineering Foundation
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black text-[#F8FAFC] tracking-tight font-heading">
+            Education & Theoretical Rigor
           </h2>
-          <p className="text-[#B7C0D1] text-base max-w-2xl leading-relaxed mx-auto lg:mx-0">
-            Academic foundation in software engineering with focus on modern
-            development practices.
+          <p className="text-[#94A3B8] text-sm sm:text-base max-w-2xl leading-relaxed mt-2 font-body">
+            Computer science principles, software architecture methodologies, and systems engineering education.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Education Main Card */}
+          {/* Degree Primary Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-2 p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:border-[#FF8A00]/20 transition-all duration-500"
+            className="lg:col-span-2 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#F5F7FA] mb-2 leading-tight">
-                  BSc in Software Engineering
-                </h3>
-                <p className="text-base font-bold text-[#B7C0D1]">
-                  Haramaya University
-                </p>
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold block mb-1">
+                    Undergraduate Degree Program
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-[#F8FAFC] leading-tight font-heading">
+                    BSc in Software Engineering
+                  </h3>
+                  <p className="text-sm sm:text-base font-bold text-[#94A3B8] mt-1 font-body">
+                    Haramaya University &bull; College of Computing & Informatics
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[#07090E] border border-emerald-500/30 text-emerald-400 w-fit">
+                  <GraduationCap size={28} />
+                </div>
               </div>
-              <div className="p-4 rounded-xl bg-gradient-to-br from-[#FF8A00]/10 to-[#FF6B00]/10 border border-[#FF8A00]/10 w-fit group-hover:scale-110 transition-transform duration-500">
-                <GraduationCap className="w-8 h-8 text-[#FF8A00]" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-5 border-y border-white/[0.06] mb-6 text-xs font-mono">
+                <div className="p-3 rounded-xl bg-[#07090E] border border-white/[0.04]">
+                  <span className="text-[10px] text-[#64748B] block mb-0.5">STATUS</span>
+                  <span className="text-emerald-400 font-bold">In Progress // Senior</span>
+                </div>
+                <div className="p-3 rounded-xl bg-[#07090E] border border-white/[0.04]">
+                  <span className="text-[10px] text-[#64748B] block mb-0.5">DISCIPLINE</span>
+                  <span className="text-[#F8FAFC] font-bold">Software Architecture</span>
+                </div>
+                <div className="p-3 rounded-xl bg-[#07090E] border border-white/[0.04]">
+                  <span className="text-[10px] text-[#64748B] block mb-0.5">LOCATION</span>
+                  <span className="text-[#94A3B8] font-bold">Haramaya, Ethiopia</span>
+                </div>
               </div>
+
+              <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed font-body">
+                Comprehensive academic education focusing on mathematical structures, algorithmic complexity,
+                compiler fundamentals, software engineering lifecycles, and database internals.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-6 border-y border-white/[0.08] mb-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08]">
-                  <BookOpen className="w-5 h-5 text-[#FF8A00]" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest mb-0.5">
-                    Status
-                  </p>
-                  <p className="font-bold text-[#F5F7FA]">In Progress</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08]">
-                  <Sparkles className="w-5 h-5 text-[#FF8A00]" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest mb-0.5">
-                    Focus
-                  </p>
-                  <p className="font-bold text-[#F5F7FA]">
-                    Software Engineering
-                  </p>
-                </div>
-              </div>
+            <div className="flex items-center gap-2 pt-6 text-xs font-mono text-[#64748B]">
+              <Calendar size={13} className="text-emerald-400" />
+              <span>Full-Time Academic Program &bull; Verified Student Enrollment</span>
             </div>
-
-            <p className="text-sm text-[#B7C0D1] leading-relaxed">
-              Rigorous curriculum in foundational computer science, advanced
-              software development methodologies, and system architecture.
-            </p>
           </motion.div>
 
-          {/* Areas of Study */}
+          {/* Academic Focus Areas Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] hover:border-[#FF8A00]/20 transition-all duration-500 h-fit"
+            className="card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between"
           >
-            <h4 className="text-base font-bold text-[#F5F7FA] mb-6">
-              Core Focus Areas
-            </h4>
-            <div className="grid grid-cols-1 gap-2">
-              {studyAreas.map((area, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.03 }}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#FF8A00]/20 transition-all group"
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#FF8A00] shadow-lg shadow-[#FF8A00]/30" />
-                  <span className="text-xs font-bold text-[#B7C0D1] group-hover:text-[#F5F7FA] transition-colors">
-                    {area}
-                  </span>
-                </motion.div>
-              ))}
+            <div>
+              <div className="flex items-center gap-2.5 mb-5">
+                <BookOpen size={18} className="text-emerald-400" />
+                <h4 className="text-base font-bold text-[#F8FAFC] font-heading">
+                  Core Study Areas
+                </h4>
+              </div>
+
+              <div className="space-y-2">
+                {studyAreas.map((area, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-2.5 p-2 rounded-lg bg-[#07090E] border border-white/[0.04] text-xs font-mono text-[#94A3B8]"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                    <span className="truncate">{area}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="text-[10px] font-mono text-[#64748B] pt-4 border-t border-white/[0.04] mt-4">
+              Theoretical Foundation for Systems Architecture
             </div>
           </motion.div>
         </div>
@@ -169,8 +177,8 @@ export function ContactSection() {
       !formData.message.trim()
     ) {
       toast({
-        title: "Error",
-        description: "Please fill in all fields",
+        title: "Validation Error",
+        description: "Please complete all fields before sending.",
         variant: "destructive",
       });
       setLoading(false);
@@ -185,17 +193,23 @@ export function ContactSection() {
 
       if (result.success) {
         toast({
-          title: "Message Sent!",
-          description: "I'll get back to you soon.",
+          title: "Transmission Successful",
+          description: "Your message has been delivered to Yihune Belay.",
         });
         setFormData({ name: "", email: "", subject: "", message: "" });
         setSubmitted(true);
         setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        toast({
+          title: "Transmission Error",
+          description: result.error || "Failed to dispatch message.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to send message.",
+        title: "Network Error",
+        description: "Failed to connect to backend server.",
         variant: "destructive",
       });
     } finally {
@@ -207,13 +221,13 @@ export function ContactSection() {
     { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia" },
     {
       icon: Mail,
-      label: "Email",
+      label: "Direct Email",
       value: "yihunebelay859@gmail.com",
       href: "mailto:yihunebelay859@gmail.com",
     },
     {
       icon: Phone,
-      label: "Phone",
+      label: "Telephone",
       value: "+251 987 414 282",
       href: "tel:+251987414282",
     },
@@ -222,85 +236,77 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="section-padding relative overflow-hidden bg-background border-t border-white/[0.06]"
+      className="section-padding relative overflow-hidden bg-[#07090E] border-t border-white/[0.08]"
     >
-      <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-[#FF8A00]/5 rounded-full blur-[150px]" />
-      <div className="absolute bottom-1/3 right-1/3 w-[300px] h-[300px] bg-[#FFB020]/5 rounded-full blur-[120px]" />
+      {/* Background Ambience */}
+      <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
+      <div className="absolute top-1/3 left-1/3 w-[450px] h-[450px] ambient-emerald-glow rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/3 w-[450px] h-[450px] ambient-amber-glow rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 text-center"
+          className="mb-14 text-center"
         >
-          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
-            Let's Connect
+          <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
+            Initiate Contact
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black text-[#F8FAFC] tracking-tight font-heading">
+            Let's Build Resilient Systems
           </h2>
-          <p className="text-[#B7C0D1] text-base max-w-2xl mx-auto leading-relaxed">
-            Open for full-time roles, freelance projects, and research
-            collaborations.
+          <p className="text-[#94A3B8] text-sm sm:text-base max-w-xl mx-auto leading-relaxed mt-2 font-body">
+            Available for full-stack engineering roles, distributed architecture consultation, and high-impact technical initiatives.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Contact Info */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] space-y-6">
-              <h3 className="text-lg font-bold text-[#F5F7FA]">
-                Contact Information
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
+          {/* Contact Details Card */}
+          <div className="lg:col-span-2 space-y-5">
+            <div className="card-slate rounded-2xl p-6 space-y-6">
+              <h3 className="text-base font-bold text-[#F8FAFC] font-heading">
+                Direct Channels
               </h3>
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {contactInfo.map((info, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="flex items-center gap-4 group"
-                  >
-                    <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08] group-hover:border-[#FF8A00]/20 transition-all duration-500">
-                      <info.icon className="w-5 h-5 text-[#FF8A00]" />
+                  <div key={idx} className="flex items-center gap-3.5 group">
+                    <div className="p-2.5 rounded-xl bg-[#07090E] border border-white/[0.06] text-emerald-400 group-hover:border-emerald-500/30 transition-colors">
+                      <info.icon size={16} />
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest mb-0.5">
+                      <p className="text-[10px] font-mono text-[#64748B] uppercase tracking-wider">
                         {info.label}
                       </p>
                       {info.href ? (
                         <a
                           href={info.href}
-                          className="font-bold text-[#F5F7FA] text-sm hover:text-[#FF8A00] transition-colors"
+                          className="font-mono text-xs font-semibold text-[#F8FAFC] hover:text-emerald-400 transition-colors"
                         >
                           {info.value}
                         </a>
                       ) : (
-                        <p className="font-bold text-[#F5F7FA] text-sm">
+                        <p className="font-mono text-xs font-semibold text-[#F8FAFC]">
                           {info.value}
                         </p>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08]">
-              <h4 className="font-bold text-[#F5F7FA] mb-3 uppercase tracking-[0.15em] text-xs">
-                Availability
-              </h4>
-              <p className="text-sm text-[#B7C0D1] leading-relaxed">
-                Open for full-time roles, freelance projects, and research
-                collaborations.
-                <br />
-                <span className="text-[#FF8A00] font-bold">
-                  Response: 24 hours
-                </span>
+            <div className="card-slate rounded-2xl p-6">
+              <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-bold block mb-2">
+                Response SLA
+              </span>
+              <p className="text-xs text-[#94A3B8] leading-relaxed font-body">
+                Inquiries are monitored continuously. Technical proposals and recruitment messages receive a response within <strong className="text-[#F8FAFC]">24 hours</strong>.
               </p>
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/* Contact Form Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -309,7 +315,7 @@ export function ContactSection() {
           >
             <form
               onSubmit={handleSubmit}
-              className="p-6 sm:p-8 rounded-2xl bg-[#0B1637] border border-white/[0.08] space-y-6 relative overflow-hidden hover:border-[#FF8A00]/20 transition-all duration-500"
+              className="card-slate rounded-2xl p-6 sm:p-8 space-y-5 relative overflow-hidden"
             >
               <AnimatePresence>
                 {submitted && (
@@ -317,91 +323,92 @@ export function ContactSection() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 z-20 bg-[#050816]/95 backdrop-blur-xl flex flex-col items-center justify-center text-center p-8 rounded-2xl"
+                    className="absolute inset-0 z-20 bg-[#07090E]/95 backdrop-blur-xl flex flex-col items-center justify-center text-center p-8 rounded-2xl"
                   >
-                    <motion.div
-                      initial={{ scale: 0.5, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      className="w-20 h-20 bg-[#FF8A00]/10 rounded-full flex items-center justify-center mb-6 border border-[#FF8A00]/20"
-                    >
-                      <CheckCircle2 className="w-10 h-10 text-[#FF8A00]" />
-                    </motion.div>
-                    <h3 className="text-2xl font-black text-[#F5F7FA] mb-2">
-                      Message Received!
+                    <div className="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-4 border border-emerald-500/30 text-emerald-400">
+                      <CheckCircle2 size={32} />
+                    </div>
+                    <h3 className="text-xl font-bold text-[#F8FAFC] mb-2 font-heading">
+                      Message Dispatched
                     </h3>
-                    <p className="text-[#B7C0D1] text-sm max-w-xs">
-                      Thank you for reaching out. I'll get back to you shortly.
+                    <p className="text-[#94A3B8] text-xs font-body max-w-xs">
+                      Thank you for getting in touch. I will review your inquiry and follow up promptly.
                     </p>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">
-                    Name
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider">
+                    Full Name
                   </label>
                   <input
                     id="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
+                    placeholder="Ada Lovelace"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#07090E] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none text-[#F8FAFC] placeholder:text-[#64748B] text-xs font-mono"
+                    required
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">
-                    Email
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider">
+                    Email Address
                   </label>
                   <input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="john@example.com"
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
+                    placeholder="ada@domain.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#07090E] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none text-[#F8FAFC] placeholder:text-[#64748B] text-xs font-mono"
+                    required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">
-                  Subject
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider">
+                  Subject / Topic
                 </label>
                 <input
                   id="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  placeholder="Project Inquiry"
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
+                  placeholder="System Architecture / Role Inquiry"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#07090E] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none text-[#F8FAFC] placeholder:text-[#64748B] text-xs font-mono"
+                  required
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#B7C0D1] uppercase tracking-widest ml-1">
-                  Message
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider">
+                  Message Content
                 </label>
                 <textarea
                   id="message"
                   value={formData.message}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Tell me about your project..."
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] focus:border-[#FF8A00] focus:bg-white/[0.05] transition-all outline-none resize-none text-[#F5F7FA] placeholder:text-[#B7C0D1]/30 text-sm"
+                  placeholder="Describe your project, timeline, or engineering opportunity..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#07090E] border border-white/[0.08] focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30 transition-all outline-none resize-none text-[#F8FAFC] placeholder:text-[#64748B] text-xs font-mono"
+                  required
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-xl font-bold hover:shadow-[0_0_40px_rgba(255,138,0,0.35)] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-[#07090E] rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50"
               >
                 {loading ? (
-                  <Loader className="w-5 h-5 animate-spin" />
+                  <Loader className="w-4 h-4 animate-spin text-[#07090E]" />
                 ) : (
                   <>
-                    Send Message
-                    <Send className="w-4 h-4" />
+                    <span>Dispatch Transmission</span>
+                    <Send size={13} />
                   </>
                 )}
               </button>

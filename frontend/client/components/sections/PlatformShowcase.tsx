@@ -1,103 +1,111 @@
 import { motion } from "framer-motion";
-import { Monitor, Smartphone, Globe, Gauge } from "lucide-react";
+import { Monitor, Smartphone, Globe, Gauge, Cpu, Layers } from "lucide-react";
 
 export default function PlatformShowcase() {
   const platforms = [
     {
-      title: "Web Applications",
+      title: "Web Platforms & SPAs",
       icon: Monitor,
-      desc: "Responsive SPAs, dashboards, and full-stack web platforms built with modern frameworks.",
-      features: ["React / Next.js", "TypeScript", "Tailwind CSS", "REST APIs"],
-      color: "from-[#FF8A00] to-[#FF6B00]",
+      desc: "Responsive web architectures, real-time dashboards, and full-stack administrative consoles built for high-throughput interaction.",
+      features: ["React 19 / Vite", "TypeScript", "Tailwind CSS", "TanStack Query", "RESTful / WebSockets"],
+      badge: "Full-Stack Client",
+      accent: "text-emerald-400 border-emerald-500/30",
     },
     {
-      title: "Mobile Applications",
+      title: "Mobile Architectures",
       icon: Smartphone,
-      desc: "Cross-platform mobile apps with native performance and clean architecture.",
-      features: ["React Native", "Expo", "Mobile APIs", "Push Notifications"],
-      color: "from-[#FF6B00] to-[#E85D00]",
+      desc: "Cross-platform mobile applications engineered with native bridge performance, offline persistence, and seamless push synchronization.",
+      features: ["React Native", "Expo SDK", "Capacitor Hybrid", "Offline SQLite", "Push Services"],
+      badge: "Cross-Platform",
+      accent: "text-sky-400 border-sky-500/30",
     },
     {
-      title: "API & Backend Systems",
+      title: "API & Backend Services",
       icon: Globe,
-      desc: "Scalable microservices, RESTful APIs, and backend infrastructure.",
-      features: ["Node.js / Django", "PostgreSQL / MongoDB", "Redis", "Docker"],
-      color: "from-[#CC4D00] to-[#FF8A00]",
+      desc: "High-resilience microservices, rate-limited RESTful gateways, and relational/document persistence layers.",
+      features: ["Node.js / Express", "Django / Python", "PostgreSQL / Mongo", "Redis Cache", "Docker Compose"],
+      badge: "Core Infrastructure",
+      accent: "text-amber-400 border-amber-500/30",
     },
     {
-      title: "Performance Engineering",
+      title: "Performance & Security",
       icon: Gauge,
-      desc: "Optimized rendering, caching strategies, and performance monitoring.",
-      features: [
-        "Code Splitting",
-        "Lazy Loading",
-        "CDN Optimization",
-        "Caching",
-      ],
-      color: "from-[#FFB020] to-[#FF8A00]",
+      desc: "Optimized client bundle splitting, CDN asset distribution, and hardened authentication controls.",
+      features: ["Code Splitting", "ETag Caching", "JWT / RBAC", "Network Defense", "Lighthouse 95+"],
+      badge: "Engineering Standard",
+      accent: "text-teal-400 border-teal-500/30",
     },
   ];
 
   return (
     <section
       id="platforms"
-      className="section-padding relative overflow-hidden bg-background border-t border-white/[0.08]"
+      className="section-padding relative overflow-hidden bg-[#07090E] border-t border-white/[0.08]"
     >
-      <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#FF8A00] opacity-[0.05] rounded-full blur-[150px]" />
-      <div className="absolute top-1/3 -left-32 w-[350px] h-[350px] bg-[#FFB020]/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/3 -right-32 w-[250px] h-[250px] bg-[#FF8A00]/5 rounded-full blur-[100px]" />
+      {/* Background Ambience */}
+      <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
+      <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] ambient-emerald-glow rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-[500px] h-[500px] ambient-amber-glow rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 text-center"
+          className="mb-14 text-center"
         >
-          <h2 className="text-4xl sm:text-5xl font-black text-[#F5F7FA] mb-4">
-            Cross-Platform Engineering
+          <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-[0.25em] font-bold block mb-2">
+            Cross-Platform Capabilities
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black text-[#F8FAFC] tracking-tight font-heading">
+            Platform Capabilities & Infrastructure
           </h2>
-          <p className="text-[#B7C0D1] text-base max-w-2xl mx-auto leading-relaxed">
-            Building across web, mobile, and infrastructure — delivering
-            cohesive, scalable experiences
+          <p className="text-[#94A3B8] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mt-2 font-body">
+            Architecting across web clients, native mobile platforms, and distributed backend clusters with unified data contracts.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {platforms.map((platform, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative p-6 sm:p-8 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.04] hover:border-primary/20 transition-all duration-500"
+              transition={{ delay: index * 0.08 }}
+              className="card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between group hover:border-emerald-500/30 transition-all duration-300 relative overflow-hidden"
             >
-              <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${platform.color} opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500`}
-              />
-              <div className="relative z-10">
-                <div
-                  className={`p-3 rounded-xl bg-gradient-to-br ${platform.color} shadow-lg w-fit mb-5 group-hover:scale-110 transition-transform duration-500`}
-                >
-                  <platform.icon className="w-5 h-5 text-white" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-3 rounded-xl bg-[#07090E] border ${platform.accent}`}>
+                      <platform.icon size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-bold text-[#F8FAFC]">
+                        {platform.title}
+                      </h3>
+                      <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">
+                        {platform.badge}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold text-[#F5F7FA] mb-3 group-hover:text-primary transition-colors">
-                  {platform.title}
-                </h3>
-                <p className="text-xs text-[#B7C0D1] leading-relaxed mb-5">
+
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed mb-6 font-body">
                   {platform.desc}
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  {platform.features.map((feature, fIdx) => (
-                    <span
-                      key={fIdx}
-                      className="px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] text-[10px] font-bold text-[#B7C0D1]"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 pt-4 border-t border-white/[0.04]">
+                {platform.features.map((feature, fIdx) => (
+                  <span
+                    key={fIdx}
+                    className="px-2.5 py-1 rounded-lg bg-[#07090E] border border-white/[0.06] text-[11px] font-mono text-[#94A3B8] group-hover:text-[#F8FAFC] transition-colors"
+                  >
+                    {feature}
+                  </span>
+                ))}
               </div>
             </motion.div>
           ))}
