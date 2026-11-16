@@ -20,6 +20,11 @@ const projectSchema = new mongoose.Schema({
     role: { type: String, default: 'Developer' },
     isMini: { type: Boolean, default: false },
     pinned: { type: Boolean, default: false },
+    githubRepoFullName: { type: String, default: null },
+    githubRepoUrl: { type: String, default: null },
+    githubSourceScope: { type: String, enum: ['PERSONAL', 'ORGANIZATION', null], default: null },
+    showGithubMetrics: { type: Boolean, default: false },
+    autoSyncMetrics: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now }
 });
 

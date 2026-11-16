@@ -14,6 +14,11 @@ export interface Project {
   pinned?: boolean;
   challenges?: string;
   createdAt: string;
+  githubRepoFullName?: string;
+  githubRepoUrl?: string;
+  githubSourceScope?: 'PERSONAL' | 'ORGANIZATION';
+  showGithubMetrics?: boolean;
+  autoSyncMetrics?: boolean;
 }
 
 export interface ProjectSection {
@@ -51,7 +56,13 @@ export const useProjects = () => {
       setError(null);
       const result = await apiFetch(API_ENDPOINTS.PROJECTS_LIST);
       if (result.success) {
-        setProjects(result.data);
+        if (Array.isArray(result.data)) {
+          setProjects(result.data);
+        } else if (result.data && Array.isArray(result.data.projects)) {
+          setProjects(result.data.projects);
+        } else {
+          setProjects([]);
+        }
       } else {
         setError(result.error || "Failed to fetch projects");
       }

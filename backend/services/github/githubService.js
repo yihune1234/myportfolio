@@ -450,6 +450,112 @@ class GitHubService {
     }
 
     /**
+     * Retrieve aggregated language byte counts from repository language endpoints
+     * @param {Object} [options]
+     * @param {'ALL'|'PERSONAL'|'ORGANIZATION'} [options.scope='ALL']
+     * @param {boolean} [options.forceRefresh=false]
+     */
+    async getLanguages(options = {}) {
+        const scope = (options.scope || 'ALL').toUpperCase();
+        const cacheKey = `github:languages:${scope}:${this.config.username}:${this.config.org || 'none'}`;
+
+        if (!options.forceRefresh) {
+            const cached = this.cache.getEntry(cacheKey);
+            if (cached) return { ...cached.value, cached: true };
+        }
+
+        // 1. Gather repositories for scope
+        let repos = [];
+        if (scope === 'PERSONAL' || scope === 'ALL') {
+            try {
+                const personal = await this.getPersonalRepos({ per_page: 100 });
+                repos.push(...(personal.repos || []));
+            } catch (e) {
+                console.warn('[GitHubService] Could not fetch personal repos for languages:', e.message);
+            }
+        }
+        if ((scope === 'ORGANIZATION' || scope === 'ALL') && this.config.org) {
+            try {
+                const org = await this.getOrgRepos({ per_page: 100 });
+                repos.push(...(org.repos || []));
+            } catch (e) {
+                console.warn('[GitHubService] Could not fetch org repos for languages:', e.message);
+            }
+        }
+
+        // De-duplicate repos by ID
+        const uniqueRepos = Array.from(new Map(repos.map(r => [r.id, r])).values());
+
+        // 2. Fetch language bytes for each repository
+        const languageByteMap = {};
+        let totalBytes = 0;
+        let emptyReposCount = 0;
+
+        await Promise.all(uniqueRepos.map(async (repo) => {
+            const repoCacheKey = `github:repo:languages:${repo.id}`;
+            let langData = this.cache.get(repoCacheKey);
+
+            if (!langData) {
+                try {
+                    const owner = repo.owner?.login || this.config.username;
+                    const res = await this.client.request(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}/languages`);
+                    langData = res.data || {};
+                    this.cache.set(repoCacheKey, langData, 2 * 60 * 60 * 1000); // 2 hr sub-cache
+                } catch (e) {
+                    langData = {};
+                }
+            }
+
+            const entries = Object.entries(langData);
+            if (entries.length === 0) {
+                emptyReposCount++;
+            } else {
+                for (const [lang, bytes] of entries) {
+                    if (typeof bytes === 'number' && bytes > 0) {
+                        languageByteMap[lang] = (languageByteMap[lang] || 0) + bytes;
+                        totalBytes += bytes;
+                    }
+                }
+            }
+        }));
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        const languages = Object.entries(languageByteMap)
+            .map(([language, bytes]) => {
+                const percentage = totalBytes > 0 ? Number(((bytes / totalBytes) * 100).toFixed(1)) : 0;
+                return {
+                    language,
+                    bytes,
+                    formatted_bytes: formatBytes(bytes),
+                    percentage
+                };
+            })
+            .sort((a, b) => b.bytes - a.bytes);
+
+        const result = {
+            scope,
+            languages,
+            total_bytes: totalBytes,
+            formatted_total_bytes: formatBytes(totalBytes),
+            repos_analyzed: uniqueRepos.length,
+            empty_repos_count: emptyReposCount,
+            methodology: "Calculated from GitHub REST API language analysis byte counts (/repos/{owner}/{repo}/languages) across unique public repositories in the selected scope.",
+            generated_at: new Date().toISOString(),
+            cached: false
+        };
+
+        this.cache.set(cacheKey, result, 30 * 60 * 1000);
+        return result;
+    }
+
+    /**
      * Invalidate caches affected by a webhook event
      * @param {string} event - e.g. 'push', 'repository', 'release'
      * @param {Object} payload - GitHub event payload

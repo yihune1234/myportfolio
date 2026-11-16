@@ -7,6 +7,7 @@ import {
   Code2,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { HeroGitHubPulse } from "./HeroGitHubPulse";
 
 interface HeroSectionProps {
   onContactClick: () => void;
@@ -58,13 +59,16 @@ export default function HeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-[#FF8A00] text-xs font-bold mb-8 backdrop-blur-md">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF8A00] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF8A00]"></span>
-                </span>
-                Available for new opportunities
-                <Sparkles className="w-3 h-3 ml-1 text-[#FF8A00]/70" />
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-[#FF8A00] text-xs font-bold backdrop-blur-md">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF8A00] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF8A00]"></span>
+                  </span>
+                  Available for new opportunities
+                  <Sparkles className="w-3 h-3 ml-1 text-[#FF8A00]/70" />
+                </div>
+                <HeroGitHubPulse />
               </div>
 
               <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-[#F5F7FA] mb-6 tracking-tighter leading-[0.9]">

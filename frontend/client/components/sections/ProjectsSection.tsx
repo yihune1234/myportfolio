@@ -1,4 +1,6 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGitHubOverview, GitHubRepository } from "@/lib/githubApi";
 import {
   ExternalLink,
   Github,
@@ -12,6 +14,9 @@ import {
   X,
   ArrowUpRight,
   Maximize2,
+  Star,
+  GitFork,
+  CheckCircle2,
 } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
 import { motion, AnimatePresence } from "framer-motion";
@@ -183,7 +188,24 @@ export default function ProjectsSection() {
   const { projects, loading, error, refetch } = useProjects();
   const [hoveredId, setHoveredId] = useState(null);
 
-  const sorted = [...(projects || [])].sort(
+  const { data: githubOverview } = useQuery({
+    queryKey: ['github', 'overview'],
+    queryFn: () => fetchGitHubOverview(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const repoMap = useMemo(() => {
+    const map = new Map<string, GitHubRepository>();
+    (githubOverview?.featured_repos || []).forEach((r) => {
+      map.set(r.html_url.toLowerCase(), r);
+      map.set(r.name.toLowerCase(), r);
+      map.set(r.full_name.toLowerCase(), r);
+    });
+    return map;
+  }, [githubOverview]);
+
+  const projectList = Array.isArray(projects) ? projects : [];
+  const sorted = [...projectList].sort(
     (a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0),
   );
 
@@ -238,7 +260,7 @@ export default function ProjectsSection() {
           <div className="flex items-center justify-center py-28">
             <Loader className="w-8 h-8 animate-spin text-[#FF8A00]" />
           </div>
-        ) : projects.length === 0 ? (
+        ) : projectList.length === 0 ? (
           <div className="text-center py-28 bg-[#0B1637] border border-white/[0.08]">
             <p className="text-[#B7C0D1] font-medium">No projects yet. Check back soon!</p>
           </div>
@@ -247,6 +269,15 @@ export default function ProjectsSection() {
             {sorted.map((project, index) => {
               const slides = getSlides(project);
               const isHovered = hoveredId === project._id;
+              const linkedRepo = (project.showGithubMetrics !== false)
+                ? (project.githubRepoFullName
+                    ? repoMap.get(project.githubRepoFullName.toLowerCase())
+                    : null) ||
+                  (project.githubUrl
+                    ? repoMap.get(project.githubUrl.toLowerCase()) ||
+                      repoMap.get(project.githubUrl.replace(/\/$/, "").split("/").slice(-1)[0]?.toLowerCase())
+                    : null)
+                : null;
 
               return (
                 <motion.div
@@ -307,6 +338,31 @@ export default function ProjectsSection() {
                         </span>
                       )}
                     </div>
+
+                    {/* Live GitHub Telemetry Strip (when connected to a repository) */}
+                    {linkedRepo && (
+                      <div className="flex items-center justify-between p-2 rounded-lg bg-black/40 border border-white/[0.06] mb-3 text-[11px] font-mono text-[#B7C0D1]">
+                        <div className="flex items-center gap-2.5">
+                          {linkedRepo.primary_language && (
+                            <span className="flex items-center gap-1 text-[#F5F7FA] font-medium font-sans">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#FF8A00]" />
+                              {linkedRepo.primary_language}
+                            </span>
+                          )}
+                          <span className="flex items-center gap-1 text-amber-400">
+                            <Star size={11} className="fill-amber-400/40" />
+                            {linkedRepo.stars}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <GitFork size={11} />
+                            {linkedRepo.forks}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-[#B7C0D1]/60">
+                          Pushed {new Date(linkedRepo.pushed_at).toLocaleDateString([], { month: "short", day: "numeric" })}
+                        </span>
+                      </div>
+                    )}
 
                     {/* Actions row */}
                     <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">

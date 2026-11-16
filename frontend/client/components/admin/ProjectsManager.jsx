@@ -36,6 +36,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const [uploadingImages, setUploadingImages] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const { toast } = useToast();
+  const [githubRepos, setGithubRepos] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -44,6 +45,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     demoUrl: "",
     role: "Developer",
     isMini: false,
+    githubRepoFullName: "",
+    githubSourceScope: "PERSONAL",
+    showGithubMetrics: true,
+    autoSyncMetrics: true,
     image: null,
   });
 
@@ -73,7 +78,19 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
   useEffect(() => {
     fetchProjects();
+    fetchGithubReposList();
   }, []);
+
+  const fetchGithubReposList = async () => {
+    try {
+      const result = await apiFetch("/api/github/overview");
+      if (result.success && result.data?.featured_repos) {
+        setGithubRepos(result.data.featured_repos);
+      }
+    } catch (e) {
+      console.warn("Could not load GitHub repositories for selector", e);
+    }
+  };
 
   useEffect(() => {
     if (showAddProject) {
@@ -125,6 +142,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     formDataToSend.append("demoUrl", formData.demoUrl);
     formDataToSend.append("role", formData.role);
     formDataToSend.append("isMini", formData.isMini);
+    formDataToSend.append("githubRepoFullName", formData.githubRepoFullName || "");
+    formDataToSend.append("githubSourceScope", formData.githubSourceScope || "");
+    formDataToSend.append("showGithubMetrics", formData.showGithubMetrics);
+    formDataToSend.append("autoSyncMetrics", formData.autoSyncMetrics);
 
     if (formData.image) {
       formDataToSend.append("image", formData.image);
@@ -344,6 +365,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         demoUrl: project.demoUrl || "",
         role: project.role || "Developer",
         isMini: project.isMini || false,
+        githubRepoFullName: project.githubRepoFullName || "",
+        githubSourceScope: project.githubSourceScope || "PERSONAL",
+        showGithubMetrics: project.showGithubMetrics !== false,
+        autoSyncMetrics: project.autoSyncMetrics !== false,
         image: null,
       });
       setImagePreview(project.image ? getImageUrl(project.image) : null);
@@ -357,6 +382,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         demoUrl: "",
         role: "Developer",
         isMini: false,
+        githubRepoFullName: "",
+        githubSourceScope: "PERSONAL",
+        showGithubMetrics: true,
+        autoSyncMetrics: true,
         image: null,
       });
       setImagePreview(null);
@@ -376,6 +405,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       demoUrl: project.demoUrl || "",
       role: project.role || "Developer",
       isMini: project.isMini || false,
+      githubRepoFullName: project.githubRepoFullName || "",
+      githubSourceScope: project.githubSourceScope || "PERSONAL",
+      showGithubMetrics: project.showGithubMetrics !== false,
+      autoSyncMetrics: project.autoSyncMetrics !== false,
       image: null,
     });
     setImagePreview(project.image ? getImageUrl(project.image) : null);
@@ -506,6 +539,23 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                     </span>
                   )}
                 </div>
+
+                {/* Connected GitHub Repository Badge */}
+                {project.githubRepoFullName && (
+                  <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#050816] border border-white/[0.06] mb-3 text-[11px] font-mono">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <Github size={12} className="text-[#FF8A00] flex-shrink-0" />
+                      <span className="text-[#F5F7FA] font-medium truncate">{project.githubRepoFullName}</span>
+                    </div>
+                    <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
+                      project.githubSourceScope === 'ORGANIZATION'
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    }`}>
+                      {project.githubSourceScope === 'ORGANIZATION' ? 'Org' : 'Personal'}
+                    </span>
+                  </div>
+                )}
 
                 {/* Links */}
                 <div className="flex gap-2 mb-3">
@@ -831,6 +881,147 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                         setFormData({ ...formData, demoUrl: e.target.value })
                       }
                     />
+                  </div>
+
+                  {/* GitHub Repository Association */}
+                  <div className="p-4 sm:p-5 rounded-xl bg-[#050816] border border-white/[0.08] space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Github size={18} className="text-[#FF8A00]" />
+                        <h4 className="text-sm font-bold text-[#F5F7FA]">
+                          GitHub Repository Association
+                        </h4>
+                      </div>
+                      {formData.githubRepoFullName && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              githubRepoFullName: "",
+                            });
+                          }}
+                          className="text-xs text-red-400 hover:text-red-300 font-bold transition-colors"
+                        >
+                          Disconnect Repository
+                        </button>
+                      )}
+                    </div>
+
+                    <p className="text-xs text-[#B7C0D1] leading-relaxed">
+                      Link this project to a verified public repository to overlay live stars, forks, language badges, and commit telemetry.
+                    </p>
+
+                    {/* Repository Selector / Input */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#B7C0D1] block">
+                          Select Repository ({githubRepos.length} detected)
+                        </label>
+                        <select
+                          value={formData.githubRepoFullName}
+                          onChange={(e) => {
+                            const selectedFullName = e.target.value;
+                            const matched = githubRepos.find((r) => r.full_name === selectedFullName);
+                            setFormData({
+                              ...formData,
+                              githubRepoFullName: selectedFullName,
+                              githubSourceScope: matched?.source_scope || formData.githubSourceScope || "PERSONAL",
+                              githubUrl: formData.githubUrl || matched?.html_url || "",
+                            });
+                          }}
+                          className="w-full px-4 py-2.5 bg-[#0B1637] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-xs sm:text-sm text-[#F5F7FA]"
+                        >
+                          <option value="">-- No Repository Connected --</option>
+                          {githubRepos.map((repo) => (
+                            <option key={repo.id} value={repo.full_name}>
+                              {repo.full_name} ({repo.source_scope === "ORGANIZATION" ? "Org" : "Personal"})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#B7C0D1] block">
+                          Or Type owner/repo
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="owner/repository"
+                          value={formData.githubRepoFullName}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              githubRepoFullName: e.target.value,
+                              githubSourceScope: e.target.value.toLowerCase().startsWith("ariitimarket") ? "ORGANIZATION" : "PERSONAL",
+                            })
+                          }
+                          className="w-full px-4 py-2.5 bg-[#0B1637] border border-white/[0.08] rounded-lg outline-none focus:border-[#FF8A00]/50 transition-all font-medium text-xs sm:text-sm text-[#F5F7FA] placeholder-[#B7C0D1]/40 font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Source Scope Selector */}
+                    {formData.githubRepoFullName && (
+                      <div className="flex items-center gap-4 pt-1">
+                        <span className="text-xs font-bold text-[#B7C0D1]">Source Scope:</span>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, githubSourceScope: "PERSONAL" })}
+                            className={`px-3 py-1 rounded text-xs font-bold transition-all ${
+                              formData.githubSourceScope === "PERSONAL"
+                                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                                : "bg-white/[0.04] text-[#B7C0D1] hover:bg-white/[0.08]"
+                            }`}
+                          >
+                            Personal Lab (yihune1234)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, githubSourceScope: "ORGANIZATION" })}
+                            className={`px-3 py-1 rounded text-xs font-bold transition-all ${
+                              formData.githubSourceScope === "ORGANIZATION"
+                                ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                                : "bg-white/[0.04] text-[#B7C0D1] hover:bg-white/[0.08]"
+                            }`}
+                          >
+                            Ariiti Tech Org (AriitiMarket)
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Toggles */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/[0.06]">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.showGithubMetrics}
+                          onChange={(e) =>
+                            setFormData({ ...formData, showGithubMetrics: e.target.checked })
+                          }
+                          className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                        />
+                        <span className="text-xs font-bold text-[#B7C0D1]">
+                          Show Live GitHub Telemetry Badges
+                        </span>
+                      </label>
+
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.autoSyncMetrics}
+                          onChange={(e) =>
+                            setFormData({ ...formData, autoSyncMetrics: e.target.checked })
+                          }
+                          className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                        />
+                        <span className="text-xs font-bold text-[#B7C0D1]">
+                          Auto-sync repository metrics
+                        </span>
+                      </label>
+                    </div>
                   </div>
 
                   {/* Image Upload */}

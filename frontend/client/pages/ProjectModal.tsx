@@ -12,7 +12,11 @@ import {
   Github,
   ExternalLink,
   AlertCircle,
+  Star,
+  GitFork,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGitHubOverview } from "@/lib/githubApi";
 import { API_ENDPOINTS, apiFetch } from "@/lib/api";
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 
@@ -38,6 +42,11 @@ interface Project {
   isMini?: boolean;
   pinned?: boolean;
   createdAt: string;
+  githubRepoFullName?: string;
+  githubRepoUrl?: string;
+  githubSourceScope?: 'PERSONAL' | 'ORGANIZATION';
+  showGithubMetrics?: boolean;
+  autoSyncMetrics?: boolean;
 }
 
 export default function ProjectModal() {
@@ -53,6 +62,32 @@ export default function ProjectModal() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+
+  const { data: githubOverview } = useQuery({
+    queryKey: ['github', 'overview'],
+    queryFn: () => fetchGitHubOverview(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const matchedRepo = (project?.showGithubMetrics !== false)
+    ? (githubOverview?.featured_repos || []).find((r) => {
+        if (project?.githubRepoFullName && r.full_name?.toLowerCase() === project.githubRepoFullName.toLowerCase()) {
+          return true;
+        }
+        if (project?.githubUrl) {
+          return (
+            r.html_url.toLowerCase() === project.githubUrl.toLowerCase() ||
+            r.name.toLowerCase() ===
+              project.githubUrl
+                .replace(/\/$/, "")
+                .split("/")
+                .slice(-1)[0]
+                ?.toLowerCase()
+          );
+        }
+        return false;
+      })
+    : null;
 
   useEffect(() => {
     if (id) {
@@ -288,6 +323,40 @@ export default function ProjectModal() {
                           {slides.length} image{slides.length !== 1 ? "s" : ""}
                         </span>
                       </div>
+
+                      {/* Live GitHub Telemetry */}
+                      {matchedRepo && (
+                        <div className="p-3 rounded-lg bg-black/40 border border-white/[0.06] space-y-2 mt-2">
+                          <span className="text-[10px] font-mono text-emerald-400 font-semibold block uppercase tracking-wider">
+                            Verified GitHub Telemetry
+                          </span>
+                          <div className="flex items-center justify-between text-xs font-mono text-[#B7C0D1]">
+                            <span>Primary Language</span>
+                            <span className="text-[#F5F7FA] font-medium">
+                              {matchedRepo.primary_language || "N/A"}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs font-mono text-[#B7C0D1]">
+                            <span>Stars / Forks</span>
+                            <span className="text-amber-400 font-bold">
+                              {matchedRepo.stars} ★ / {matchedRepo.forks} ⑂
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-[11px] font-mono text-[#B7C0D1]/60">
+                            <span>Last Pushed</span>
+                            <span>
+                              {new Date(matchedRepo.pushed_at).toLocaleDateString(
+                                [],
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                },
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-white/[0.08] flex flex-col gap-2">

@@ -153,6 +153,21 @@ async function getOrganizationActivity(req, res) {
 }
 
 /**
+ * GET /api/github/languages
+ * Aggregated language byte analysis from GitHub language endpoints
+ */
+async function getLanguages(req, res) {
+    try {
+        const forceRefresh = req.query.refresh === 'true' || req.query.refresh === '1';
+        const scope = req.query.scope || 'ALL';
+        const result = await githubService.getLanguages({ scope, forceRefresh });
+        res.json(result);
+    } catch (err) {
+        handleGitHubError(err, res);
+    }
+}
+
+/**
  * GET /api/github/health
  * Synchronization monitoring, source availability, cache metrics, and scheduler status
  */
@@ -198,6 +213,41 @@ async function handleWebhook(req, res) {
     }
 }
 
+/**
+ * GET /api/github/settings
+ * Public visibility configuration flags
+ */
+async function getPublicSettings(req, res) {
+    try {
+        const SiteSettings = require('../models/SiteSettings');
+        let settings = await SiteSettings.findOne({ key: 'site_settings' });
+        if (!settings) {
+            settings = {
+                personalVisibility: true,
+                orgVisibility: true,
+                showHeroPulse: true,
+                showSkillsIntegration: true,
+                showEngineeringShowcase: true
+            };
+        }
+        res.json({
+            personalVisibility: settings.personalVisibility,
+            orgVisibility: settings.orgVisibility,
+            showHeroPulse: settings.showHeroPulse,
+            showSkillsIntegration: settings.showSkillsIntegration,
+            showEngineeringShowcase: settings.showEngineeringShowcase
+        });
+    } catch (err) {
+        res.json({
+            personalVisibility: true,
+            orgVisibility: true,
+            showHeroPulse: true,
+            showSkillsIntegration: true,
+            showEngineeringShowcase: true
+        });
+    }
+}
+
 module.exports = {
     getOverview,
     getPersonal,
@@ -206,6 +256,8 @@ module.exports = {
     getOrganization,
     getOrganizationRepos,
     getOrganizationActivity,
+    getLanguages,
     getHealth,
-    handleWebhook
+    handleWebhook,
+    getPublicSettings
 };

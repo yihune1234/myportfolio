@@ -3,7 +3,7 @@
  * Centralized API endpoint management
  */
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 export const API_ENDPOINTS = {
   // Admin
@@ -11,6 +11,8 @@ export const API_ENDPOINTS = {
   ADMIN_PROFILE: `${API_URL}/api/admin/profile`,
   ADMIN_UPDATE_USERNAME: `${API_URL}/api/admin/username`,
   ADMIN_UPDATE_PASSWORD: `${API_URL}/api/admin/password`,
+  ADMIN_GITHUB_SETTINGS: `${API_URL}/api/admin/github-settings`,
+  ADMIN_GITHUB_SYNC: `${API_URL}/api/admin/github-sync`,
 
   // Projects
   PROJECTS_LIST: `${API_URL}/api/projects`,
@@ -58,21 +60,22 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
       },
     });
 
-    // Check if the response is empty
+    // Check content type
     const contentType = response.headers.get("content-type");
     let data: any = null;
 
     if (contentType && contentType.includes("application/json")) {
       const text = await response.text();
       data = text ? JSON.parse(text) : {};
+    } else if (response.status === 204) {
+      data = null;
     } else {
-      // For non-JSON responses, just get the text or assume success if it's a 204
       const text = await response.text();
-      data = { message: text || `API Error: ${response.status}` };
+      throw new Error(`Expected JSON response, got ${contentType || "unknown"}: ${text.slice(0, 100)}`);
     }
 
     if (!response.ok) {
-      throw new Error(data.message || `API Error: ${response.status}`);
+      throw new Error(data?.message || `API Error: ${response.status}`);
     }
 
     return { success: true, data, status: response.status };

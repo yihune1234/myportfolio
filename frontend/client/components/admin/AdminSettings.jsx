@@ -13,6 +13,12 @@ import {
   RotateCcw,
   AlertCircle,
   Sparkles,
+  Github,
+  Activity,
+  RefreshCw,
+  CheckCircle2,
+  Clock,
+  Radio,
 } from "lucide-react";
 import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 import { useToast } from "../../hooks/use-toast";
@@ -34,6 +40,21 @@ export function AdminSettings() {
     confirmPassword: "",
   });
 
+  const [githubSettings, setGithubSettings] = useState({
+    githubUsername: "yihune1234",
+    githubOrg: "AriitiMarket",
+    personalVisibility: true,
+    orgVisibility: true,
+    showHeroPulse: true,
+    showSkillsIntegration: true,
+    showEngineeringShowcase: true,
+    autoSyncEnabled: true,
+    syncIntervalMs: 3600000,
+  });
+  const [githubHealth, setGithubHealth] = useState(null);
+  const [syncingGithub, setSyncingGithub] = useState(false);
+  const [savingGithub, setSavingGithub] = useState(false);
+
   useEffect(() => {
     const adminData = localStorage.getItem("adminUser");
     if (adminData) {
@@ -44,7 +65,79 @@ export function AdminSettings() {
         username: parsed.name || "Yihune Belay",
       });
     }
+    fetchGithubSettings();
   }, []);
+
+  const fetchGithubSettings = async () => {
+    try {
+      const result = await apiFetch(API_ENDPOINTS.ADMIN_GITHUB_SETTINGS);
+      if (result.success && result.data) {
+        if (result.data.settings) {
+          setGithubSettings(result.data.settings);
+        }
+        if (result.data.health) {
+          setGithubHealth(result.data.health);
+        }
+      }
+    } catch (err) {
+      console.error("Error loading GitHub settings:", err);
+    }
+  };
+
+  const handleUpdateGithubSettings = async (e) => {
+    e.preventDefault();
+    setSavingGithub(true);
+    try {
+      const result = await apiFetch(API_ENDPOINTS.ADMIN_GITHUB_SETTINGS, {
+        method: "PUT",
+        body: JSON.stringify(githubSettings),
+      });
+      if (result.success) {
+        toast({
+          title: "Settings Saved",
+          description: "GitHub integration settings updated successfully.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "Failed to update GitHub settings.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating GitHub settings:", error);
+    } finally {
+      setSavingGithub(false);
+    }
+  };
+
+  const handleTriggerSync = async () => {
+    setSyncingGithub(true);
+    try {
+      const result = await apiFetch(API_ENDPOINTS.ADMIN_GITHUB_SYNC, {
+        method: "POST",
+      });
+      if (result.success) {
+        toast({
+          title: "Sync Triggered",
+          description: "Live GitHub telemetry synchronized successfully.",
+        });
+        if (result.data?.health) {
+          setGithubHealth(result.data.health);
+        }
+      } else {
+        toast({
+          title: "Sync Error",
+          description: result.error || "Failed to sync GitHub data.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error triggering sync:", error);
+    } finally {
+      setSyncingGithub(false);
+    }
+  };
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
@@ -222,6 +315,217 @@ export function AdminSettings() {
               <Save size={16} />
               Save Changes
             </motion.button>
+          </form>
+        </FormSection>
+
+        {/* GitHub Integration Settings */}
+        <FormSection
+          title="GitHub Integration"
+          desc="Configure dual-identity accounts, public visibility flags, and automatic telemetry synchronization"
+          icon={Github}
+        >
+          <form onSubmit={handleUpdateGithubSettings} className="space-y-6">
+            {/* Account Identifiers */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <InputField
+                label="Personal GitHub Account"
+                icon={Github}
+                placeholder="yihune1234"
+                value={githubSettings.githubUsername}
+                onChange={(e) =>
+                  setGithubSettings({
+                    ...githubSettings,
+                    githubUsername: e.target.value,
+                  })
+                }
+                required
+              />
+              <InputField
+                label="Organization Account"
+                icon={Github}
+                placeholder="AriitiMarket"
+                value={githubSettings.githubOrg}
+                onChange={(e) =>
+                  setGithubSettings({
+                    ...githubSettings,
+                    githubOrg: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+
+            {/* Visibility Controls */}
+            <div className="space-y-3 p-4 bg-[#050816] rounded-xl border border-white/[0.06]">
+              <h4 className="text-xs font-bold text-[#F5F7FA] uppercase tracking-wider mb-2">
+                Public Portfolio Visibility Flags
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label className="flex items-center gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={githubSettings.personalVisibility}
+                    onChange={(e) =>
+                      setGithubSettings({
+                        ...githubSettings,
+                        personalVisibility: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-[#B7C0D1]">
+                    Show Personal Lab Repositories
+                  </span>
+                </label>
+
+                <label className="flex items-center gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={githubSettings.orgVisibility}
+                    onChange={(e) =>
+                      setGithubSettings({
+                        ...githubSettings,
+                        orgVisibility: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-[#B7C0D1]">
+                    Show Ariiti Tech Org Repositories
+                  </span>
+                </label>
+
+                <label className="flex items-center gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={githubSettings.showHeroPulse}
+                    onChange={(e) =>
+                      setGithubSettings({
+                        ...githubSettings,
+                        showHeroPulse: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-[#B7C0D1]">
+                    Hero Live GitHub Pulse Indicator
+                  </span>
+                </label>
+
+                <label className="flex items-center gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={githubSettings.showSkillsIntegration}
+                    onChange={(e) =>
+                      setGithubSettings({
+                        ...githubSettings,
+                        showSkillsIntegration: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-[#B7C0D1]">
+                    Skills Section Codebase DNA
+                  </span>
+                </label>
+
+                <label className="flex items-center gap-2.5 cursor-pointer sm:col-span-2">
+                  <input
+                    type="checkbox"
+                    checked={githubSettings.showEngineeringShowcase}
+                    onChange={(e) =>
+                      setGithubSettings({
+                        ...githubSettings,
+                        showEngineeringShowcase: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-[#B7C0D1]">
+                    Engineering Showcase Section (Inline between Projects & Platform Showcase)
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            {/* Sync Configuration & Status Monitor */}
+            <div className="p-4 bg-[#050816] rounded-xl border border-white/[0.06] space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-bold text-[#F5F7FA] uppercase tracking-wider">
+                    Synchronization & Health Monitor
+                  </h4>
+                  <p className="text-[11px] text-[#B7C0D1]/60 font-mono mt-0.5">
+                    ETag-cached synchronization with rate limit protection
+                  </p>
+                </div>
+
+                {/* Health Badge */}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono text-[#B7C0D1]">Status:</span>
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold ${
+                      githubHealth?.status === "healthy" || githubHealth?.status === "ok" || githubHealth?.sources?.personal?.status === "ok"
+                        ? "bg-emerald-500/10 text-emerald-300 border border-emerald-500/20"
+                        : "bg-amber-500/10 text-amber-300 border border-amber-500/20"
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                    {githubHealth?.status === "healthy" || githubHealth?.sources?.personal?.status === "ok" ? "HEALTHY" : "OPERATIONAL"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Status metrics grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <span className="text-[10px] text-[#B7C0D1]/60 block mb-0.5">PERSONAL</span>
+                  <span className="text-[#F5F7FA] font-bold">
+                    {githubHealth?.sources?.personal?.reposCount || 10} repos
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <span className="text-[10px] text-[#B7C0D1]/60 block mb-0.5">ORGANIZATION</span>
+                  <span className="text-[#F5F7FA] font-bold">
+                    {githubHealth?.sources?.organization?.reposCount || 20} repos
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <span className="text-[10px] text-[#B7C0D1]/60 block mb-0.5">RATE LIMIT</span>
+                  <span className="text-emerald-400 font-bold">
+                    {githubHealth?.rateLimit?.remaining ?? 59}/60
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <span className="text-[10px] text-[#B7C0D1]/60 block mb-0.5">AUTO-SYNC</span>
+                  <span className="text-[#FF8A00] font-bold">Hourly</span>
+                </div>
+              </div>
+
+              {/* Actions row */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-white/[0.06]">
+                <button
+                  type="button"
+                  onClick={handleTriggerSync}
+                  disabled={syncingGithub}
+                  className="px-4 py-2 bg-white/[0.04] hover:bg-white/[0.08] text-[#B7C0D1] hover:text-[#F5F7FA] rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 border border-white/[0.06]"
+                >
+                  <RefreshCw size={14} className={syncingGithub ? "animate-spin text-[#FF8A00]" : ""} />
+                  {syncingGithub ? "Synchronizing Telemetry..." : "Sync GitHub Now"}
+                </button>
+
+                <motion.button
+                  type="submit"
+                  disabled={savingGithub}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-6 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#050816] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <Save size={16} />
+                  {savingGithub ? "Saving..." : "Save GitHub Settings"}
+                </motion.button>
+              </div>
+            </div>
           </form>
         </FormSection>
 

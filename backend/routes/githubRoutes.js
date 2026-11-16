@@ -15,8 +15,10 @@ router.get('/health', githubController.getHealth);
 // Webhook Receiver (optional event-driven synchronization)
 router.post('/webhook', verifyWebhookSignature, githubController.handleWebhook);
 
-// Portfolio Aggregation
+// Portfolio Aggregation & Public Settings
+router.get('/settings', githubController.getPublicSettings);
 router.get('/overview', githubController.getOverview);
+router.get('/languages', githubController.getLanguages);
 
 // Personal Account Endpoints
 router.get('/personal', githubController.getPersonal);

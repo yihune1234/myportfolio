@@ -246,7 +246,7 @@ export const portfolioData: PortfolioData = {
   },
 };
 
-export function searchPortfolio(query: string): string {
+export function searchPortfolio(query: string, githubContext?: string): string {
   const q = query.toLowerCase();
   const sections: string[] = [];
 
@@ -423,6 +423,10 @@ SERVICES: ${portfolioData.services.map((s) => s.title).join(", ")}
 
 For more details, the visitor can browse the portfolio website.`;
     sections.push(fullProfile);
+  }
+
+  if (githubContext) {
+    sections.push(githubContext);
   }
 
   return sections.join("\n\n---\n\n");

@@ -3,6 +3,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import SkillsSection from "@/components/sections/SkillsSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
+import EngineeringShowcase from "@/components/showcase/EngineeringShowcase";
 import PlatformShowcase from "@/components/sections/PlatformShowcase";
 import ExperienceSection from "@/components/sections/ExperienceSection";
 import EducationSection, {
@@ -12,6 +13,7 @@ import { useState } from "react";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AIChatWidget from "@/components/AIChatWidget";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Lock, Github, Linkedin, Sparkles } from "lucide-react";
 
 export default function Index() {
@@ -75,7 +77,12 @@ export default function Index() {
         />
         <AboutSection />
         <SkillsSection />
-        <ProjectsSection />
+        <ErrorBoundary fallbackTitle="Projects Section">
+          <ProjectsSection />
+        </ErrorBoundary>
+        <ErrorBoundary fallbackTitle="Engineering Showcase">
+          <EngineeringShowcase />
+        </ErrorBoundary>
         <PlatformShowcase />
         <ExperienceSection />
         <EducationSection />
@@ -113,6 +120,7 @@ export default function Index() {
                 {[
                   { name: "Home", id: "home" },
                   { name: "Projects", id: "projects" },
+                  { name: "Engineering", id: "engineering" },
                   { name: "Experience", id: "experience" },
                   { name: "Contact", id: "contact" },
                 ].map((link) => (

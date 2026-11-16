@@ -42,7 +42,8 @@ router.get('/:id', async (req, res) => {
 // Create project (admin only)
 router.post('/', auth, upload.single('image'), cloudinaryUpload, async (req, res) => {
     try {
-        const { title, description, technologies, githubUrl, demoUrl, role, isMini } = req.body;
+        const { title, description, technologies, githubUrl, demoUrl, role, isMini,
+                githubRepoFullName, githubSourceScope, showGithubMetrics, autoSyncMetrics } = req.body;
 
         const missing = [];
         if (!title || !title.trim()) missing.push('title');
@@ -62,14 +63,23 @@ router.post('/', auth, upload.single('image'), cloudinaryUpload, async (req, res
             return res.status(400).json({ message: `Missing required fields: ${missing.join(', ')}` });
         }
 
+        if (githubRepoFullName && !/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(githubRepoFullName.trim())) {
+            return res.status(400).json({ message: 'Invalid GitHub repository format. Expected: owner/repo' });
+        }
+
         const projectData = {
             title: title.trim(),
             description: description.trim(),
             technologies: parsedTech,
-            githubUrl: githubUrl?.trim() || '',
+            githubUrl: githubUrl?.trim() || (githubRepoFullName ? `https://github.com/${githubRepoFullName.trim()}` : ''),
             demoUrl: demoUrl?.trim() || '',
             role: role || 'Developer',
-            isMini: isMini === 'true',
+            isMini: isMini === 'true' || isMini === true,
+            githubRepoFullName: githubRepoFullName ? githubRepoFullName.trim() : null,
+            githubRepoUrl: githubRepoFullName ? (githubUrl?.trim() || `https://github.com/${githubRepoFullName.trim()}`) : null,
+            githubSourceScope: githubSourceScope || (githubRepoFullName ? 'PERSONAL' : null),
+            showGithubMetrics: showGithubMetrics === 'true' || showGithubMetrics === true,
+            autoSyncMetrics: autoSyncMetrics === undefined ? true : (autoSyncMetrics === 'true' || autoSyncMetrics === true),
             images: []
         };
 
@@ -109,8 +119,13 @@ router.put('/:id', auth, upload.single('image'), cloudinaryUpload, async (req, r
             return res.status(400).json({ message: 'Invalid project ID' });
         }
 
-        const { title, description, technologies, githubUrl, demoUrl, role, isMini } = req.body;
+        const { title, description, technologies, githubUrl, demoUrl, role, isMini,
+                githubRepoFullName, githubSourceScope, showGithubMetrics, autoSyncMetrics } = req.body;
         
+        if (githubRepoFullName && !/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(githubRepoFullName.trim())) {
+            return res.status(400).json({ message: 'Invalid GitHub repository format. Expected: owner/repo' });
+        }
+
         const updateData = {
             title: title?.trim(),
             description: description?.trim(),
@@ -120,6 +135,24 @@ router.put('/:id', auth, upload.single('image'), cloudinaryUpload, async (req, r
             role: role || 'Developer',
             isMini: isMini === 'true' || isMini === true
         };
+
+        if (githubRepoFullName !== undefined) {
+            updateData.githubRepoFullName = githubRepoFullName ? githubRepoFullName.trim() : null;
+            if (githubRepoFullName) {
+                updateData.githubRepoUrl = githubUrl?.trim() || `https://github.com/${githubRepoFullName.trim()}`;
+            } else {
+                updateData.githubRepoUrl = null;
+            }
+        }
+        if (githubSourceScope !== undefined) {
+            updateData.githubSourceScope = githubSourceScope || null;
+        }
+        if (showGithubMetrics !== undefined) {
+            updateData.showGithubMetrics = showGithubMetrics === 'true' || showGithubMetrics === true;
+        }
+        if (autoSyncMetrics !== undefined) {
+            updateData.autoSyncMetrics = autoSyncMetrics === 'true' || autoSyncMetrics === true;
+        }
 
         if (req.file && req.file.cloudinaryUrl) {
             updateData.image = req.file.cloudinaryUrl;
