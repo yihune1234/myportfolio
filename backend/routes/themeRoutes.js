@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const SiteSettings = require('../models/SiteSettings');
+const auth = require('../middleware/auth');
 
 const DEFAULT_THEME = {
     preset: 'warm-charcoal',
@@ -38,6 +39,51 @@ router.get('/', async (req, res) => {
     } catch (err) {
         console.error('Error fetching theme:', err);
         res.json({ success: true, theme: DEFAULT_THEME });
+    }
+});
+
+// PUT /api/theme — Admin endpoint to update portfolio theme
+router.put('/', auth, async (req, res) => {
+    try {
+        const {
+            preset,
+            background,
+            primary,
+            primaryText,
+            secondaryText,
+            secondaryAccent,
+            cardSurface,
+            cardElevated,
+            border
+        } = req.body;
+
+        let settings = await SiteSettings.findOne({ key: 'site_settings' });
+        if (!settings) {
+            settings = new SiteSettings({ key: 'site_settings' });
+        }
+
+        if (!settings.theme) {
+            settings.theme = {};
+        }
+
+        if (preset !== undefined) settings.theme.preset = preset;
+        if (background !== undefined) settings.theme.background = String(background).trim();
+        if (primary !== undefined) settings.theme.primary = String(primary).trim();
+        if (primaryText !== undefined) settings.theme.primaryText = String(primaryText).trim();
+        if (secondaryText !== undefined) settings.theme.secondaryText = String(secondaryText).trim();
+        if (secondaryAccent !== undefined) settings.theme.secondaryAccent = String(secondaryAccent).trim();
+        if (cardSurface !== undefined) settings.theme.cardSurface = String(cardSurface).trim();
+        if (cardElevated !== undefined) settings.theme.cardElevated = String(cardElevated).trim();
+        if (border !== undefined) settings.theme.border = String(border).trim();
+        settings.theme.updatedAt = new Date();
+        settings.updatedAt = new Date();
+
+        await settings.save();
+
+        res.json({ success: true, message: 'Portfolio theme updated successfully', theme: settings.theme });
+    } catch (error) {
+        console.error('Error saving portfolio theme:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
 

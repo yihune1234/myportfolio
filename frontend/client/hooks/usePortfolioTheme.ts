@@ -7,21 +7,27 @@ import {
   applyThemeToDom,
   getStoredTheme,
 } from "@/lib/theme";
+import { API_ENDPOINTS } from "@/lib/api";
 
 async function fetchActiveTheme(): Promise<ThemeConfig> {
-  const res = await fetch("/api/theme");
-  if (!res.ok) {
-    throw new Error(`Failed to fetch theme: ${res.statusText}`);
+  try {
+    const res = await fetch(API_ENDPOINTS.THEME);
+    const contentType = res.headers.get("content-type") || "";
+    if (!res.ok || !contentType.includes("application/json")) {
+      return getStoredTheme();
+    }
+    const data = await res.json();
+    if (data?.success && data?.theme?.background) {
+      return data.theme;
+    }
+    return DEFAULT_THEME;
+  } catch {
+    return getStoredTheme();
   }
-  const data = await res.json();
-  if (data?.success && data?.theme?.background) {
-    return data.theme;
-  }
-  return DEFAULT_THEME;
 }
 
 async function persistTheme(theme: ThemeConfig, token: string): Promise<ThemeConfig> {
-  const res = await fetch("/api/admin/theme", {
+  const res = await fetch(API_ENDPOINTS.ADMIN_THEME, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -30,13 +36,19 @@ async function persistTheme(theme: ThemeConfig, token: string): Promise<ThemeCon
     body: JSON.stringify(theme),
   });
 
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || `Failed to save theme: ${res.statusText}`);
+  const contentType = res.headers.get("content-type") || "";
+  let data: any = null;
+
+  if (contentType.includes("application/json")) {
+    data = await res.json().catch(() => ({}));
   }
 
-  const data = await res.json();
-  return data.theme || theme;
+  if (!res.ok) {
+    const errorMsg = data?.message || `Server returned error (${res.status}): ${res.statusText || 'Unable to update theme'}`;
+    throw new Error(errorMsg);
+  }
+
+  return data?.theme || theme;
 }
 
 export function usePortfolioTheme() {
