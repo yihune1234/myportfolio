@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowRight, Sparkles, Activity } from "lucide-react";
+import { Menu, X, ArrowRight, Sparkles, Activity, Palette } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubHealth } from "@/lib/githubApi";
@@ -242,6 +242,15 @@ export default function Navigation() {
             className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl z-50"
           >
             <div className="p-5 space-y-1.5">
+              {/* Mobile Quick Theme Icons */}
+              <div className="flex items-center justify-between pb-3 mb-2 border-b border-white/[0.08]">
+                <span className="text-[11px] font-mono font-bold text-[var(--text-secondary,#FFF1D8)] uppercase tracking-wider flex items-center gap-1.5">
+                  <Palette className="w-3.5 h-3.5 text-[var(--primary-accent,#FFDD9B)]" />
+                  Theme
+                </span>
+                <PublicThemeSwitcher inline />
+              </div>
+
               {navItems.map((item) => (
                 <button
                   key={item.id}
