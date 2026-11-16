@@ -204,15 +204,12 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Public Theme Switcher, Contact Action & Mobile Menu Toggle */}
+          {/* Contact Action, Mobile Menu Toggle & Right-Most Theme Switcher */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2.5 sm:gap-3"
           >
-            {/* Top Right Public Theme Switcher */}
-            <PublicThemeSwitcher />
-
             <button
               onClick={() => scrollToSection("contact")}
               className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D] rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-[var(--primary-accent,#FFDD9B)]/25 active:scale-95"
@@ -228,6 +225,9 @@ export default function Navigation() {
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
+
+            {/* Top Right-Most Public Theme Switcher */}
+            <PublicThemeSwitcher />
           </motion.div>
         </div>
       </div>
