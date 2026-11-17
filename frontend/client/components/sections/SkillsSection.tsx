@@ -53,9 +53,7 @@ export default function SkillsSection() {
   const { data: settings } = useGitHubSettings();
   const { data: technologies = [], isLoading: techLoading } = useTechnologies(false);
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("All Technologies");
-  const [colorMode, setColorMode] = useState<"brand" | "warm">("brand");
   const [selectedScope, setSelectedScope] = useState<DualScope>("ALL");
-  const [viewStyle, setViewStyle] = useState<"bento" | "matrix">("bento");
 
   // GitHub Language Telemetry query
   const { data: langData, isLoading: langLoading } = useQuery<GitHubLanguagesResponse>({
@@ -103,78 +101,21 @@ export default function SkillsSection() {
 
       <div className="max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 mb-4">
-              <Sparkles size={13} className="text-[var(--primary-accent,#FFDD9B)] animate-pulse" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--primary-accent,#FFDD9B)] font-bold">
-                Technical Arsenal & Tooling
-              </span>
-            </div>
-
-            <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
-              Technologies Behind My Work
-            </h2>
-
-            <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-3 font-body">
-              Exploring and building digital solutions through modern programming languages, frameworks, and development tools.
-            </p>
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 mb-4">
+            <Sparkles size={13} className="text-[var(--primary-accent,#FFDD9B)] animate-pulse" />
+            <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--primary-accent,#FFDD9B)] font-bold">
+              Technical Arsenal & Tooling
+            </span>
           </div>
 
-          {/* Controls: Color Mode & Layout Toggle */}
-          <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-            {/* Color Mode Toggle */}
-            <div className="inline-flex p-1 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-inner text-xs font-mono">
-              <button
-                onClick={() => setColorMode("brand")}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  colorMode === "brand"
-                    ? "bg-white/[0.12] text-white shadow-sm"
-                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
-                }`}
-                title="Display authentic brand logos and colors"
-              >
-                Official Colors
-              </button>
-              <button
-                onClick={() => setColorMode("warm")}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  colorMode === "warm"
-                    ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-sm shadow-[#FFDD9B]/20"
-                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
-                }`}
-                title="Display monochrome Champagne Gold icons"
-              >
-                Warm Theme
-              </button>
-            </div>
+          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
+            Technologies Behind My Work
+          </h2>
 
-            {/* View Style Toggle */}
-            <div className="inline-flex p-1 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-inner text-xs font-mono">
-              <button
-                onClick={() => setViewStyle("bento")}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  viewStyle === "bento"
-                    ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-sm shadow-[#FFDD9B]/20"
-                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
-                }`}
-                title="Bento Grid View"
-              >
-                Bento Cards
-              </button>
-              <button
-                onClick={() => setViewStyle("matrix")}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  viewStyle === "matrix"
-                    ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-sm shadow-[#FFDD9B]/20"
-                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
-                }`}
-                title="Compact Icon Grid"
-              >
-                Icon Matrix
-              </button>
-            </div>
-          </div>
+          <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-3 font-body">
+            Exploring and building digital solutions through modern programming languages, frameworks, and development tools.
+          </p>
         </div>
 
         {/* Category Filter Pills */}
@@ -213,99 +154,56 @@ export default function SkillsSection() {
           })}
         </div>
 
-        {/* ========================================================================= */}
-        {/* VIEW 1: BENTO CARDS SHOWCASE                                              */}
-        {/* ========================================================================= */}
-        {viewStyle === "bento" ? (
-          activeCategory === "All Technologies" ? (
-            /* Grouped by Distinctive Categories */
-            <div className="space-y-12">
-              {Array.from(categoriesWithTech.entries()).map(([catName, techList]) => {
-                if (techList.length === 0) return null;
-                const CatIcon = CATEGORY_ICONS[catName] || Layers;
+        {/* Technology Cards Grid */}
+        {activeCategory === "All Technologies" ? (
+          /* Grouped by Distinctive Categories */
+          <div className="space-y-12">
+            {Array.from(categoriesWithTech.entries()).map(([catName, techList]) => {
+              if (techList.length === 0) return null;
+              const CatIcon = CATEGORY_ICONS[catName] || Layers;
 
-                return (
-                  <div key={catName} className="space-y-4">
-                    {/* Category Title Header */}
-                    <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/30 flex items-center justify-center text-[var(--primary-accent,#FFDD9B)]">
-                          <CatIcon size={16} />
-                        </div>
-                        <h3 className="text-lg sm:text-xl font-bold font-heading text-white">
-                          {catName}
-                        </h3>
-                        <span className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/60">
-                          ({techList.length})
-                        </span>
+              return (
+                <div key={catName} className="space-y-4">
+                  {/* Category Title Header */}
+                  <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/30 flex items-center justify-center text-[var(--primary-accent,#FFDD9B)]">
+                        <CatIcon size={16} />
                       </div>
-                    </div>
-
-                    {/* Cards Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {techList.map((tech, idx) => (
-                        <TechCard
-                          key={tech.slug || idx}
-                          tech={tech}
-                          colorMode={colorMode}
-                          idx={idx}
-                        />
-                      ))}
+                      <h3 className="text-lg sm:text-xl font-bold font-heading text-white">
+                        {catName}
+                      </h3>
+                      <span className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/60">
+                        ({techList.length})
+                      </span>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          ) : (
-            /* Single Category Filtered Grid */
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filteredTechnologies.map((tech, idx) => (
-                <TechCard
-                  key={tech.slug || idx}
-                  tech={tech}
-                  colorMode={colorMode}
-                  idx={idx}
-                />
-              ))}
-            </div>
-          )
-        ) : (
-          /* ========================================================================= */
-          /* VIEW 2: COMPACT ICON MATRIX                                               */
-          /* ========================================================================= */
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {filteredTechnologies.map((tech, idx) => (
-              <motion.div
-                key={tech.slug || idx}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.02 }}
-                className="group relative p-4 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] hover:border-[var(--primary-accent,#FFDD9B)]/40 transition-all duration-300 flex flex-col items-center justify-center text-center shadow-lg hover:-translate-y-1"
-              >
-                <div className="w-12 h-12 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform duration-300 shadow-inner">
-                  <TechIcon
-                    name={tech.icon || tech.slug}
-                    size={28}
-                    colorMode={colorMode}
-                    title={tech.name}
-                  />
+
+                  {/* Cards Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {techList.map((tech, idx) => (
+                      <TechCard
+                        key={tech.slug || idx}
+                        tech={tech}
+                        colorMode="brand"
+                        idx={idx}
+                      />
+                    ))}
+                  </div>
                 </div>
-
-                <span className="text-xs font-bold text-white group-hover:text-[var(--primary-accent,#FFDD9B)] transition-colors line-clamp-1">
-                  {tech.name}
-                </span>
-
-                <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/60 line-clamp-1 mt-0.5">
-                  {tech.experienceLevel || tech.category}
-                </span>
-
-                {tech.source === "github_detected" && (
-                  <span
-                    className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-emerald-400"
-                    title="Detected across active GitHub codebases"
-                  />
-                )}
-              </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Single Category Filtered Grid */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filteredTechnologies.map((tech, idx) => (
+              <TechCard
+                key={tech.slug || idx}
+                tech={tech}
+                colorMode="brand"
+                idx={idx}
+              />
             ))}
           </div>
         )}

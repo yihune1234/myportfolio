@@ -1,24 +1,38 @@
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowRight, Sparkles, Activity, Palette } from "lucide-react";
+import { Menu, X, ArrowRight, Sparkles, Activity, Palette, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubHealth } from "@/lib/githubApi";
 import { PublicThemeSwitcher } from "./PublicThemeSwitcher";
 import { YBLogo } from "./YBLogo";
 
+interface NavSubItem {
+  name: string;
+  id: string;
+  description: string;
+}
+
+interface NavItem {
+  name: string;
+  id: string;
+  subItems?: NavSubItem[];
+}
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileProjectsOpen, setMobileProjectsOpen] = useState(true);
 
   const { data: health, isLoading: healthLoading, isError: healthError } = useQuery({
-    queryKey: ['github', 'health'],
+    queryKey: ["github", "health"],
     queryFn: fetchGitHubHealth,
     staleTime: 60 * 1000,
     retry: 1,
   });
 
-  const isConnected = !healthError && (health?.status === 'healthy' || health?.sources?.personal?.status === 'ok');
+  const isConnected = !healthError && (health?.status === "healthy" || health?.sources?.personal?.status === "ok");
   const isSyncing = healthLoading;
 
   useEffect(() => {
@@ -36,11 +50,12 @@ export default function Navigation() {
         "education",
         "contact",
       ];
+
       const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
+          return rect.top <= 120 && rect.bottom >= 120;
         }
         return false;
       });
@@ -51,12 +66,26 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navItems = [
+  const navItems: NavItem[] = [
     { name: "Home", id: "home" },
     { name: "About", id: "about" },
     { name: "Technologies", id: "skills" },
-    { name: "My Projects", id: "my-projects" },
-    { name: "Ariitii Tech Projects", id: "ariitii-tech-projects" },
+    {
+      name: "Projects",
+      id: "projects",
+      subItems: [
+        {
+          name: "My Projects",
+          id: "my-projects",
+          description: "Personal software & lab experiments",
+        },
+        {
+          name: "Ariitii Tech Projects",
+          id: "ariitii-tech-projects",
+          description: "Haramaya University tech initiative",
+        },
+      ],
+    },
     { name: "Engineering", id: "engineering" },
     { name: "Experience", id: "experience" },
     { name: "Education", id: "education" },
@@ -65,6 +94,7 @@ export default function Navigation() {
 
   const scrollToSection = (id: string) => {
     setIsOpen(false);
+    setDropdownOpen(false);
     const element = document.getElementById(id);
     if (element) {
       const navHeight = 80;
@@ -76,6 +106,11 @@ export default function Navigation() {
       });
     }
   };
+
+  const isProjectsActive =
+    activeSection === "my-projects" ||
+    activeSection === "ariitii-tech-projects" ||
+    activeSection === "projects";
 
   return (
     <nav
@@ -139,22 +174,87 @@ export default function Navigation() {
           {/* Navigation Links */}
           <div className="hidden lg:flex items-center gap-2 flex-1 justify-center">
             <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[var(--card-surface,#3A3836)] border border-[var(--border-color,rgba(255,221,155,0.18))] backdrop-blur-md shadow-inner">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.id}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.04 }}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`relative px-4 py-1.5 text-xs font-bold transition-all duration-300 rounded-full ${
-                    activeSection === item.id
-                      ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/25"
-                      : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <span className="relative z-10">{item.name}</span>
-                </motion.button>
-              ))}
+              {navItems.map((item, index) => {
+                if (item.subItems) {
+                  return (
+                    <div
+                      key={item.id}
+                      className="relative"
+                      onMouseEnter={() => setDropdownOpen(true)}
+                      onMouseLeave={() => setDropdownOpen(false)}
+                    >
+                      <motion.button
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.04 }}
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                        className={`relative px-4 py-1.5 text-xs font-bold transition-all duration-300 rounded-full flex items-center gap-1.5 ${
+                          isProjectsActive
+                            ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/25"
+                            : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
+                        }`}
+                      >
+                        <span className="relative z-10">{item.name}</span>
+                        <ChevronDown
+                          size={12}
+                          className={`transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+                        />
+                      </motion.button>
+
+                      {/* Dropdown Menu */}
+                      <AnimatePresence>
+                        {dropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-2 rounded-2xl bg-[var(--card-surface,#403C38)]/95 backdrop-blur-2xl border border-[var(--border-color,rgba(255,221,155,0.18))] shadow-2xl z-50 space-y-1"
+                          >
+                            {item.subItems.map((sub) => (
+                              <button
+                                key={sub.id}
+                                onClick={() => scrollToSection(sub.id)}
+                                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all flex flex-col ${
+                                  activeSection === sub.id
+                                    ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] font-bold shadow-md shadow-[#FFDD9B]/20"
+                                    : "text-white hover:bg-white/[0.08]"
+                                }`}
+                              >
+                                <span className="font-heading font-black text-xs">
+                                  {sub.name}
+                                </span>
+                                <span className={`text-[10px] mt-0.5 ${
+                                  activeSection === sub.id ? "text-[#302E2D]/80" : "text-[var(--text-secondary,#FFF1D8)]/70"
+                                }`}>
+                                  {sub.description}
+                                </span>
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
+                return (
+                  <motion.button
+                    key={item.id}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.04 }}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`relative px-4 py-1.5 text-xs font-bold transition-all duration-300 rounded-full ${
+                      activeSection === item.id
+                        ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/25"
+                        : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <span className="relative z-10">{item.name}</span>
+                  </motion.button>
+                );
+              })}
             </div>
           </div>
 
@@ -193,7 +293,7 @@ export default function Navigation() {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl z-50"
+            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl z-50 max-h-[85vh] overflow-y-auto"
           >
             <div className="p-5 space-y-1.5">
               {/* Mobile Quick Theme Icons */}
@@ -205,19 +305,61 @@ export default function Navigation() {
                 <PublicThemeSwitcher inline />
               </div>
 
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`block w-full text-left px-4 py-3 text-sm font-bold rounded-xl transition-all ${
-                    activeSection === item.id
-                      ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
-                      : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
-                  }`}
-                >
-                  {item.name}
-                </button>
-              ))}
+              {navItems.map((item) => {
+                if (item.subItems) {
+                  return (
+                    <div key={item.id} className="space-y-1 py-1">
+                      <button
+                        onClick={() => setMobileProjectsOpen(!mobileProjectsOpen)}
+                        className={`w-full flex items-center justify-between px-4 py-2.5 text-sm font-bold rounded-xl transition-all ${
+                          isProjectsActive
+                            ? "text-[var(--primary-accent,#FFDD9B)]"
+                            : "text-[var(--text-secondary,#FFF1D8)] hover:text-white"
+                        }`}
+                      >
+                        <span className="font-heading font-black">{item.name}</span>
+                        <ChevronDown
+                          size={14}
+                          className={`transition-transform duration-200 ${mobileProjectsOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+
+                      {mobileProjectsOpen && (
+                        <div className="pl-4 space-y-1 border-l-2 border-[var(--primary-accent,#FFDD9B)]/20 ml-4">
+                          {item.subItems.map((sub) => (
+                            <button
+                              key={sub.id}
+                              onClick={() => scrollToSection(sub.id)}
+                              className={`block w-full text-left px-3.5 py-2 text-xs font-bold rounded-xl transition-all ${
+                                activeSection === sub.id
+                                  ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-sm"
+                                  : "text-[var(--text-secondary,#FFF1D8)]/80 hover:text-white hover:bg-white/[0.04]"
+                              }`}
+                            >
+                              {sub.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`block w-full text-left px-4 py-3 text-sm font-bold rounded-xl transition-all ${
+                      activeSection === item.id
+                        ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
+                        : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    {item.name}
+                  </button>
+                );
+              })}
+
               <div className="pt-3">
                 <button
                   onClick={() => scrollToSection("contact")}
