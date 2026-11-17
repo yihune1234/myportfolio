@@ -114,19 +114,64 @@ ${githubContext}
     }
 
     /**
-     * Send chat messages to Gemini API
+     * Match common portfolio queries locally for resilient, instant responses
+     */
+    async matchPortfolioKnowledge(query = '') {
+        const q = String(query).toLowerCase().trim();
+        if (!q) return null;
+
+        if (q.includes('who is') || q.includes('about yihune') || q.includes('introduce') || q.includes('bio')) {
+            return "Yihune Belay is a Full-Stack Software Engineer & Distributed Backend Architect. He specializes in high-throughput backend APIs, microservices, and cross-platform mobile architectures, operating between individual engineering research and the Ariiti Tech ecosystem. You can reach him directly at yihunebelay859@gmail.com or +251 987 414 282.";
+        }
+
+        if (q.includes('project') || q.includes('built') || q.includes('portfolio') || q.includes('work')) {
+            try {
+                const projects = await Project.find({ status: { $ne: 'draft' } }).limit(5).lean();
+                if (projects && projects.length > 0) {
+                    const list = projects.map(p => `• **${p.title}** (${p.category || 'Full-Stack'}): ${(p.description || '').slice(0, 140)}...`).join('\n');
+                    return `Here are some of Yihune's featured projects:\n\n${list}\n\nFeel free to explore the interactive project showcase and live GitHub telemetry above!`;
+                }
+            } catch (e) {}
+            return "Yihune has built production-grade systems including the Ariiti Multi-Vendor Commerce Platform, Architectural Telemetry Hub, and distributed backend microservices. You can explore all featured repositories and live telemetry in the Projects section above!";
+        }
+
+        if (q.includes('skill') || q.includes('tech') || q.includes('language') || q.includes('stack')) {
+            return "Yihune's technical stack includes:\n\n• **Languages:** TypeScript, JavaScript, Python, Go, PHP\n• **Backend & Systems:** Node.js, Express, Django, REST APIs, Microservices\n• **Databases:** MongoDB, PostgreSQL, MySQL\n• **Frontend & Mobile:** React, React Native, Vite, TailwindCSS\n• **DevOps & Cloud:** Docker, Linux, Git/GitHub, Cloudinary, Vercel, Render";
+        }
+
+        if (q.includes('contact') || q.includes('hire') || q.includes('email') || q.includes('phone') || q.includes('reach')) {
+            return "You can connect with Yihune Belay directly:\n\n• **Email:** yihunebelay859@gmail.com\n• **Phone:** +251 987 414 282\n• **GitHub:** https://github.com/yihune1234\n• **Organization:** https://github.com/AriitiMarket\n\nOr click the 'Let's Work Together' button in the contact section below!";
+        }
+
+        if (q.includes('experience') || q.includes('ariiti')) {
+            return "Yihune serves as Lead Software Engineer & Backend Architect at Ariiti Technologies / AriitiMarket (2024 - Present), developing scalable commerce platforms, multi-tenant merchant services, and payment integrations, alongside freelance software engineering projects.";
+        }
+
+        if (q.includes('education') || q.includes('degree') || q.includes('university')) {
+            return "Yihune is pursuing a Bachelor of Science in Software Engineering at Haramaya University (2021 - 2026), focusing on Distributed Systems, Software Architecture, Algorithms, and Database Design.";
+        }
+
+        return null;
+    }
+
+    /**
+     * Send chat messages to Gemini API with graceful abstract fallback
      */
     async chat(messages = []) {
+        const fallbackMessage = "I am Yihune Belay's AI Portfolio Assistant. I am currently undergoing scheduled system updates. In the meantime, feel free to explore Yihune's featured projects and verified GitHub showcase above, or reach out directly at yihunebelay859@gmail.com or +251 987 414 282!";
+
+        const latestQuery = messages.length > 0 ? messages[messages.length - 1].content : '';
         const apiKey = this.getApiKey();
+
         if (!apiKey) {
+            const localReply = await this.matchPortfolioKnowledge(latestQuery);
             return {
                 success: true,
-                message: "I am Yihune Belay's AI Portfolio Assistant. The server's Gemini API key is currently being configured by the administrator. In the meantime, feel free to explore Yihune's featured projects and verified GitHub showcase above, or reach out directly at yihunebelay859@gmail.com or +251 987 414 282!"
+                message: localReply || fallbackMessage
             };
         }
 
         const model = this.getModel();
-        const latestQuery = messages.length > 0 ? messages[messages.length - 1].content : '';
         const systemPrompt = await this.buildSystemPrompt(latestQuery);
 
         const contents = messages.map(m => ({
@@ -147,23 +192,37 @@ ${githubContext}
             }
         };
 
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
+        let response;
+        try {
+            response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+        } catch (fetchErr) {
+            console.error('Gemini API Network Error:', fetchErr.message);
+            const localReply = await this.matchPortfolioKnowledge(latestQuery);
+            return {
+                success: true,
+                message: localReply || fallbackMessage
+            };
+        }
 
         if (!response.ok) {
             const errData = await response.json().catch(() => ({}));
-            const errMsg = errData.error?.message || `Gemini API returned status ${response.status}`;
+            const errMsg = errData.error?.message || `Status ${response.status}`;
             console.error('Gemini API Error:', errMsg);
-            throw new Error(`AI Service temporarily unavailable: ${errMsg}`);
+            const localReply = await this.matchPortfolioKnowledge(latestQuery);
+            return {
+                success: true,
+                message: localReply || fallbackMessage
+            };
         }
 
         const data = await response.json();
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response. Please ask me about Yihune's projects, skills, or experience!";
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here to assist you with Yihune Belay's projects, skills, and engineering background. How can I help?";
 
         return {
             success: true,

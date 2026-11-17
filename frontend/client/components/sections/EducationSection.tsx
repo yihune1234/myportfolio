@@ -347,7 +347,7 @@ export function ContactSection() {
                     id="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Ada Lovelace"
+                    placeholder="e.g. Yihune Belay"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                     required
                   />
@@ -362,7 +362,7 @@ export function ContactSection() {
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="ada@domain.com"
+                    placeholder="e.g. yihunebelay859@gmail.com"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                     required
                   />
@@ -377,7 +377,7 @@ export function ContactSection() {
                   id="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  placeholder="System Architecture / Role Inquiry"
+                  placeholder="e.g. System Architecture / Project Inquiry"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                   required
                 />
@@ -392,7 +392,7 @@ export function ContactSection() {
                   value={formData.message}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Describe your project, timeline, or engineering opportunity..."
+                  placeholder="Hi Yihune, I would like to discuss a project, engineering architecture, or opportunity..."
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none resize-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
                   required
                 />

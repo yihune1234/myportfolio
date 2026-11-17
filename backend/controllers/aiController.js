@@ -31,9 +31,9 @@ exports.chat = async (req, res) => {
         res.json(result);
     } catch (error) {
         console.error('Error in AI Chat controller:', error.message);
-        res.status(500).json({
-            success: false,
-            message: error.message || 'Failed to process AI chat request'
+        res.json({
+            success: true,
+            message: "I am Yihune Belay's AI Portfolio Assistant. I am currently undergoing scheduled system updates. In the meantime, feel free to explore Yihune's featured projects and verified GitHub showcase above, or reach out directly at yihunebelay859@gmail.com or +251 987 414 282!"
         });
     }
 };
