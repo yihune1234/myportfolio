@@ -16,8 +16,10 @@ import {
   FileText,
   Palette,
   Github,
+  Code2,
 } from "lucide-react";
 import { ProjectsManager } from "./ProjectsManager";
+import { TechnologiesManager } from "./TechnologiesManager";
 import { MessagesManager } from "./MessagesManager";
 import { AdminSettings } from "./AdminSettings";
 import { ThemeSelector } from "./ThemeSelector";
@@ -56,6 +58,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
   const tabs = [
     { id: "overview", label: "Overview", icon: Home },
     { id: "projects", label: "Projects Management", icon: FolderKanban },
+    { id: "technologies", label: "Technologies Behind My Work", icon: Code2 },
     { id: "sections", label: "Project Sections", icon: FileText },
     { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "github", label: "GitHub Accounts", icon: Github },
@@ -215,6 +218,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
                     setShowAddProject={setShowAddProject}
                   />
                 )}
+                {activeTab === "technologies" && <TechnologiesManager />}
                 {activeTab === "sections" && <ProjectSectionsManager />}
                 {activeTab === "messages" && <MessagesManager />}
                 {activeTab === "github" && <GitHubAccountManager />}

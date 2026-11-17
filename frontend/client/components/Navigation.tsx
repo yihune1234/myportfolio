@@ -54,7 +54,7 @@ export default function Navigation() {
   const navItems = [
     { name: "Home", id: "home" },
     { name: "About", id: "about" },
-    { name: "Skills", id: "skills" },
+    { name: "Technologies", id: "skills" },
     { name: "My Projects", id: "my-projects" },
     { name: "Ariitii Tech Projects", id: "ariitii-tech-projects" },
     { name: "Engineering", id: "engineering" },

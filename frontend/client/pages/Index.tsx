@@ -149,8 +149,9 @@ export default function Index() {
                 {[
                   { name: "Overview", id: "home" },
                   { name: "About & Background", id: "about" },
-                  { name: "System & Skills", id: "skills" },
-                  { name: "Portfolio & Projects", id: "projects" },
+                  { name: "Technologies Behind My Work", id: "skills" },
+                  { name: "My Projects", id: "my-projects" },
+                  { name: "Ariitii Tech Projects", id: "ariitii-tech-projects" },
                   { name: "Engineering Showcase", id: "engineering" },
                   { name: "Experience & Education", id: "experience" },
                   { name: "Contact & Inquiries", id: "contact" },

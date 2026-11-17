@@ -60,6 +60,7 @@ app.use('/api/section-media', require('./routes/sectionMedia'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/github', require('./routes/githubRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
+app.use('/api/technologies', require('./routes/technologyRoutes'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

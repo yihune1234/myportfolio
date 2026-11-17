@@ -60,6 +60,14 @@ export const API_ENDPOINTS = {
 
   // AI Assistant
   AI_CHAT: `${API_URL}/api/ai/chat`,
+
+  // Technologies & Skills
+  TECHNOLOGIES_LIST: (all = false) => `${API_URL}/api/technologies${all ? "?all=true" : ""}`,
+  TECHNOLOGIES_CREATE: `${API_URL}/api/technologies`,
+  TECHNOLOGIES_UPDATE: (id: string) => `${API_URL}/api/technologies/${id}`,
+  TECHNOLOGIES_DELETE: (id: string) => `${API_URL}/api/technologies/${id}`,
+  TECHNOLOGIES_SEED: `${API_URL}/api/technologies/seed`,
+  TECHNOLOGIES_SYNC_GITHUB: `${API_URL}/api/technologies/sync-github`,
 };
 
 /**

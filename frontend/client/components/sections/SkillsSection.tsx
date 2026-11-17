@@ -1,35 +1,63 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubLanguages, GitHubLanguagesResponse, DualScope } from "@/lib/githubApi";
 import { useGitHubSettings } from "@/hooks/useGitHubSettings";
+import { useTechnologies, Technology } from "@/hooks/useTechnologies";
+import { TechIcon } from "@/components/tech/TechIcon";
 import {
-  Globe,
+  Code2,
+  Layout,
   Server,
-  Database,
-  Shield,
   Smartphone,
+  Database,
   Cloud,
+  Wrench,
+  Palette,
+  Boxes,
+  Sparkles,
   GitBranch,
   Binary,
-  Code2,
-  Terminal,
+  Layers,
+  CheckCircle2,
 } from "lucide-react";
 
-interface DomainGroup {
-  id: string;
-  title: string;
-  icon: any;
-  accent: string;
-  scope: "ALL" | "PERSONAL" | "ORGANIZATION";
-  skills: string[];
-  telemetryNote?: string;
-}
+export const CATEGORIES = [
+  "All Technologies",
+  "Programming Languages",
+  "Frontend Development",
+  "Backend Development",
+  "Mobile Development",
+  "Databases",
+  "DevOps and Cloud",
+  "Development Tools",
+  "Design and Prototyping",
+  "Frameworks and Libraries",
+] as const;
+
+export type CategoryFilter = (typeof CATEGORIES)[number];
+
+const CATEGORY_ICONS: Record<string, any> = {
+  "Programming Languages": Code2,
+  "Frontend Development": Layout,
+  "Backend Development": Server,
+  "Mobile Development": Smartphone,
+  Databases: Database,
+  "DevOps and Cloud": Cloud,
+  "Development Tools": Wrench,
+  "Design and Prototyping": Palette,
+  "Frameworks and Libraries": Boxes,
+};
 
 export default function SkillsSection() {
   const { data: settings } = useGitHubSettings();
+  const { data: technologies = [], isLoading: techLoading } = useTechnologies(false);
+  const [activeCategory, setActiveCategory] = useState<CategoryFilter>("All Technologies");
+  const [colorMode, setColorMode] = useState<"brand" | "warm">("brand");
   const [selectedScope, setSelectedScope] = useState<DualScope>("ALL");
+  const [viewStyle, setViewStyle] = useState<"bento" | "matrix">("bento");
 
+  // GitHub Language Telemetry query
   const { data: langData, isLoading: langLoading } = useQuery<GitHubLanguagesResponse>({
     queryKey: ["github", "languages", selectedScope],
     queryFn: () => fetchGitHubLanguages(selectedScope),
@@ -37,229 +65,327 @@ export default function SkillsSection() {
     enabled: settings?.showSkillsIntegration !== false,
   });
 
-  const domains: DomainGroup[] = [
-    {
-      id: "backend",
-      title: "Backend Engineering",
-      icon: Server,
-      accent: "text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/30",
-      scope: "ALL",
-      skills: ["Node.js", "Express", "Django", "PHP", "REST APIs", "Microservices", "Event-Driven Arch"],
-      telemetryNote: "Core API runtime across 35+ repositories",
-    },
-    {
-      id: "frontend",
-      title: "Frontend Engineering",
-      icon: Globe,
-      accent: "text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/30",
-      scope: "ALL",
-      skills: ["React", "TypeScript", "Next.js", "Tailwind CSS", "TanStack Query", "Vite", "Framer Motion"],
-      telemetryNote: "Primary client stack for SPAs & dashboards",
-    },
-    {
-      id: "database",
-      title: "Database Systems",
-      icon: Database,
-      accent: "text-amber-400 border-amber-500/30",
-      scope: "ALL",
-      skills: ["PostgreSQL", "MongoDB", "Redis", "SQLite", "Database Modeling", "Query Optimization"],
-      telemetryNote: "Transactional persistence & in-memory caching",
-    },
-    {
-      id: "mobile",
-      title: "Mobile & Offline-First",
-      icon: Smartphone,
-      accent: "text-amber-300 border-amber-500/30",
-      scope: "PERSONAL",
-      skills: ["React Native", "Expo", "Capacitor", "WatermelonDB", "Background Sync", "Mobile Push"],
-      telemetryNote: "Personal research in disconnected mobile sync",
-    },
-    {
-      id: "security",
-      title: "Cybersecurity & Systems",
-      icon: Shield,
-      accent: "text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/30",
-      scope: "PERSONAL",
-      skills: ["JWT & Bcrypt", "RBAC", "Network Defense", "Input Sanitization", "HTTPS/TLS", "OWASP Standards"],
-      telemetryNote: "Applied defense & encryption patterns",
-    },
-    {
-      id: "organization",
-      title: "Organization Platform Tech",
-      icon: GitBranch,
-      accent: "text-amber-400 border-amber-500/30",
-      scope: "ORGANIZATION",
-      skills: ["Multi-Tenant Arch", "Commerce APIs", "Payment Gateways", "Shared SDKs", "Webhook Ingestion"],
-      telemetryNote: "Ariiti Tech ecosystem shared infrastructure",
-    },
-    {
-      id: "devops",
-      title: "DevOps & Infrastructure",
-      icon: Cloud,
-      accent: "text-[#FFF1D8] border-white/20",
-      scope: "ALL",
-      skills: ["Docker", "Linux Administration", "CI/CD Workflows", "Nginx", "Git Version Control", "Monitoring"],
-      telemetryNote: "Containerized deployment pipelines",
-    },
-  ];
+  const filteredTechnologies = useMemo(() => {
+    if (activeCategory === "All Technologies") {
+      return technologies;
+    }
+    return technologies.filter((t) => t.category === activeCategory);
+  }, [technologies, activeCategory]);
 
-  const filteredDomains = domains.filter((d) => {
-    if (selectedScope === "ALL") return true;
-    if (selectedScope === "PERSONAL") return d.scope === "ALL" || d.scope === "PERSONAL";
-    if (selectedScope === "ORGANIZATION") return d.scope === "ALL" || d.scope === "ORGANIZATION";
-    return true;
-  });
+  const categoriesWithTech = useMemo(() => {
+    const map = new Map<string, Technology[]>();
+    CATEGORIES.filter((c) => c !== "All Technologies").forEach((cat) => {
+      map.set(cat, []);
+    });
+
+    technologies.forEach((tech) => {
+      if (map.has(tech.category)) {
+        map.get(tech.category)!.push(tech);
+      }
+    });
+
+    return map;
+  }, [technologies]);
+
+  const featuredTechs = useMemo(() => {
+    return technologies.filter((t) => t.featured);
+  }, [technologies]);
 
   return (
     <section
       id="skills"
       className="section-padding relative overflow-hidden bg-[var(--bg-base,#302E2D)] border-t border-white/[0.08]"
     >
-      {/* Background Ambience */}
+      {/* Background Ambience & Grid */}
       <div className="absolute inset-0 dot-matrix-grid opacity-25 pointer-events-none" />
-      <div className="absolute top-1/3 -left-32 w-[550px] h-[550px] ambient-emerald-glow rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/3 -right-32 w-[550px] h-[550px] ambient-amber-glow rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 -left-40 w-[600px] h-[600px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-40 w-[600px] h-[600px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[160px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold block mb-2">
-              Architectural Domain Stack
-            </span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 mb-4">
+              <Sparkles size={13} className="text-[var(--primary-accent,#FFDD9B)] animate-pulse" />
+              <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--primary-accent,#FFDD9B)] font-bold">
+                Technical Arsenal & Tooling
+              </span>
+            </div>
+
             <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
-              Technical Domains & Evidence
+              Technologies Behind My Work
             </h2>
-            <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-xl leading-relaxed mt-2 font-body">
-              Verified manual CMS competencies supplemented by physical byte metrics detected across public repositories.
+
+            <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-3 font-body">
+              Exploring and building digital solutions through modern programming languages, frameworks, and development tools.
             </p>
           </div>
 
-          {/* Scope Filter Switcher */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] backdrop-blur-md self-start md:self-auto shadow-inner">
-            <button
-              onClick={() => setSelectedScope("ALL")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                selectedScope === "ALL"
-                  ? "bg-white/[0.1] text-[var(--text-primary,#FFFFFF)] border border-white/[0.15] shadow-sm"
-                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
-              }`}
-            >
-              All Domains
-            </button>
-            <button
-              onClick={() => setSelectedScope("PERSONAL")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                selectedScope === "PERSONAL"
-                  ? "bg-[var(--primary-accent,#FFDD9B)]/20 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/40 shadow-sm"
-                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
-              }`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
-              <span>Personal</span>
-            </button>
-            <button
-              onClick={() => setSelectedScope("ORGANIZATION")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                selectedScope === "ORGANIZATION"
-                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm"
-                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)]"
-              }`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              <span>Organization</span>
-            </button>
+          {/* Controls: Color Mode & Layout Toggle */}
+          <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+            {/* Color Mode Toggle */}
+            <div className="inline-flex p-1 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-inner text-xs font-mono">
+              <button
+                onClick={() => setColorMode("brand")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                  colorMode === "brand"
+                    ? "bg-white/[0.12] text-white shadow-sm"
+                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
+                }`}
+                title="Display authentic brand logos and colors"
+              >
+                Official Colors
+              </button>
+              <button
+                onClick={() => setColorMode("warm")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                  colorMode === "warm"
+                    ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-sm shadow-[#FFDD9B]/20"
+                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
+                }`}
+                title="Display monochrome Champagne Gold icons"
+              >
+                Warm Theme
+              </button>
+            </div>
+
+            {/* View Style Toggle */}
+            <div className="inline-flex p-1 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-inner text-xs font-mono">
+              <button
+                onClick={() => setViewStyle("bento")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                  viewStyle === "bento"
+                    ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-sm shadow-[#FFDD9B]/20"
+                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
+                }`}
+                title="Bento Grid View"
+              >
+                Bento Cards
+              </button>
+              <button
+                onClick={() => setViewStyle("matrix")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                  viewStyle === "matrix"
+                    ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-sm shadow-[#FFDD9B]/20"
+                    : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
+                }`}
+                title="Compact Icon Grid"
+              >
+                Icon Matrix
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Architectural Domain Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-          {filteredDomains.map((domain, index) => (
-            <motion.div
-              key={domain.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="card-slate rounded-2xl p-6 flex flex-col justify-between group hover:border-emerald-500/30 transition-all duration-300 relative overflow-hidden"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border ${domain.accent}`}>
-                      <domain.icon size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary,#FFFFFF)]">
-                        {domain.title}
-                      </h3>
-                      <span className="text-[10px] font-mono text-[#64748B] uppercase">
-                        {domain.scope === "ALL" ? "Combined Scope" : domain.scope === "PERSONAL" ? "Personal Lab" : "Ariiti Org"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+        {/* Category Filter Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-4 mb-10 scrollbar-none">
+          {CATEGORIES.map((cat) => {
+            const IconComponent = CATEGORY_ICONS[cat] || Layers;
+            const count =
+              cat === "All Technologies"
+                ? technologies.length
+                : (categoriesWithTech.get(cat) || []).length;
+            const isActive = activeCategory === cat;
 
-                {/* Skills tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {domain.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-2.5 py-1 rounded-lg bg-[var(--bg-base,#302E2D)]/80 border border-white/[0.06] text-xs font-mono text-[var(--text-secondary,#FFF1D8)] group-hover:text-[var(--text-primary,#FFFFFF)] transition-colors"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {domain.telemetryNote && (
-                <div className="text-[10px] font-mono text-[#64748B] pt-3 border-t border-white/[0.04]">
-                  {domain.telemetryNote}
-                </div>
-              )}
-            </motion.div>
-          ))}
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 border ${
+                  isActive
+                    ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] border-[var(--primary-accent,#FFDD9B)] shadow-md shadow-[#FFDD9B]/20"
+                    : "bg-[var(--card-surface,#403C38)] text-[var(--text-secondary,#FFF1D8)] border-white/[0.08] hover:border-white/20 hover:text-white"
+                }`}
+              >
+                <IconComponent size={14} className={isActive ? "text-[#302E2D]" : "text-[var(--primary-accent,#FFDD9B)]"} />
+                <span>{cat}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    isActive
+                      ? "bg-black/15 text-[#302E2D]"
+                      : "bg-white/[0.06] text-[var(--text-secondary,#FFF1D8)]/70"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Technology Stack Distribution */}
+        {/* ========================================================================= */}
+        {/* VIEW 1: BENTO CARDS SHOWCASE                                              */}
+        {/* ========================================================================= */}
+        {viewStyle === "bento" ? (
+          activeCategory === "All Technologies" ? (
+            /* Grouped by Distinctive Categories */
+            <div className="space-y-12">
+              {Array.from(categoriesWithTech.entries()).map(([catName, techList]) => {
+                if (techList.length === 0) return null;
+                const CatIcon = CATEGORY_ICONS[catName] || Layers;
+
+                return (
+                  <div key={catName} className="space-y-4">
+                    {/* Category Title Header */}
+                    <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/30 flex items-center justify-center text-[var(--primary-accent,#FFDD9B)]">
+                          <CatIcon size={16} />
+                        </div>
+                        <h3 className="text-lg sm:text-xl font-bold font-heading text-white">
+                          {catName}
+                        </h3>
+                        <span className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/60">
+                          ({techList.length})
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Cards Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {techList.map((tech, idx) => (
+                        <TechCard
+                          key={tech.slug || idx}
+                          tech={tech}
+                          colorMode={colorMode}
+                          idx={idx}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* Single Category Filtered Grid */
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredTechnologies.map((tech, idx) => (
+                <TechCard
+                  key={tech.slug || idx}
+                  tech={tech}
+                  colorMode={colorMode}
+                  idx={idx}
+                />
+              ))}
+            </div>
+          )
+        ) : (
+          /* ========================================================================= */
+          /* VIEW 2: COMPACT ICON MATRIX                                               */
+          /* ========================================================================= */
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {filteredTechnologies.map((tech, idx) => (
+              <motion.div
+                key={tech.slug || idx}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.02 }}
+                className="group relative p-4 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] hover:border-[var(--primary-accent,#FFDD9B)]/40 transition-all duration-300 flex flex-col items-center justify-center text-center shadow-lg hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                  <TechIcon
+                    name={tech.icon || tech.slug}
+                    size={28}
+                    colorMode={colorMode}
+                    title={tech.name}
+                  />
+                </div>
+
+                <span className="text-xs font-bold text-white group-hover:text-[var(--primary-accent,#FFDD9B)] transition-colors line-clamp-1">
+                  {tech.name}
+                </span>
+
+                <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/60 line-clamp-1 mt-0.5">
+                  {tech.experienceLevel || tech.category}
+                </span>
+
+                {tech.source === "github_detected" && (
+                  <span
+                    className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-emerald-400"
+                    title="Detected across active GitHub codebases"
+                  />
+                )}
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* GITHUB REPOSITORY LANGUAGE METRICS ACCORDION                              */}
+        {/* ========================================================================= */}
         {settings?.showSkillsIntegration !== false && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="card-slate rounded-2xl p-6 sm:p-8 relative overflow-hidden"
+            className="mt-16 p-6 sm:p-8 rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-xl relative overflow-hidden"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-[var(--primary-accent,#FFDD9B)]">
-                  <Binary size={18} />
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/30 flex items-center justify-center text-[var(--primary-accent,#FFDD9B)] font-bold">
+                  <Binary size={20} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[var(--text-primary,#FFFFFF)]">
-                    Technology Stack Distribution ({selectedScope === "ALL" ? "Combined" : selectedScope === "PERSONAL" ? "Personal" : "Organization"})
+                  <h3 className="text-lg sm:text-xl font-bold font-heading text-white">
+                    Verified Repository Language Distribution
                   </h3>
                   <p className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">
-                    Core programming languages utilized across delivered systems
+                    Direct telemetry aggregated across connected personal and organizational GitHub repositories
                   </p>
                 </div>
               </div>
 
-              <div className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)] self-start sm:self-auto">
-                Ecosystem:{" "}
-                <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">
-                  Multi-Tier Production
-                </span>
+              {/* Scope Switcher */}
+              <div className="inline-flex p-1 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs font-mono self-start sm:self-auto">
+                <button
+                  onClick={() => setSelectedScope("ALL")}
+                  className={`px-3 py-1 rounded-lg font-bold transition-all ${
+                    selectedScope === "ALL"
+                      ? "bg-white/[0.1] text-white"
+                      : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
+                  }`}
+                >
+                  Combined
+                </button>
+                <button
+                  onClick={() => setSelectedScope("PERSONAL")}
+                  className={`px-3 py-1 rounded-lg font-bold transition-all ${
+                    selectedScope === "PERSONAL"
+                      ? "bg-sky-500/20 text-sky-300"
+                      : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
+                  }`}
+                >
+                  Personal
+                </button>
+                <button
+                  onClick={() => setSelectedScope("ORGANIZATION")}
+                  className={`px-3 py-1 rounded-lg font-bold transition-all ${
+                    selectedScope === "ORGANIZATION"
+                      ? "bg-amber-500/20 text-amber-300"
+                      : "text-[var(--text-secondary,#FFF1D8)]/70 hover:text-white"
+                  }`}
+                >
+                  Ariitii Tech
+                </button>
               </div>
             </div>
 
-            {/* Stacked Multi-Color Progress Bar */}
-            <div className="h-2 w-full rounded-full bg-[var(--bg-base,#302E2D)] overflow-hidden flex p-0.5 gap-0.5 mb-4 border border-white/[0.04]">
+            {/* Language Distribution Progress Bar */}
+            <div className="h-2.5 w-full rounded-full bg-[var(--bg-base,#302E2D)] overflow-hidden flex p-0.5 gap-0.5 mb-4 border border-white/[0.06]">
               {langLoading ? (
-                <div className="w-full h-full bg-white/[0.08] animate-pulse rounded-full" />
+                <div className="w-full h-full bg-white/[0.1] animate-pulse rounded-full" />
               ) : (
-                (langData?.languages || []).slice(0, 6).map((l, i) => {
-                  const colors = ["#F59E0B", "#818CF8", "#38BDF8", "#A78BFA", "#F87171", "#10B981"];
+                (langData?.languages || []).slice(0, 8).map((l, i) => {
+                  const colors = [
+                    "#3178C6", // TypeScript Blue
+                    "#F7DF1E", // JS Yellow
+                    "#3776AB", // Python Blue
+                    "#777BB4", // PHP Purple
+                    "#E34F26", // HTML Orange
+                    "#1572B6", // CSS Blue
+                    "#06B6D4", // Cyan
+                    "#10B981", // Emerald
+                  ];
                   return (
                     <div
                       key={l.language}
@@ -267,7 +393,7 @@ export default function SkillsSection() {
                         width: `${Math.max(l.percentage, 2)}%`,
                         backgroundColor: colors[i % colors.length],
                       }}
-                      className="h-full rounded-full transition-all duration-700"
+                      className="h-full rounded-full transition-all duration-500"
                       title={`${l.language}: ${l.percentage}%`}
                     />
                   );
@@ -276,35 +402,119 @@ export default function SkillsSection() {
             </div>
 
             {/* Language Breakdown Pills */}
-            <div className="flex flex-wrap gap-2.5 mb-4">
+            <div className="flex flex-wrap gap-2.5 pt-2">
               {langLoading ? (
-                <div className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">Loading distribution metrics...</div>
+                <span className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">
+                  Loading language telemetry...
+                </span>
               ) : (
-                (langData?.languages || []).slice(0, 6).map((l, i) => {
-                  const colors = ["#F59E0B", "#818CF8", "#38BDF8", "#A78BFA", "#F87171", "#10B981"];
+                (langData?.languages || []).slice(0, 8).map((l, i) => {
+                  const colors = [
+                    "#3178C6",
+                    "#F7DF1E",
+                    "#3776AB",
+                    "#777BB4",
+                    "#E34F26",
+                    "#1572B6",
+                    "#06B6D4",
+                    "#10B981",
+                  ];
                   return (
                     <div
                       key={l.language}
-                      className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--bg-base,#302E2D)] border border-white/[0.06] text-xs font-mono"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-base,#302E2D)] border border-white/[0.06] text-xs font-mono"
                     >
-                      <span
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: colors[i % colors.length] }}
-                      />
-                      <span className="text-[var(--text-primary,#FFFFFF)] font-semibold">{l.language}</span>
-                      <span className="text-[#64748B]">{l.percentage}%</span>
+                      <TechIcon name={l.language} size={16} colorMode="brand" />
+                      <span className="text-white font-bold">{l.language}</span>
+                      <span className="text-[var(--text-secondary,#FFF1D8)]/60">{l.percentage}%</span>
                     </div>
                   );
                 })
               )}
             </div>
-
-            <p className="text-[11px] text-[#64748B] leading-relaxed font-sans border-t border-white/[0.04] pt-3">
-              <strong className="text-[var(--text-secondary,#FFF1D8)]">Methodology:</strong> Derived from active repository codebases. This breakdown reflects the practical language distribution across production deployments and enterprise architectures.
-            </p>
           </motion.div>
         )}
       </div>
     </section>
+  );
+}
+
+// Subcomponent: Individual Bento Tech Card
+interface TechCardProps {
+  tech: Technology;
+  colorMode: "brand" | "warm";
+  idx: number;
+}
+
+function TechCard({ tech, colorMode, idx }: TechCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: (idx % 6) * 0.04 }}
+      className={`group relative p-5 rounded-2xl bg-[var(--card-surface,#403C38)] border transition-all duration-300 flex flex-col justify-between shadow-lg hover:-translate-y-1 ${
+        tech.featured
+          ? "border-[var(--primary-accent,#FFDD9B)]/30 ring-1 ring-[var(--primary-accent,#FFDD9B)]/10"
+          : "border-white/[0.08] hover:border-white/25"
+      }`}
+    >
+      <div>
+        {/* Top Icon & Badges Row */}
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="w-12 h-12 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] flex items-center justify-center p-2.5 group-hover:scale-105 group-hover:border-[var(--primary-accent,#FFDD9B)]/40 transition-all duration-300 shadow-inner">
+            <TechIcon
+              name={tech.icon || tech.slug}
+              size={30}
+              colorMode={colorMode}
+              title={tech.name}
+            />
+          </div>
+
+          <div className="flex flex-col items-end gap-1">
+            {tech.experienceLevel && (
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider bg-[var(--primary-accent,#FFDD9B)]/10 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/25">
+                {tech.experienceLevel}
+              </span>
+            )}
+
+            {tech.source === "github_detected" && (
+              <span className="flex items-center gap-1 text-[9px] font-mono text-emerald-300/80">
+                <CheckCircle2 size={10} className="text-emerald-400" />
+                <span>Verified Repo</span>
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Title & Category */}
+        <div className="mb-2">
+          <h4 className="text-base font-black font-heading text-white group-hover:text-[var(--primary-accent,#FFDD9B)] transition-colors">
+            {tech.name}
+          </h4>
+          <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/60">
+            {tech.category}
+          </span>
+        </div>
+
+        {/* Short Description */}
+        {tech.description && (
+          <p className="text-xs text-[var(--text-secondary,#FFF1D8)]/80 leading-relaxed font-body mt-2 line-clamp-2">
+            {tech.description}
+          </p>
+        )}
+      </div>
+
+      {/* Subtle Bottom Accent Indicator */}
+      <div className="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-between text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/50">
+        <span>Production Ready</span>
+        {tech.featured && (
+          <span className="text-[var(--primary-accent,#FFDD9B)] flex items-center gap-1">
+            <Sparkles size={10} />
+            <span>Featured</span>
+          </span>
+        )}
+      </div>
+    </motion.div>
   );
 }
