@@ -95,6 +95,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    shortSummary: "",
     technologies: "",
     githubUrl: "",
     demoUrl: "",
@@ -102,6 +103,19 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     category: "Full-Stack",
     highlights: "",
     status: "published",
+    projectType: "completed",
+    proposalStatus: "pending",
+    clientOrPartner: "",
+    location: "",
+    startDate: "",
+    completionDate: "",
+    objectives: "",
+    challenges: "",
+    proposedSolution: "",
+    expectedOutcomes: "",
+    resultsAndImpact: "",
+    equipment: "",
+    showGithubLink: true,
     pinned: false,
     isMini: false,
     githubRepoId: null,
@@ -270,9 +284,13 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         if (!matchesTitle && !matchesDesc && !matchesRepo && !matchesTech) return false;
       }
 
-      // Status Filter
-      if (projectStatusFilter === "PUBLISHED" && p.status === "draft") return false;
+      // Status & Type Filter
+      if (projectStatusFilter === "PUBLISHED" && p.status !== "published") return false;
       if (projectStatusFilter === "DRAFT" && p.status !== "draft") return false;
+      if (projectStatusFilter === "UNDER_REVIEW" && p.status !== "under_review") return false;
+      if (projectStatusFilter === "PROPOSALS" && p.projectType !== "proposed") return false;
+      if (projectStatusFilter === "COMPLETED" && (p.projectType || "completed") !== "completed") return false;
+      if (projectStatusFilter === "ONGOING" && p.projectType !== "ongoing") return false;
       if (projectStatusFilter === "PERSONAL" && (p.sourceType !== "personal" && p.githubSourceScope !== "PERSONAL")) return false;
       if (projectStatusFilter === "ORGANIZATION" && (p.sourceType !== "organization" && p.githubSourceScope !== "ORGANIZATION")) return false;
       if (projectStatusFilter === "MANUAL" && (p.sourceType !== "manual" || p.githubRepoFullName)) return false;
@@ -587,6 +605,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     setFormData({
       title: "",
       description: "",
+      shortSummary: "",
       technologies: "",
       githubUrl: "",
       demoUrl: "",
@@ -594,6 +613,19 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       category: "Full-Stack",
       highlights: "",
       status: "published",
+      projectType: "completed",
+      proposalStatus: "pending",
+      clientOrPartner: "",
+      location: "",
+      startDate: "",
+      completionDate: "",
+      objectives: "",
+      challenges: "",
+      proposedSolution: "",
+      expectedOutcomes: "",
+      resultsAndImpact: "",
+      equipment: "",
+      showGithubLink: true,
       pinned: false,
       isMini: false,
       githubRepoId: null,
@@ -616,6 +648,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     setFormData({
       title: project.title,
       description: project.description,
+      shortSummary: project.shortSummary || "",
       technologies: (project.technologies || []).join(", "),
       githubUrl: project.githubUrl || "",
       demoUrl: project.demoUrl || "",
@@ -625,6 +658,27 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         ? project.highlights.join("\n")
         : project.highlights || "",
       status: project.status || "published",
+      projectType: project.projectType || "completed",
+      proposalStatus: project.proposalStatus || "pending",
+      clientOrPartner: project.clientOrPartner || "",
+      location: project.location || "",
+      startDate: project.startDate || "",
+      completionDate: project.completionDate || "",
+      objectives: Array.isArray(project.objectives)
+        ? project.objectives.join("\n")
+        : project.objectives || "",
+      challenges: project.challenges || "",
+      proposedSolution: project.proposedSolution || "",
+      expectedOutcomes: Array.isArray(project.expectedOutcomes)
+        ? project.expectedOutcomes.join("\n")
+        : project.expectedOutcomes || "",
+      resultsAndImpact: Array.isArray(project.resultsAndImpact)
+        ? project.resultsAndImpact.join("\n")
+        : project.resultsAndImpact || "",
+      equipment: Array.isArray(project.equipment)
+        ? project.equipment.join(", ")
+        : project.equipment || "",
+      showGithubLink: project.showGithubLink !== false,
       pinned: project.pinned || false,
       isMini: project.isMini || false,
       githubRepoId: project.githubRepoId || null,
@@ -686,6 +740,16 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     formDataToSend.append("role", formData.role);
     formDataToSend.append("category", formData.category);
     formDataToSend.append("status", formData.status);
+    formDataToSend.append("projectType", formData.projectType || "completed");
+    formDataToSend.append("proposalStatus", formData.proposalStatus || "pending");
+    formDataToSend.append("shortSummary", formData.shortSummary || "");
+    formDataToSend.append("clientOrPartner", formData.clientOrPartner || "");
+    formDataToSend.append("location", formData.location || "");
+    formDataToSend.append("startDate", formData.startDate || "");
+    formDataToSend.append("completionDate", formData.completionDate || "");
+    formDataToSend.append("challenges", formData.challenges || "");
+    formDataToSend.append("proposedSolution", formData.proposedSolution || "");
+    formDataToSend.append("showGithubLink", formData.showGithubLink !== false);
     formDataToSend.append("pinned", formData.pinned);
     formDataToSend.append("isMini", formData.isMini);
     formDataToSend.append("githubRepoFullName", formData.githubRepoFullName || "");
@@ -697,6 +761,26 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
     if (formData.githubRepoId) {
       formDataToSend.append("githubRepoId", formData.githubRepoId);
+    }
+
+    if (formData.objectives) {
+      const parsed = formData.objectives.split("\n").map((o) => o.trim()).filter(Boolean);
+      formDataToSend.append("objectives", JSON.stringify(parsed));
+    }
+
+    if (formData.expectedOutcomes) {
+      const parsed = formData.expectedOutcomes.split("\n").map((o) => o.trim()).filter(Boolean);
+      formDataToSend.append("expectedOutcomes", JSON.stringify(parsed));
+    }
+
+    if (formData.resultsAndImpact) {
+      const parsed = formData.resultsAndImpact.split("\n").map((r) => r.trim()).filter(Boolean);
+      formDataToSend.append("resultsAndImpact", JSON.stringify(parsed));
+    }
+
+    if (formData.equipment) {
+      const parsed = formData.equipment.split(",").map((e) => e.trim()).filter(Boolean);
+      formDataToSend.append("equipment", JSON.stringify(parsed));
     }
 
     if (formData.highlights) {
@@ -903,11 +987,27 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                 { id: "ALL", label: `All (${projects.length})` },
                 {
                   id: "PUBLISHED",
-                  label: `Published (${projects.filter((p) => p.status !== "draft").length})`,
+                  label: `Published (${projects.filter((p) => p.status === "published").length})`,
+                },
+                {
+                  id: "COMPLETED",
+                  label: `Completed (${projects.filter((p) => (p.projectType || "completed") === "completed").length})`,
+                },
+                {
+                  id: "ONGOING",
+                  label: `Ongoing (${projects.filter((p) => p.projectType === "ongoing").length})`,
+                },
+                {
+                  id: "PROPOSALS",
+                  label: `Proposals (${projects.filter((p) => p.projectType === "proposed").length})`,
                 },
                 {
                   id: "DRAFT",
                   label: `Drafts (${projects.filter((p) => p.status === "draft").length})`,
+                },
+                {
+                  id: "UNDER_REVIEW",
+                  label: `Review (${projects.filter((p) => p.status === "under_review").length})`,
                 },
                 {
                   id: "PERSONAL",
@@ -1057,15 +1157,38 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
                       {/* Top Badges */}
                       <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5">
+                        {/* Project Type Badge */}
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider shadow-md backdrop-blur-md border ${
+                            project.projectType === "proposed"
+                              ? "bg-purple-500/20 text-purple-300 border-purple-500/40"
+                              : project.projectType === "ongoing"
+                              ? "bg-sky-500/20 text-sky-300 border-sky-500/40"
+                              : "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                          }`}
+                        >
+                          {project.projectType === "proposed"
+                            ? "Proposed"
+                            : project.projectType === "ongoing"
+                            ? "Ongoing"
+                            : "Completed"}
+                        </span>
+
                         {/* Status Badge */}
                         <span
                           className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider shadow-md ${
-                            isPublished
+                            project.status === "published"
                               ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 backdrop-blur-md"
+                              : project.status === "under_review"
+                              ? "bg-purple-500/20 text-purple-300 border border-purple-500/40 backdrop-blur-md"
                               : "bg-amber-500/20 text-amber-300 border border-amber-500/40 backdrop-blur-md"
                           }`}
                         >
-                          {isPublished ? "Published" : "Draft"}
+                          {project.status === "published"
+                            ? "Published"
+                            : project.status === "under_review"
+                            ? "Under Review"
+                            : "Draft"}
                         </span>
 
                         {/* Source Badge */}
@@ -1931,40 +2054,45 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                   /* Main Project Form */
                   <form id="project-form" onSubmit={handleSubmit} className="space-y-6">
                     {/* Publication & Status Bar */}
-                    <div className="p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
-                      {/* Publication Status Toggle */}
-                      <div>
-                        <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 uppercase tracking-wider block mb-1">
-                          Publication Status
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, status: "draft" })}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                              formData.status === "draft"
-                                ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                                : "bg-white/[0.04] text-[var(--text-secondary,#FFF1D8)]/60 hover:text-white"
-                            }`}
+                    <div className="p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* Publication Status Selector */}
+                        <div>
+                          <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 uppercase tracking-wider block mb-1">
+                            Publication Lifecycle Status
+                          </span>
+                          <select
+                            value={formData.status}
+                            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                            className="w-full px-3 py-2 rounded-lg bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs font-mono text-[var(--text-primary,#FFFFFF)] focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
                           >
-                            Draft (Hidden)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, status: "published" })}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                              formData.status === "published"
-                                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                                : "bg-white/[0.04] text-[var(--text-secondary,#FFF1D8)]/60 hover:text-white"
-                            }`}
+                            <option value="draft">Draft (Hidden from public)</option>
+                            <option value="under_review">Under Review (Admin only)</option>
+                            <option value="published">Published (Visible to public)</option>
+                            <option value="unpublished">Unpublished (Hidden)</option>
+                            <option value="archived">Archived (Internal record)</option>
+                          </select>
+                        </div>
+
+                        {/* Project Type Selector */}
+                        <div>
+                          <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 uppercase tracking-wider block mb-1">
+                            Project Classification
+                          </span>
+                          <select
+                            value={formData.projectType}
+                            onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                            className="w-full px-3 py-2 rounded-lg bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs font-mono text-[var(--text-primary,#FFFFFF)] focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
                           >
-                            Published (Public)
-                          </button>
+                            <option value="completed">Completed Project</option>
+                            <option value="ongoing">Ongoing Deployment</option>
+                            <option value="proposed">Proposed Project (Proposal)</option>
+                          </select>
                         </div>
                       </div>
 
-                      {/* Pinned & Mini Toggles */}
-                      <div className="flex items-center gap-4">
+                      {/* Toggles */}
+                      <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-white/[0.06]">
                         <label className="flex items-center gap-2 cursor-pointer text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
                           <input
                             type="checkbox"
@@ -1972,7 +2100,17 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                             onChange={(e) => setFormData({ ...formData, pinned: e.target.checked })}
                             className="w-4 h-4 accent-[var(--primary-accent,#FFDD9B)] rounded cursor-pointer"
                           />
-                          <span>Pin to top</span>
+                          <span>Pin to top (Featured)</span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
+                          <input
+                            type="checkbox"
+                            checked={formData.showGithubLink}
+                            onChange={(e) => setFormData({ ...formData, showGithubLink: e.target.checked })}
+                            className="w-4 h-4 accent-[var(--primary-accent,#FFDD9B)] rounded cursor-pointer"
+                          />
+                          <span>Show GitHub link publicly</span>
                         </label>
 
                         <label className="flex items-center gap-2 cursor-pointer text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
@@ -1982,10 +2120,90 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                             onChange={(e) => setFormData({ ...formData, isMini: e.target.checked })}
                             className="w-4 h-4 accent-[var(--primary-accent,#FFDD9B)] rounded cursor-pointer"
                           />
-                          <span>Mini / Experimental</span>
+                          <span>Mini / Research utility</span>
                         </label>
                       </div>
                     </div>
+
+                    {/* Proposal Specific Controls (When projectType === 'proposed') */}
+                    {formData.projectType === "proposed" && (
+                      <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                            <Sparkles size={14} />
+                            <span>Proposal Governance & Details</span>
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono text-purple-200">Review Status:</span>
+                            <select
+                              value={formData.proposalStatus}
+                              onChange={(e) => setFormData({ ...formData, proposalStatus: e.target.value })}
+                              className="px-2.5 py-1 rounded bg-[var(--bg-base,#302E2D)] border border-purple-500/30 text-xs font-mono text-purple-300 focus:outline-none"
+                            >
+                              <option value="pending">Pending Review</option>
+                              <option value="approved">Approved</option>
+                              <option value="rejected">Rejected</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-xs font-mono font-bold text-purple-200 block">
+                              Objectives (one per line)
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={formData.objectives}
+                              onChange={(e) => setFormData({ ...formData, objectives: e.target.value })}
+                              placeholder="Objective 1&#10;Objective 2"
+                              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-base,#302E2D)] border border-purple-500/20 text-xs text-white focus:outline-none resize-none font-mono"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-xs font-mono font-bold text-purple-200 block">
+                              Expected Outcomes (one per line)
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={formData.expectedOutcomes}
+                              onChange={(e) => setFormData({ ...formData, expectedOutcomes: e.target.value })}
+                              placeholder="Outcome 1&#10;Outcome 2"
+                              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-base,#302E2D)] border border-purple-500/20 text-xs text-white focus:outline-none resize-none font-mono"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-xs font-mono font-bold text-purple-200 block">
+                              Challenge / Problem Statement
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={formData.challenges}
+                              onChange={(e) => setFormData({ ...formData, challenges: e.target.value })}
+                              placeholder="Background and critical problem being solved..."
+                              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-base,#302E2D)] border border-purple-500/20 text-xs text-white focus:outline-none resize-none"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-xs font-mono font-bold text-purple-200 block">
+                              Proposed Solution Architecture
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={formData.proposedSolution}
+                              onChange={(e) => setFormData({ ...formData, proposedSolution: e.target.value })}
+                              placeholder="Proposed technical solution and delivery plan..."
+                              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-base,#302E2D)] border border-purple-500/20 text-xs text-white focus:outline-none resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Title, Category & Role */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -2045,6 +2263,75 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                       />
                     </div>
 
+                    {/* Short Summary */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                        Brief Executive Summary (for cards & quick view)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.shortSummary}
+                        onChange={(e) => setFormData({ ...formData, shortSummary: e.target.value })}
+                        placeholder="e.g. Multi-tenant retail engine processing 50k daily transactions with 99.98% uptime."
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+                      />
+                    </div>
+
+                    {/* Client, Location & Timeline */}
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                          Client or Partner
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.clientOrPartner}
+                          onChange={(e) => setFormData({ ...formData, clientOrPartner: e.target.value })}
+                          placeholder="e.g. Ariiti Tech Ltd"
+                          className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                          Location
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.location}
+                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                          placeholder="e.g. Addis Ababa / Remote"
+                          className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                          Start Date
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.startDate}
+                          onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                          placeholder="e.g. Jan 2024"
+                          className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50 font-mono"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                          Completion Date
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.completionDate}
+                          onChange={(e) => setFormData({ ...formData, completionDate: e.target.value })}
+                          placeholder="e.g. Present / Nov 2024"
+                          className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50 font-mono"
+                        />
+                      </div>
+                    </div>
+
                     {/* Technologies (Comma-Separated) */}
                     <div className="space-y-1.5">
                       <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
@@ -2058,6 +2345,35 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
                         placeholder="TypeScript, Node.js, Express, MongoDB, Docker, TailwindCSS"
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50 font-mono"
                       />
+                    </div>
+
+                    {/* Results, Impact & Equipment */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                          Results & Key Impact (one per line)
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={formData.resultsAndImpact}
+                          onChange={(e) => setFormData({ ...formData, resultsAndImpact: e.target.value })}
+                          placeholder="Reduced order checkout latency by 64%&#10;Onboarded 12,000 active merchants"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50 leading-relaxed resize-none"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                          Tools, Hardware & Equipment (comma-separated)
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={formData.equipment}
+                          onChange={(e) => setFormData({ ...formData, equipment: e.target.value })}
+                          placeholder="AWS EC2, Nginx, Redis Clusters, Docker Swarm, Linux Ubuntu Server"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50 leading-relaxed resize-none font-mono"
+                        />
+                      </div>
                     </div>
 
                     {/* Highlights / Bullet points */}

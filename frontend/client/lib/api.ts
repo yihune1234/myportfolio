@@ -26,8 +26,14 @@ export const API_ENDPOINTS = {
   PROJECTS_DELETE: (id: string) => `${API_URL}/api/projects/${id}`,
   PROJECTS_PIN_TOGGLE: (id: string) => `${API_URL}/api/projects/${id}/pin`,
   PROJECTS_PUBLISH_TOGGLE: (id: string) => `${API_URL}/api/projects/${id}/publish`,
+  PROJECTS_SET_STATUS: (id: string) => `${API_URL}/api/projects/${id}/status`,
+  PROJECTS_SET_PROPOSAL_STATUS: (id: string) => `${API_URL}/api/projects/${id}/proposal-status`,
   PROJECTS_SYNC: (id: string) => `${API_URL}/api/projects/${id}/sync`,
   PROJECTS_IMPORT_GITHUB: `${API_URL}/api/projects/import-github`,
+  PROJECT_SECTIONS_ADD: (id: string) => `${API_URL}/api/projects/${id}/sections`,
+  PROJECT_SECTIONS_UPDATE: (id: string, sectionId: string) => `${API_URL}/api/projects/${id}/sections/${sectionId}`,
+  PROJECT_SECTIONS_DELETE: (id: string, sectionId: string) => `${API_URL}/api/projects/${id}/sections/${sectionId}`,
+  PROJECT_SECTIONS_REORDER: (id: string) => `${API_URL}/api/projects/${id}/sections-reorder`,
 
   // GitHub Telemetry & Browsing
   GITHUB_REPO_DETAILS: (owner: string, repo: string, refresh = false) =>

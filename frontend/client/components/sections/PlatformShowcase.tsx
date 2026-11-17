@@ -66,7 +66,7 @@ export default function PlatformShowcase() {
       capabilities: [
         "Token verification middleware and IP-based distributed rate limiting",
         "Zero-downtime containerized deploys with automated health monitoring",
-        "Integrated telemetry and centralized error propagation logging",
+        "Real-time service health monitoring and centralized audit logs",
       ],
       tech: ["Node.js", "Redis", "Nginx", "Docker Compose", "Prometheus"],
       url: orgUrl,
@@ -202,14 +202,14 @@ export default function PlatformShowcase() {
                   </span>
                 </div>
 
-                {/* Telemetry Metrics Grid */}
+                {/* Performance & Architecture Highlights */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="p-3 rounded-xl bg-[var(--card-surface,#403C38)]/60 border border-white/[0.04]">
                     <span className="text-[10px] font-mono text-[#A8A29E] block mb-0.5">AVG LATENCY</span>
                     <span className="text-base font-bold font-mono text-[var(--primary-accent,#FFDD9B)]">38.4 ms</span>
                   </div>
                   <div className="p-3 rounded-xl bg-[var(--card-surface,#403C38)]/60 border border-white/[0.04]">
-                    <span className="text-[10px] font-mono text-[#A8A29E] block mb-0.5">AUTH PROTOCOL</span>
+                    <span className="text-[10px] font-mono text-[#A8A29E] block mb-0.5">SECURITY PROTOCOL</span>
                     <span className="text-base font-bold font-mono text-[var(--text-primary,#FFFFFF)]">JWT + RBAC</span>
                   </div>
                   <div className="p-3 rounded-xl bg-[var(--card-surface,#403C38)]/60 border border-white/[0.04]">
@@ -239,8 +239,8 @@ export default function PlatformShowcase() {
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-between text-[10px] font-mono text-[#A8A29E]">
-                  <span>Telemetry Runtime: Cluster Node 01</span>
-                  <span className="text-[var(--primary-accent,#FFDD9B)]">Architecture Verified</span>
+                  <span>Infrastructure: High-Availability Cloud</span>
+                  <span className="text-[var(--primary-accent,#FFDD9B)]">Production Certified</span>
                 </div>
               </div>
             </div>

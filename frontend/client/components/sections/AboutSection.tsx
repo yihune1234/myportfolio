@@ -216,7 +216,7 @@ export default function AboutSection() {
                   </div>
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block">
-                      Domain 04 // Verified Telemetry
+                      Domain 04 // Provenance & Focus
                     </span>
                     <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
                       Contribution Distinction & Scale
@@ -225,13 +225,13 @@ export default function AboutSection() {
                 </div>
 
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-[var(--text-secondary,#FFF1D8)] border border-white/[0.06]">
-                  25.4 MB LINGUIST
+                  ENTERPRISE CODEBASE
                 </span>
               </div>
 
               <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-4">
-                A transparent separation between individual engineering experiments and organization infrastructure.
-                Public activities are fetched via verified GitHub telemetry without inflating commit metrics:
+                A clear separation between individual engineering research and organization infrastructure.
+                Public activities and organizational contributions reflect verifiable, production-tested delivery:
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">

@@ -98,7 +98,7 @@ export default function HeroSection({
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary-accent,#FFDD9B)] opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary-accent,#FFDD9B)]"></span>
                   </span>
-                  <span>ARCHITECTURAL TELEMETRY ENGINE</span>
+                  <span>SOLUTIONS & ENGINEERING HUB</span>
                 </div>
 
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] text-xs font-mono">
@@ -196,16 +196,16 @@ export default function HeroSection({
                 <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[var(--primary-accent,#FFDD9B)]/60" />
                 <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-amber-500/60" />
 
-                {/* Telemetry Header */}
+                {/* Profile Overview Header */}
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-4">
                   <div className="flex items-center gap-2">
-                    <Activity size={16} className="text-[var(--primary-accent,#FFDD9B)] animate-pulse" />
+                    <Activity size={16} className="text-[var(--primary-accent,#FFDD9B)]" />
                     <span className="font-mono text-[11px] font-bold text-[var(--text-primary,#FFFFFF)] tracking-wider uppercase">
-                      GitHub Telemetry HUD
+                      Engineering Profile & Solutions
                     </span>
                   </div>
                   <span className="font-mono text-[10px] text-[#A8A29E]">
-                    NODE: 5002 // REST
+                    Enterprise Services
                   </span>
                 </div>
 
@@ -249,7 +249,7 @@ export default function HeroSection({
                         </span>
                       </div>
                       <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]">
-                        {overview?.accounts?.personal?.public_repos ?? overview?.metrics?.personal_public_repos ?? 27} Repos
+                        {overview?.accounts?.personal?.public_repos ?? overview?.metrics?.personal_public_repos ?? 27} Solutions
                       </span>
                     </div>
 
@@ -273,7 +273,7 @@ export default function HeroSection({
                         </span>
                       </div>
                       <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]">
-                        {overview?.accounts?.organization?.public_repos ?? overview?.metrics?.organization_public_repos ?? 20} Repos
+                        {overview?.accounts?.organization?.public_repos ?? overview?.metrics?.organization_public_repos ?? 20} Solutions
                       </span>
                     </div>
 
@@ -288,11 +288,11 @@ export default function HeroSection({
                   </div>
                 </div>
 
-                {/* Codebase Linguist Byte Share */}
+                {/* Core Stack Breakdown */}
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04] mb-4">
                   <div className="flex items-center justify-between text-[11px] font-mono text-[var(--text-secondary,#FFF1D8)] mb-2">
-                    <span>Verified Language Share</span>
-                    <span className="text-[var(--text-primary,#FFFFFF)] font-bold">25.4 MB</span>
+                    <span>Core Technology Stack</span>
+                    <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">Multi-Platform</span>
                   </div>
 
                   {/* Multi-segment mini bar */}
@@ -304,20 +304,20 @@ export default function HeroSection({
                   </div>
 
                   <div className="flex items-center justify-between text-[10px] font-mono text-[#A8A29E]">
-                    <span>JS 42%</span>
-                    <span>PHP 28%</span>
-                    <span>TS 18%</span>
-                    <span>Other 12%</span>
+                    <span>TypeScript</span>
+                    <span>Node.js / Express</span>
+                    <span>PostgreSQL & Mongo</span>
+                    <span>Cloud Architecture</span>
                   </div>
                 </div>
 
-                {/* Telemetry Footer */}
+                {/* Overview Status Footer */}
                 <div className="flex items-center justify-between text-[10px] font-mono text-[#A8A29E] pt-2 border-t border-white/[0.05]">
                   <div className="flex items-center gap-1.5">
                     <Clock size={11} className="text-[var(--primary-accent,#FFDD9B)]" />
-                    <span>Sync: {formatRelativeTime(overview?.last_synchronized_at)}</span>
+                    <span>Updated: {formatRelativeTime(overview?.last_synchronized_at)}</span>
                   </div>
-                  <span className="text-[var(--primary-accent,#FFDD9B)]/90 font-bold">CACHE ETAG: OK</span>
+                  <span className="text-[var(--primary-accent,#FFDD9B)]/90 font-bold">Active & Available</span>
                 </div>
               </div>
             </motion.div>

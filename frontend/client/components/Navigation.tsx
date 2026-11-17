@@ -112,7 +112,7 @@ export default function Navigation() {
                         ? "bg-[var(--primary-accent,#FFDD9B)]/15 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/30"
                         : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                     }`}
-                    title={isSyncing ? "GitHub Telemetry Syncing" : isConnected ? "GitHub Telemetry Connected" : "Telemetry Cached"}
+                    title={isSyncing ? "Updating Services" : isConnected ? "Services Online" : "Cached View"}
                   >
                     <span
                       className={`w-1.5 h-1.5 rounded-full ${

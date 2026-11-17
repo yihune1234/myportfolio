@@ -222,7 +222,7 @@ export default function SkillsSection() {
           ))}
         </div>
 
-        {/* Supplementary GitHub Language Telemetry (Codebase DNA) */}
+        {/* Technology Stack Distribution */}
         {settings?.showSkillsIntegration !== false && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -237,18 +237,18 @@ export default function SkillsSection() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-[var(--text-primary,#FFFFFF)]">
-                    Codebase DNA // Physical Byte Analysis ({selectedScope})
+                    Technology Stack Distribution ({selectedScope === "ALL" ? "Combined" : selectedScope === "PERSONAL" ? "Personal" : "Organization"})
                   </h3>
                   <p className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">
-                    Directly aggregated from GitHub Linguist repository source bytes
+                    Core programming languages utilized across delivered systems
                   </p>
                 </div>
               </div>
 
               <div className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)] self-start sm:self-auto">
-                Total Volume:{" "}
+                Ecosystem:{" "}
                 <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">
-                  {langLoading ? "Analyzing..." : langData?.formatted_total_bytes || "25.4 MB"}
+                  Multi-Tier Production
                 </span>
               </div>
             </div>
@@ -268,7 +268,7 @@ export default function SkillsSection() {
                         backgroundColor: colors[i % colors.length],
                       }}
                       className="h-full rounded-full transition-all duration-700"
-                      title={`${l.language}: ${l.formatted_bytes} (${l.percentage}%)`}
+                      title={`${l.language}: ${l.percentage}%`}
                     />
                   );
                 })
@@ -278,7 +278,7 @@ export default function SkillsSection() {
             {/* Language Breakdown Pills */}
             <div className="flex flex-wrap gap-2.5 mb-4">
               {langLoading ? (
-                <div className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">Loading byte density metrics...</div>
+                <div className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">Loading distribution metrics...</div>
               ) : (
                 (langData?.languages || []).slice(0, 6).map((l, i) => {
                   const colors = ["#F59E0B", "#818CF8", "#38BDF8", "#A78BFA", "#F87171", "#10B981"];
@@ -300,8 +300,7 @@ export default function SkillsSection() {
             </div>
 
             <p className="text-[11px] text-[#64748B] leading-relaxed font-sans border-t border-white/[0.04] pt-3">
-              <strong className="text-[var(--text-secondary,#FFF1D8)]">Methodology:</strong> Derived from source code bytes across 35 public repositories via GitHub Linguist.
-              This represents physical codebase distribution and is presented as supplementary engineering evidence, not an arbitrary rating of personal proficiency.
+              <strong className="text-[var(--text-secondary,#FFF1D8)]">Methodology:</strong> Derived from active repository codebases. This breakdown reflects the practical language distribution across production deployments and enterprise architectures.
             </p>
           </motion.div>
         )}

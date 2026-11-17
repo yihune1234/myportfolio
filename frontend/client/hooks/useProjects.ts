@@ -1,29 +1,56 @@
 import { useState, useEffect, useCallback } from "react";
 import { API_ENDPOINTS, apiFetch, apiFetchFormData } from "@/lib/api";
 
+export interface ProjectImage {
+  _id?: string;
+  url: string;
+  public_id?: string;
+  title?: string;
+  caption?: string;
+  imageType?: 'overview' | 'installation' | 'infrastructure' | 'screenshot' | 'before_after' | 'implementation' | 'general';
+  order: number;
+  isFeatured: boolean;
+}
+
+export interface ContentSection {
+  _id?: string;
+  title: string;
+  content: string;
+  order: number;
+  isVisible: boolean;
+}
+
 export interface Project {
   _id: string;
   title: string;
-  description: string;
-  technologies: string[];
-  image?: string;
-  images?: Array<{
-    _id?: string;
-    url: string;
-    public_id?: string;
-    title?: string;
-    order: number;
-    isFeatured: boolean;
-  }>;
-  githubUrl?: string;
-  demoUrl?: string;
-  role?: string;
   category?: string;
-  highlights?: string[];
-  isMini?: boolean;
+  shortSummary?: string;
+  description: string;
+  location?: string;
+  clientOrPartner?: string;
+  startDate?: string;
+  completionDate?: string;
+  projectType?: 'completed' | 'ongoing' | 'proposed';
+  status?: 'draft' | 'under_review' | 'published' | 'unpublished' | 'archived';
+  proposalStatus?: 'pending' | 'approved' | 'rejected';
   pinned?: boolean;
-  status?: "published" | "draft";
+  isMini?: boolean;
+  order?: number;
+  objectives?: string[];
   challenges?: string;
+  proposedSolution?: string;
+  expectedOutcomes?: string[];
+  resultsAndImpact?: string;
+  technologies: string[];
+  equipment?: string[];
+  contentSections?: ContentSection[];
+  image?: string;
+  images?: ProjectImage[];
+  demoUrl?: string;
+  githubUrl?: string;
+  showGithubLink?: boolean;
+  role?: string;
+  highlights?: string[];
   createdAt: string;
   updatedAt?: string;
   lastSyncedAt?: string;
@@ -35,6 +62,7 @@ export interface Project {
   sourceType?: 'personal' | 'organization' | 'manual';
   showGithubMetrics?: boolean;
   autoSyncMetrics?: boolean;
+  relatedProjects?: Project[];
   githubMetadata?: {
     stars?: number;
     forks?: number;

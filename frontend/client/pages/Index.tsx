@@ -99,7 +99,7 @@ export default function Index() {
         <ContactSection />
       </main>
 
-      {/* Architectural Telemetry Footer */}
+      {/* Portfolio Footer */}
       <footer className="relative overflow-hidden border-t border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--bg-base,#302E2D)]">
         {/* Subtle Ambient Radial Lighting */}
         <div className="absolute top-0 left-1/4 -translate-y-1/2 w-96 h-96 bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-3xl pointer-events-none" />
@@ -113,11 +113,9 @@ export default function Index() {
               <div className="flex items-center gap-3.5 mb-5">
                 <YBLogo size="md" />
                 <div>
-                  <span className="font-black text-xl text-[var(--text-primary,#FFFFFF)] tracking-tight block">
-                    Yihune Belay
-                  </span>
+                  
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--primary-accent,#FFDD9B)]">
-                    Architectural Telemetry & Venture Hub
+                    Technology Solutions & Engineering Hub
                   </span>
                 </div>
               </div>
@@ -143,17 +141,17 @@ export default function Index() {
             {/* Quick Links */}
             <div>
               <h4 className="font-mono text-[var(--text-primary,#FFFFFF)] uppercase tracking-wider text-xs mb-5 font-bold">
-                Telemetry Nodes
+                Navigation
               </h4>
               <ul className="space-y-2.5">
                 {[
                   { name: "Overview", id: "home" },
-                  { name: "About Architecture", id: "about" },
-                  { name: "System Skills", id: "skills" },
-                  { name: "Projects Catalog", id: "projects" },
-                  { name: "Engineering Pulse", id: "engineering" },
-                  { name: "Experience Matrix", id: "experience" },
-                  { name: "Contact Terminal", id: "contact" },
+                  { name: "About & Background", id: "about" },
+                  { name: "System & Skills", id: "skills" },
+                  { name: "Portfolio & Projects", id: "projects" },
+                  { name: "Engineering Showcase", id: "engineering" },
+                  { name: "Experience & Education", id: "experience" },
+                  { name: "Contact & Inquiries", id: "contact" },
                 ].map((link) => (
                   <li key={link.id}>
                     <button
@@ -220,8 +218,8 @@ export default function Index() {
 
                 <div className="p-3 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/[0.06] text-[11px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 space-y-1">
                   <div className="flex items-center justify-between text-[var(--text-secondary,#FFF1D8)]">
-                    <span>Telemetry Sync</span>
-                    <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">AUTOMATED</span>
+                    <span>Portfolio Services</span>
+                    <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">ONLINE</span>
                   </div>
                   <div>Stack: React · Vite · Express · Mongo</div>
                 </div>
@@ -235,7 +233,7 @@ export default function Index() {
             </p>
             <p className="flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
-              Verified Telemetry Hub · Haramaya SE Alum
+              Software Engineering · Haramaya University
             </p>
           </div>
         </div>
