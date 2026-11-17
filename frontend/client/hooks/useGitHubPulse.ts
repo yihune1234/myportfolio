@@ -6,6 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useGitHubSettings } from '@/hooks/useGitHubSettings';
 import {
   DualScope,
   GitHubRepository,
@@ -25,6 +26,11 @@ export function useGitHubPulse(defaultScope: DualScope = 'ALL') {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<'stars' | 'updated' | 'name'>('stars');
   const queryClient = useQueryClient();
+  const { data: gitHubSettings } = useGitHubSettings();
+
+  const hiddenReposSet = useMemo(() => {
+    return new Set((gitHubSettings?.hiddenRepos || []).map((r) => r.toLowerCase()));
+  }, [gitHubSettings?.hiddenRepos]);
 
   // 1. Overview Query
   const overviewQuery = useQuery({
@@ -80,20 +86,36 @@ export function useGitHubPulse(defaultScope: DualScope = 'ALL') {
     refetchInterval: 60 * 1000
   });
 
-  // Scoped Repositories
+  // Scoped Repositories (respecting individual repository visibility exclusions)
   const allRepos = useMemo<GitHubRepository[]>(() => {
     const personal = personalReposQuery.data?.repos || [];
     const org = orgReposQuery.data?.repos || [];
 
-    if (scope === 'PERSONAL') return personal;
-    if (scope === 'ORGANIZATION') return org;
+    const isAllowed = (r: GitHubRepository) => {
+      if (r.isHidden) return false;
+      if (hiddenReposSet.size > 0) {
+        const full = (r.full_name || '').toLowerCase();
+        const name = (r.name || '').toLowerCase();
+        if (hiddenReposSet.has(full) || hiddenReposSet.has(name)) return false;
+      }
+      return true;
+    };
 
-    // Merge and deduplicate by ID
-    const map = new Map<number, GitHubRepository>();
-    personal.forEach((r) => map.set(r.id, r));
-    org.forEach((r) => map.set(r.id, r));
-    return Array.from(map.values());
-  }, [personalReposQuery.data, orgReposQuery.data, scope]);
+    let base: GitHubRepository[] = [];
+    if (scope === 'PERSONAL') {
+      base = personal;
+    } else if (scope === 'ORGANIZATION') {
+      base = org;
+    } else {
+      // Merge and deduplicate by ID
+      const map = new Map<number, GitHubRepository>();
+      personal.forEach((r) => map.set(r.id, r));
+      org.forEach((r) => map.set(r.id, r));
+      base = Array.from(map.values());
+    }
+
+    return base.filter(isAllowed);
+  }, [personalReposQuery.data, orgReposQuery.data, scope, hiddenReposSet]);
 
   // Scoped Activity Events (Deduplicated by event ID)
   const allActivity = useMemo<GitHubActivityEvent[]>(() => {

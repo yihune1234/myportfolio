@@ -19,6 +19,7 @@ const siteSettingsSchema = new mongoose.Schema({
     autoSyncEnabled: { type: Boolean, default: true },
     syncIntervalMs: { type: Number, default: 900000 },
     featuredRepos: [{ type: String }],
+    hiddenRepos: [{ type: String, trim: true }],
     theme: {
         preset: { type: String, default: 'warm-charcoal' },
         background: { type: String, default: '#302E2D' },

@@ -33,6 +33,7 @@ export interface GitHubRepository {
   is_fork: boolean;
   open_issues_count: number;
   default_branch: string;
+  isHidden?: boolean;
 }
 
 export interface GitHubProfile {
@@ -186,20 +187,22 @@ export async function fetchGitHubOverview(forceRefresh = false): Promise<GitHubO
   return res.json();
 }
 
-export async function fetchGitHubPersonalRepos(params: { page?: number; per_page?: number } = {}): Promise<{ repos: GitHubRepository[] }> {
+export async function fetchGitHubPersonalRepos(params: { page?: number; per_page?: number; includeHidden?: boolean } = {}): Promise<{ repos: GitHubRepository[] }> {
   const query = new URLSearchParams({
     page: String(params.page || 1),
-    per_page: String(params.per_page || 100)
+    per_page: String(params.per_page || 100),
+    ...(params.includeHidden ? { includeHidden: 'true' } : {})
   });
   const res = await fetch(`${getBaseUrl()}/api/github/personal/repos?${query}`);
   if (!res.ok) throw new Error(`Failed to fetch personal repos: HTTP ${res.status}`);
   return res.json();
 }
 
-export async function fetchGitHubOrgRepos(params: { page?: number; per_page?: number } = {}): Promise<{ repos: GitHubRepository[] }> {
+export async function fetchGitHubOrgRepos(params: { page?: number; per_page?: number; includeHidden?: boolean } = {}): Promise<{ repos: GitHubRepository[] }> {
   const query = new URLSearchParams({
     page: String(params.page || 1),
-    per_page: String(params.per_page || 100)
+    per_page: String(params.per_page || 100),
+    ...(params.includeHidden ? { includeHidden: 'true' } : {})
   });
   const res = await fetch(`${getBaseUrl()}/api/github/organization/repos?${query}`);
   if (!res.ok) throw new Error(`Failed to fetch organization repos: HTTP ${res.status}`);
@@ -249,6 +252,7 @@ export interface GitHubPublicSettings {
   showSkillsIntegration: boolean;
   showEngineeringShowcase: boolean;
   showRepositoryExplorer?: boolean;
+  hiddenRepos?: string[];
 }
 
 export async function fetchGitHubPublicSettings(): Promise<GitHubPublicSettings> {
@@ -261,6 +265,7 @@ export async function fetchGitHubPublicSettings(): Promise<GitHubPublicSettings>
       showSkillsIntegration: true,
       showEngineeringShowcase: true,
       showRepositoryExplorer: true,
+      hiddenRepos: [],
     };
   }
   return res.json();
@@ -279,6 +284,52 @@ export async function toggleRepositoryExplorerVisibility(visible?: boolean): Pro
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
     throw new Error(errorData.message || `Failed to toggle repository explorer visibility: HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function toggleRepoVisibility(
+  repoFullName: string,
+  visible?: boolean
+): Promise<{ success: boolean; hiddenRepos: string[]; isHidden: boolean; isVisible: boolean; message: string }> {
+  const token = localStorage.getItem('adminToken');
+  const res = await fetch(`${getBaseUrl()}/api/admin/repository-explorer/repo-visibility`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({
+      repoFullName,
+      ...(visible !== undefined ? { visible } : {})
+    })
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to update repository visibility: HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function bulkSetReposVisibility(
+  repoFullNames: string[],
+  visible: boolean
+): Promise<{ success: boolean; hiddenRepos: string[]; message: string }> {
+  const token = localStorage.getItem('adminToken');
+  const res = await fetch(`${getBaseUrl()}/api/admin/repository-explorer/repo-visibility`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({
+      repoFullNames,
+      visible
+    })
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to update repositories visibility: HTTP ${res.status}`);
   }
   return res.json();
 }

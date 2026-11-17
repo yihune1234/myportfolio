@@ -55,13 +55,58 @@ function handleGitHubError(err, res) {
 }
 
 /**
+ * Helper to fetch hidden repositories set from SiteSettings
+ */
+async function getHiddenReposSet() {
+    try {
+        const SiteSettings = require('../models/SiteSettings');
+        const settings = await SiteSettings.findOne({ key: 'site_settings' }).select('hiddenRepos').lean();
+        if (settings && Array.isArray(settings.hiddenRepos)) {
+            return new Set(settings.hiddenRepos.map(r => String(r || '').trim().toLowerCase()));
+        }
+    } catch (e) {
+        // Fallback gracefully on query error
+    }
+    return new Set();
+}
+
+/**
+ * Filter or annotate repositories based on hidden status
+ */
+function applyRepoVisibility(repos, hiddenSet, includeHidden) {
+    if (!Array.isArray(repos)) return repos;
+    if (includeHidden) {
+        return repos.map(r => ({
+            ...r,
+            isHidden: hiddenSet.has(String(r.full_name || '').toLowerCase()) ||
+                      hiddenSet.has(String(r.name || '').toLowerCase()) ||
+                      hiddenSet.has(String(r.id || '').toLowerCase())
+        }));
+    }
+    return repos.filter(r => {
+        const isHidden = hiddenSet.has(String(r.full_name || '').toLowerCase()) ||
+                         hiddenSet.has(String(r.name || '').toLowerCase()) ||
+                         hiddenSet.has(String(r.id || '').toLowerCase());
+        return !isHidden;
+    }).map(r => ({ ...r, isHidden: false }));
+}
+
+/**
  * GET /api/github/overview
  * Combined overview of personal and organization portfolios
  */
 async function getOverview(req, res) {
     try {
         const forceRefresh = req.query.refresh === 'true' || req.query.refresh === '1';
+        const includeHidden = req.query.includeHidden === 'true' || req.query.all === 'true';
         const overview = await githubService.getOverview({ forceRefresh });
+        const hiddenSet = await getHiddenReposSet();
+        if (overview && overview.personal && Array.isArray(overview.personal.repositories)) {
+            overview.personal.repositories = applyRepoVisibility(overview.personal.repositories, hiddenSet, includeHidden);
+        }
+        if (overview && overview.organization && Array.isArray(overview.organization.repositories)) {
+            overview.organization.repositories = applyRepoVisibility(overview.organization.repositories, hiddenSet, includeHidden);
+        }
         res.json(overview);
     } catch (err) {
         handleGitHubError(err, res);
@@ -89,7 +134,12 @@ async function getPersonal(req, res) {
 async function getPersonalRepos(req, res) {
     try {
         const forceRefresh = req.query.refresh === 'true' || req.query.refresh === '1';
+        const includeHidden = req.query.includeHidden === 'true' || req.query.all === 'true';
         const result = await githubService.getPersonalRepos(req.pagination, { forceRefresh });
+        const hiddenSet = await getHiddenReposSet();
+        if (result && Array.isArray(result.repos)) {
+            result.repos = applyRepoVisibility(result.repos, hiddenSet, includeHidden);
+        }
         res.json(result);
     } catch (err) {
         handleGitHubError(err, res);
@@ -131,7 +181,12 @@ async function getOrganization(req, res) {
 async function getOrganizationRepos(req, res) {
     try {
         const forceRefresh = req.query.refresh === 'true' || req.query.refresh === '1';
+        const includeHidden = req.query.includeHidden === 'true' || req.query.all === 'true';
         const result = await githubService.getOrgRepos(req.pagination, { forceRefresh });
+        const hiddenSet = await getHiddenReposSet();
+        if (result && Array.isArray(result.repos)) {
+            result.repos = applyRepoVisibility(result.repos, hiddenSet, includeHidden);
+        }
         res.json(result);
     } catch (err) {
         handleGitHubError(err, res);
@@ -231,7 +286,8 @@ async function getPublicSettings(req, res) {
                 showHeroPulse: true,
                 showSkillsIntegration: true,
                 showEngineeringShowcase: true,
-                showRepositoryExplorer: true
+                showRepositoryExplorer: true,
+                hiddenRepos: []
             };
         }
         const isExplorerVisible = settings.showRepositoryExplorer !== false && settings.showEngineeringShowcase !== false;
@@ -243,7 +299,8 @@ async function getPublicSettings(req, res) {
             showHeroPulse: settings.showHeroPulse,
             showSkillsIntegration: settings.showSkillsIntegration,
             showEngineeringShowcase: isExplorerVisible,
-            showRepositoryExplorer: isExplorerVisible
+            showRepositoryExplorer: isExplorerVisible,
+            hiddenRepos: settings.hiddenRepos || []
         });
     } catch (err) {
         const githubConfig = require('../config/githubConfig');
@@ -255,7 +312,8 @@ async function getPublicSettings(req, res) {
             showHeroPulse: true,
             showSkillsIntegration: true,
             showEngineeringShowcase: true,
-            showRepositoryExplorer: true
+            showRepositoryExplorer: true,
+            hiddenRepos: []
         });
     }
 }

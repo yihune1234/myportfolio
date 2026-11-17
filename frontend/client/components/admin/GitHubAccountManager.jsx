@@ -43,12 +43,14 @@ export function GitHubAccountManager() {
     showSkillsIntegration: true,
     showEngineeringShowcase: true,
     showRepositoryExplorer: true,
+    hiddenRepos: [],
   });
 
   const [health, setHealth] = useState(null);
   const [loading, setLoading] = useState(true);
   const [syncingAll, setSyncingAll] = useState(false);
   const [togglingExplorer, setTogglingExplorer] = useState(false);
+  const [unhidingRepo, setUnhidingRepo] = useState(null);
 
   const isPublicExplorerVisible =
     settings.showRepositoryExplorer !== false &&
@@ -85,6 +87,31 @@ export function GitHubAccountManager() {
       });
     } finally {
       setTogglingExplorer(false);
+    }
+  };
+
+  const handleUnsingleRepo = async (repoFullName) => {
+    setUnhidingRepo(repoFullName);
+    try {
+      const res = await apiFetch(API_ENDPOINTS.ADMIN_REPO_VISIBILITY, {
+        method: "PUT",
+        body: JSON.stringify({ repoFullName, visible: true }),
+      });
+      if (res.success && Array.isArray(res.hiddenRepos)) {
+        setSettings((prev) => ({ ...prev, hiddenRepos: res.hiddenRepos }));
+        toast({
+          title: "Repository Allowed",
+          description: `"${repoFullName}" is now visible in the Repository Explorer.`,
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.message || "Failed to restore repository visibility.",
+        variant: "destructive",
+      });
+    } finally {
+      setUnhidingRepo(null);
     }
   };
 
@@ -489,6 +516,44 @@ export function GitHubAccountManager() {
             )}
           </div>
         </div>
+
+        {/* Individually Hidden Repositories Section */}
+        {settings.hiddenRepos && settings.hiddenRepos.length > 0 && (
+          <div className="mt-5 pt-4 border-t border-white/[0.08] relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                <EyeOff size={13} />
+                Individually Hidden Repositories ({settings.hiddenRepos.length})
+              </span>
+              <span className="text-[11px] text-[var(--text-secondary,#FFF1D8)]/70 font-mono">
+                Excluded from the public Repository Explorer
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {settings.hiddenRepos.map((r) => (
+                <span
+                  key={r}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs font-mono text-amber-200"
+                >
+                  <span className="font-bold">{r}</span>
+                  <button
+                    onClick={() => handleUnsingleRepo(r)}
+                    disabled={unhidingRepo === r}
+                    className="hover:bg-amber-500/20 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase transition-colors text-amber-400 hover:text-white flex items-center gap-1"
+                    title={`Allow "${r}" back in public Repository Explorer`}
+                  >
+                    {unhidingRepo === r ? (
+                      <RefreshCw size={10} className="animate-spin" />
+                    ) : (
+                      <Eye size={11} />
+                    )}
+                    <span>Allow</span>
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Two Separate Management Cards Grid */}

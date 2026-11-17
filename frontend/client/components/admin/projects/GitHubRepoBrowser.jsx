@@ -45,6 +45,12 @@ export function GitHubRepoBrowser({
   isPublicExplorerVisible,
   onTogglePublicExplorer,
   togglingPublicExplorer,
+  hiddenRepos = [],
+  onToggleRepoVisibility,
+  onBulkSetRepoVisibility,
+  togglingRepoName,
+  repoVisibilityFilter = "ALL",
+  setRepoVisibilityFilter,
 }) {
   return (
     <div className="space-y-6">
@@ -242,6 +248,19 @@ export function GitHubRepoBrowser({
             ))}
           </select>
 
+          {/* Explorer Visibility Filter */}
+          {setRepoVisibilityFilter && (
+            <select
+              value={repoVisibilityFilter}
+              onChange={(e) => setRepoVisibilityFilter(e.target.value)}
+              className="px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs font-mono text-[var(--text-secondary,#FFF1D8)] focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+            >
+              <option value="ALL">All Explorer Status</option>
+              <option value="VISIBLE">Visible in Explorer Only</option>
+              <option value="HIDDEN">Hidden from Explorer Only</option>
+            </select>
+          )}
+
           {/* Sort By */}
           <select
             value={repoSort}
@@ -284,20 +303,44 @@ export function GitHubRepoBrowser({
           </div>
 
           {selectedRepoFullNames.size > 0 && (
-            <button
-              onClick={onBulkImportSelected}
-              disabled={bulkImporting}
-              className="px-4 py-1.5 rounded-lg bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] font-bold text-xs flex items-center gap-1.5 shadow-md shadow-[#FFDD9B]/20 disabled:opacity-50"
-            >
-              {bulkImporting ? (
-                <RefreshCw size={12} className="animate-spin" />
-              ) : (
-                <Download size={12} />
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={onBulkImportSelected}
+                disabled={bulkImporting}
+                className="px-3.5 py-1.5 rounded-lg bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] font-bold text-xs flex items-center gap-1.5 shadow-md shadow-[#FFDD9B]/20 disabled:opacity-50"
+              >
+                {bulkImporting ? (
+                  <RefreshCw size={12} className="animate-spin" />
+                ) : (
+                  <Download size={12} />
+                )}
+                <span>
+                  Import {selectedRepoFullNames.size} as Drafts
+                </span>
+              </button>
+
+              {onBulkSetRepoVisibility && (
+                <>
+                  <button
+                    onClick={() => onBulkSetRepoVisibility(Array.from(selectedRepoFullNames), true)}
+                    className="px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold flex items-center gap-1"
+                    title="Allow selected repositories to appear in public Repository Explorer"
+                  >
+                    <Eye size={12} />
+                    <span>Allow Selected ({selectedRepoFullNames.size})</span>
+                  </button>
+
+                  <button
+                    onClick={() => onBulkSetRepoVisibility(Array.from(selectedRepoFullNames), false)}
+                    className="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-bold flex items-center gap-1"
+                    title="Hide selected repositories from public Repository Explorer"
+                  >
+                    <EyeOff size={12} />
+                    <span>Hide Selected ({selectedRepoFullNames.size})</span>
+                  </button>
+                </>
               )}
-              <span>
-                Bulk Import {selectedRepoFullNames.size} Repos as Drafts
-              </span>
-            </button>
+            </div>
           )}
         </div>
       </div>
@@ -354,6 +397,11 @@ export function GitHubRepoBrowser({
           {filteredRepos.map((repo) => {
             const isSelected = selectedRepoFullNames.has(repo.full_name);
             const existingProject = importedRepoMap.get(repo.full_name.toLowerCase());
+            const isRepoHidden =
+              repo.isHidden ||
+              hiddenRepos.some((h) => h.toLowerCase() === repo.full_name.toLowerCase());
+            const isTogglingThisRepo =
+              togglingRepoName?.toLowerCase() === repo.full_name.toLowerCase();
 
             return (
               <div
@@ -361,6 +409,8 @@ export function GitHubRepoBrowser({
                 className={`p-5 rounded-2xl bg-[var(--card-surface,#403C38)] border transition-all flex flex-col justify-between ${
                   isSelected
                     ? "border-[var(--primary-accent,#FFDD9B)] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/10"
+                    : isRepoHidden
+                    ? "border-amber-500/20 hover:border-amber-500/40 bg-[var(--card-surface,#403C38)]/90"
                     : "border-white/[0.08] hover:border-white/[0.18]"
                 }`}
               >
@@ -396,6 +446,18 @@ export function GitHubRepoBrowser({
                             In Portfolio ({existingProject.status})
                           </span>
                         )}
+
+                        {/* Visibility in Repository Explorer Badge */}
+                        <span
+                          className={`text-[9px] font-mono uppercase px-2 py-0.5 rounded-full border flex items-center gap-1 ${
+                            isRepoHidden
+                              ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                              : "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                          }`}
+                        >
+                          {isRepoHidden ? <EyeOff size={10} /> : <Eye size={10} />}
+                          {isRepoHidden ? "Hidden from Explorer" : "In Explorer"}
+                        </span>
                       </div>
 
                       <p className="text-[11px] font-mono text-[var(--text-secondary,#FFF1D8)]/60 truncate">
@@ -450,10 +512,10 @@ export function GitHubRepoBrowser({
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06] mt-2">
+                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06] mt-2 flex-wrap">
                   <button
                     onClick={() => onImportRepo(repo, true)}
-                    className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md ${
+                    className={`flex-1 min-w-[120px] py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md ${
                       existingProject
                         ? "bg-white/[0.08] hover:bg-white/[0.15] text-white"
                         : "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] shadow-[#FFDD9B]/20"
@@ -462,6 +524,32 @@ export function GitHubRepoBrowser({
                     <Download size={13} />
                     <span>{existingProject ? "Re-import / Edit" : "Import as Project"}</span>
                   </button>
+
+                  {onToggleRepoVisibility && (
+                    <button
+                      onClick={() => onToggleRepoVisibility(repo.full_name)}
+                      disabled={isTogglingThisRepo}
+                      className={`py-2 px-3 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all ${
+                        isRepoHidden
+                          ? "bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30"
+                          : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                      }`}
+                      title={
+                        isRepoHidden
+                          ? `Allow "${repo.name}" in public Repository Explorer`
+                          : `Hide "${repo.name}" from public Repository Explorer`
+                      }
+                    >
+                      {isTogglingThisRepo ? (
+                        <RefreshCw size={13} className="animate-spin" />
+                      ) : isRepoHidden ? (
+                        <Eye size={13} />
+                      ) : (
+                        <EyeOff size={13} />
+                      )}
+                      <span>{isRepoHidden ? "Allow" : "Hide"}</span>
+                    </button>
+                  )}
 
                   <button
                     onClick={() => onOpenPreview(repo)}

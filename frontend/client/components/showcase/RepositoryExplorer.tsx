@@ -39,6 +39,8 @@ export function RepositoryExplorer({
   const filteredRepos = useMemo(() => {
     return repos
       .filter((r) => {
+        if (r.isHidden) return false;
+
         // Search query
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();

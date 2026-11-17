@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
   ADMIN_GITHUB_VALIDATE: `${API_URL}/api/admin/github-validate`,
   ADMIN_GITHUB_SYNC: `${API_URL}/api/admin/github-sync`,
   ADMIN_REPOSITORY_EXPLORER_TOGGLE: `${API_URL}/api/admin/repository-explorer/toggle`,
+  ADMIN_REPO_VISIBILITY: `${API_URL}/api/admin/repository-explorer/repo-visibility`,
   ADMIN_THEME: `${API_URL}/api/admin/theme`,
   THEME: `${API_URL}/api/theme`,
 

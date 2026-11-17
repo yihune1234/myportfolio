@@ -27,6 +27,16 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const [explorerVisibilityOverride, setExplorerVisibilityOverride] = useState(null);
   const [togglingPublicExplorer, setTogglingPublicExplorer] = useState(false);
 
+  // Granular per-repository hidden list
+  const [hiddenRepos, setHiddenRepos] = useState([]);
+  const [togglingRepoName, setTogglingRepoName] = useState(null);
+
+  useEffect(() => {
+    if (gitHubSettings && Array.isArray(gitHubSettings.hiddenRepos)) {
+      setHiddenRepos(gitHubSettings.hiddenRepos);
+    }
+  }, [gitHubSettings]);
+
   const isPublicExplorerVisible =
     explorerVisibilityOverride !== null
       ? explorerVisibilityOverride
@@ -65,6 +75,103 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     }
   };
 
+  const handleToggleRepoVisibility = async (repoFullName) => {
+    if (!repoFullName) return;
+    setTogglingRepoName(repoFullName);
+    try {
+      const isCurrentlyHidden = hiddenRepos.some(
+        (r) => r.toLowerCase() === repoFullName.toLowerCase()
+      );
+      const nextVisible = isCurrentlyHidden; // If currently hidden, we want it to become visible
+
+      const res = await apiFetch(API_ENDPOINTS.ADMIN_REPO_VISIBILITY, {
+        method: "PUT",
+        body: JSON.stringify({
+          repoFullName,
+          visible: nextVisible,
+        }),
+      });
+
+      if (res.success) {
+        if (Array.isArray(res.hiddenRepos)) {
+          setHiddenRepos(res.hiddenRepos);
+        } else {
+          setHiddenRepos((prev) =>
+            nextVisible
+              ? prev.filter((r) => r.toLowerCase() !== repoFullName.toLowerCase())
+              : [...prev, repoFullName]
+          );
+        }
+
+        setRepos((prev) =>
+          prev.map((r) =>
+            r.full_name?.toLowerCase() === repoFullName.toLowerCase()
+              ? { ...r, isHidden: !nextVisible }
+              : r
+          )
+        );
+
+        toast({
+          title: nextVisible ? "Repository Visible in Explorer" : "Repository Hidden from Explorer",
+          description:
+            res.message ||
+            (nextVisible
+              ? `"${repoFullName}" is now visible to public visitors in Repository Explorer.`
+              : `"${repoFullName}" is now hidden from the public Repository Explorer.`),
+        });
+      } else {
+        throw new Error(res.message || "Failed to update repository visibility");
+      }
+    } catch (err) {
+      toast({
+        title: "Visibility Error",
+        description: err.message || "Could not update repository visibility.",
+        variant: "destructive",
+      });
+    } finally {
+      setTogglingRepoName(null);
+    }
+  };
+
+  const handleBulkSetRepoVisibility = async (repoFullNames, makeVisible) => {
+    if (!Array.isArray(repoFullNames) || repoFullNames.length === 0) return;
+    try {
+      const res = await apiFetch(API_ENDPOINTS.ADMIN_REPO_VISIBILITY, {
+        method: "PUT",
+        body: JSON.stringify({
+          repoFullNames,
+          visible: makeVisible,
+        }),
+      });
+
+      if (res.success) {
+        if (Array.isArray(res.hiddenRepos)) {
+          setHiddenRepos(res.hiddenRepos);
+        }
+        const nameSet = new Set(repoFullNames.map((n) => n.toLowerCase()));
+        setRepos((prev) =>
+          prev.map((r) =>
+            nameSet.has(r.full_name?.toLowerCase())
+              ? { ...r, isHidden: !makeVisible }
+              : r
+          )
+        );
+        toast({
+          title: makeVisible ? "Repositories Allowed" : "Repositories Hidden",
+          description: res.message || `Updated visibility for ${repoFullNames.length} repositories.`,
+        });
+      } else {
+        throw new Error(res.message || "Failed to update visibility");
+      }
+    } catch (err) {
+      toast({
+        title: "Bulk Visibility Error",
+        description: err.message || "Could not update visibility in bulk.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // ==========================================
   // Portfolio Projects State
   // ==========================================
@@ -99,6 +206,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const [reposError, setReposError] = useState(null);
   const [repoSearch, setRepoSearch] = useState("");
   const [repoLanguageFilter, setRepoLanguageFilter] = useState("ALL");
+  const [repoVisibilityFilter, setRepoVisibilityFilter] = useState("ALL");
   const [repoSort, setRepoSort] = useState("updated");
   const [selectedRepoFullNames, setSelectedRepoFullNames] = useState(new Set());
   const [bulkImporting, setBulkImporting] = useState(false);
@@ -221,10 +329,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       const endpoint =
         repoSource === "ORGANIZATION"
           ? API_ENDPOINTS.GITHUB_ORG_REPOS(
-              `per_page=100&sort=${repoSort === 'name' ? 'full_name' : repoSort}${forceRefresh ? '&refresh=true' : ''}`
+              `per_page=100&includeHidden=true&sort=${repoSort === 'name' ? 'full_name' : repoSort}${forceRefresh ? '&refresh=true' : ''}`
             )
           : API_ENDPOINTS.GITHUB_PERSONAL_REPOS(
-              `per_page=100&sort=${repoSort === 'name' ? 'full_name' : repoSort}${forceRefresh ? '&refresh=true' : ''}`
+              `per_page=100&includeHidden=true&sort=${repoSort === 'name' ? 'full_name' : repoSort}${forceRefresh ? '&refresh=true' : ''}`
             );
 
       const res = await apiFetch(endpoint);
@@ -342,6 +450,13 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         return false;
       }
 
+      const isHidden =
+        r.isHidden ||
+        hiddenRepos.some((h) => h.toLowerCase() === r.full_name?.toLowerCase());
+
+      if (repoVisibilityFilter === "VISIBLE" && isHidden) return false;
+      if (repoVisibilityFilter === "HIDDEN" && !isHidden) return false;
+
       return true;
     });
 
@@ -353,7 +468,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     });
 
     return list;
-  }, [repos, repoSearch, repoLanguageFilter, repoSort]);
+  }, [repos, repoSearch, repoLanguageFilter, repoVisibilityFilter, hiddenRepos, repoSort]);
 
   // ==========================================
   // Quick Actions on Portfolio Projects
@@ -1122,6 +1237,12 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
           isPublicExplorerVisible={isPublicExplorerVisible}
           onTogglePublicExplorer={handleTogglePublicExplorer}
           togglingPublicExplorer={togglingPublicExplorer}
+          hiddenRepos={hiddenRepos}
+          onToggleRepoVisibility={handleToggleRepoVisibility}
+          onBulkSetRepoVisibility={handleBulkSetRepoVisibility}
+          togglingRepoName={togglingRepoName}
+          repoVisibilityFilter={repoVisibilityFilter}
+          setRepoVisibilityFilter={setRepoVisibilityFilter}
         />
       )}
 
