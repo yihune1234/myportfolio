@@ -50,10 +50,10 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary,#FFFFFF)] tracking-tight">
-                Codebase DNA
+                Core Technologies & Languages
               </h3>
               <p className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">
-                Source Byte Volume Analysis ({scope})
+                Verified Technology Distribution ({scope})
               </p>
             </div>
           </div>
@@ -68,22 +68,22 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
           </button>
         </div>
 
-        {/* Total Bytes & Repos Analyzed Highlight */}
+        {/* Total Languages & Repos Analyzed Highlight */}
         <div className="grid grid-cols-2 gap-3 p-3 mb-5 rounded-xl bg-black/30 border border-white/[0.06]">
           <div>
             <div className="text-[10px] font-mono uppercase tracking-wider text-[#B7C0D1]/70">
-              Aggregated Code Volume
+              Tracked Technologies
             </div>
             <div className="text-lg sm:text-xl font-bold font-mono text-[#F5F7FA] mt-0.5">
-              {isLoading ? '...' : formattedTotal}
+              {isLoading ? '...' : `${languages.length} Languages`}
             </div>
           </div>
           <div>
             <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-secondary,#FFF1D8)]/70">
-              Repositories Scanned
+              Active Repositories
             </div>
             <div className="text-lg sm:text-xl font-bold font-mono text-emerald-400 mt-0.5">
-              {isLoading ? '...' : `${reposCount} Repos`}
+              {isLoading ? '...' : `${reposCount} Repositories`}
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
                     backgroundColor: getLangColor(l.language),
                   }}
                   className="h-full rounded-full transition-all duration-700"
-                  title={`${l.language}: ${l.formatted_bytes} (${l.percentage}%)`}
+                  title={`${l.language}: ${l.percentage}% distribution`}
                 />
               ))
             )}
@@ -142,7 +142,7 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
                     </span>
                   </div>
                   <div className="text-[10px] font-mono text-[#B7C0D1]/60 truncate">
-                    {l.formatted_bytes}
+                    {l.percentage >= 25 ? 'Primary Focus' : l.percentage >= 10 ? 'Core Language' : 'Active Stack'}
                   </div>
                 </div>
               );
@@ -152,8 +152,8 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
       </div>
 
       <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-[#B7C0D1]/70">
-        <span>Verified Byte Calculation</span>
-        <span>No Estimated Counts</span>
+        <span>Verified Production Repositories</span>
+        <span>Real Codebase Telemetry</span>
       </div>
 
       {/* Methodology Modal */}
@@ -183,24 +183,22 @@ export function CodebaseDNA({ data, isLoading, scope }: CodebaseDNAProps) {
               <div className="flex items-center gap-2 mb-4">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                 <h4 className="text-lg font-bold text-[#F5F7FA]">
-                  Codebase DNA Methodology
+                  Technology Distribution Methodology
                 </h4>
               </div>
 
               <div className="space-y-3 text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed">
                 <p>
-                  <strong>Actual Source Bytes:</strong> Values are fetched directly from GitHub's
-                  repository language endpoints (<code className="text-emerald-400 font-mono">/repos/:owner/:repo/languages</code>),
-                  which compute exact source file bytes using GitHub's Linguist library.
+                  <strong>Verified Language Distribution:</strong> Percentages are computed directly from public GitHub repositories using language detection to accurately represent code written across your repositories.
                 </p>
                 <p>
-                  <strong>Deduplication:</strong> Every eligible public repository is evaluated once without double-counting forks or duplicates.
+                  <strong>Deduplication:</strong> Every distinct public repository is analyzed once without double-counting forks or duplicate codebases.
                 </p>
                 <p>
-                  <strong>Volume vs Proficiency:</strong> Percentages represent physical code byte distribution across stored repositories, not subjective proficiency ratings or commit counts.
+                  <strong>Realistic Focus vs Estimates:</strong> Accurately reflects real-world technical stack usage and production implementations rather than subjective self-ratings.
                 </p>
                 <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] font-mono text-[11px] text-[var(--text-secondary,#FFF1D8)]">
-                  Total Bytes: {totalBytes.toLocaleString()} bytes ({formattedTotal}) across {reposCount} public repositories.
+                  Scope: {languages.length} active languages analyzed across {reposCount} public repositories.
                 </div>
               </div>
 

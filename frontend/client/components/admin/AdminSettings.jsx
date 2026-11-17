@@ -406,7 +406,7 @@ export function AdminSettings() {
                     className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
                   />
                   <span className="text-xs font-bold text-[#B7C0D1]">
-                    Skills Section Codebase DNA
+                    Skills Section Language Distribution
                   </span>
                 </label>
 

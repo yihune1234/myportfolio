@@ -119,15 +119,15 @@ export async function getCompactGitHubContext(query: string = ''): Promise<strin
     lines.push(`- Note on Ownership: Organization repositories represent collaborative team platforms. Do NOT state that Yihune individually wrote 100% of organization code; he is a key contributor and architect.`);
   }
 
-  // Codebase DNA (Byte Volume)
+  // Core Technologies & Language Breakdown
   if (languages?.languages && languages.languages.length > 0) {
     const topLangs = languages.languages
       .slice(0, 5)
-      .map((l) => `${l.language}: ${l.percentage}% (${l.formatted_bytes})`)
+      .map((l) => `${l.language}: ${l.percentage}%`)
       .join(', ');
-    lines.push(`\nCODEBASE DNA (${languages.formatted_total_bytes} analyzed across ${languages.repos_analyzed} public repos):`);
-    lines.push(`- Top Languages by byte volume: ${topLangs}`);
-    lines.push(`- Clarification: Language percentages reflect physical source file bytes across repositories, not subjective proficiency ratings.`);
+    lines.push(`\nCORE TECHNOLOGIES & LANGUAGE BREAKDOWN (${languages.languages.length} languages across ${languages.repos_analyzed} public repos):`);
+    lines.push(`- Top Languages: ${topLangs}`);
+    lines.push(`- Clarification: Language percentages reflect actual project code distribution across repositories, not subjective proficiency ratings.`);
   }
 
   // Featured Repositories (Include if query is GitHub-specific, or compact 3 items otherwise)

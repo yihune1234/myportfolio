@@ -58,9 +58,9 @@ export default function EngineeringShowcase() {
           isRefreshing={isRefreshing}
         />
 
-        {/* Bento Grid: Telemetry, DNA, Velocity & Impact */}
+        {/* Bento Grid: Languages, Velocity & Impact */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
-          {/* Left Column: Codebase DNA (6 cols) */}
+          {/* Left Column: Core Technologies & Languages (6 cols) */}
           <div className="lg:col-span-6 flex flex-col">
             <CodebaseDNA
               data={languages}

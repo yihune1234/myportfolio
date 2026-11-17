@@ -142,7 +142,7 @@ describe('GitHub Context Provider for AI Assistant', () => {
     expect(context).toContain('ORGANIZATION (@AriitiMarket)');
     expect(context).toContain('yihune1234/myportfolio [PERSONAL]');
     expect(context).toContain('AriitiMarket/ariiti-market-api [ORGANIZATION]');
-    expect(context).toContain('CODEBASE DNA (25.4 MB analyzed across 30 public repos)');
+    expect(context).toContain('CORE TECHNOLOGIES & LANGUAGE BREAKDOWN');
     expect(context).toContain('JavaScript: 46.9%');
   });
 
