@@ -192,7 +192,17 @@ router.get('/github-settings', auth, async (req, res) => {
             });
         }
 
-        const health = await githubService.getHealthStatus();
+        let health = null;
+        try {
+            if (githubService && typeof githubService.getHealthStatus === 'function') {
+                health = await githubService.getHealthStatus();
+            } else if (githubService && typeof githubService.getHealth === 'function') {
+                health = await githubService.getHealth();
+            }
+        } catch (healthErr) {
+            console.warn('Warning fetching GitHub health status in admin:', healthErr.message);
+        }
+
         res.json({ success: true, settings, health });
     } catch (error) {
         console.error('Error fetching GitHub settings:', error);
@@ -366,7 +376,16 @@ router.put('/github-settings', auth, async (req, res) => {
 router.post('/github-sync', auth, async (req, res) => {
     try {
         const result = await githubScheduler.runOnce('admin_manual');
-        const health = await githubService.getHealthStatus();
+        let health = null;
+        try {
+            if (githubService && typeof githubService.getHealthStatus === 'function') {
+                health = await githubService.getHealthStatus();
+            } else if (githubService && typeof githubService.getHealth === 'function') {
+                health = await githubService.getHealth();
+            }
+        } catch (healthErr) {
+            console.warn('Warning fetching GitHub health status after sync:', healthErr.message);
+        }
         res.json({ success: true, message: 'Synchronization triggered successfully', result, health });
     } catch (error) {
         console.error('Error triggering GitHub sync:', error);

@@ -101,8 +101,9 @@ export function TechnologiesManager() {
     try {
       setLoading(true);
       const res = await apiFetch(API_ENDPOINTS.TECHNOLOGIES_LIST(true));
-      if (res.success && Array.isArray(res.technologies)) {
-        setTechnologies(res.technologies);
+      const list = res?.technologies || res?.data?.technologies || (Array.isArray(res?.data) ? res.data : null);
+      if (res?.success && Array.isArray(list)) {
+        setTechnologies(list);
       }
     } catch (e) {
       console.error(e);
@@ -198,7 +199,7 @@ export function TechnologiesManager() {
       } else {
         toast({
           title: "Save Failed",
-          description: res.message || "Failed to save technology.",
+          description: res.message || res.data?.message || res.error || "Failed to save technology.",
           variant: "destructive",
         });
       }
@@ -280,13 +281,13 @@ export function TechnologiesManager() {
       if (res.success) {
         toast({
           title: "GitHub Sync Complete",
-          description: res.message || "Repositories scanned and matching skills tagged.",
+          description: res.message || res.data?.message || "Repositories scanned and matching skills tagged.",
         });
         fetchTechnologies();
       } else {
         toast({
           title: "Sync Error",
-          description: res.message || "Failed to scan GitHub repositories.",
+          description: res.message || res.data?.message || res.error || "Failed to scan GitHub repositories.",
           variant: "destructive",
         });
       }
@@ -308,9 +309,15 @@ export function TechnologiesManager() {
       if (res.success) {
         toast({
           title: "Verified Stack Synchronized",
-          description: res.message || "Verified technologies populated.",
+          description: res.message || res.data?.message || "Verified technologies populated.",
         });
         fetchTechnologies();
+      } else {
+        toast({
+          title: "Seed Error",
+          description: res.message || res.data?.message || res.error || "Failed to synchronize verified technologies.",
+          variant: "destructive",
+        });
       }
     } catch (e) {
       console.error(e);

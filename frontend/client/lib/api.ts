@@ -110,11 +110,16 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
       throw new Error(data?.message || `API Error: ${response.status}`);
     }
 
-    return { success: true, data, status: response.status };
+    return {
+      success: true,
+      data,
+      ...(data && typeof data === "object" && !Array.isArray(data) ? data : {}),
+      status: response.status,
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("API Fetch Error:", message);
-    return { success: false, error: message, status: 500 };
+    return { success: false, error: message, message, status: 500 };
   }
 };
 

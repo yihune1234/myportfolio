@@ -50,4 +50,16 @@ describe('Technology Model & Seed Validation', () => {
             assert.ok(typeof item.visible === 'boolean', 'item.visible must be boolean');
         }
     });
+
+    it('githubService.getHealthStatus should be a function and return health status', async () => {
+        const { githubService } = require('../services/github/githubService');
+        assert.equal(typeof githubService.getHealthStatus, 'function', 'getHealthStatus must be a function on githubService');
+        assert.equal(typeof githubService.getHealth, 'function', 'getHealth must be a function on githubService');
+
+        const health = await githubService.getHealthStatus();
+        assert.ok(health, 'Health status object must be returned');
+        assert.ok(['healthy', 'degraded'].includes(health.status), 'Health status must be healthy or degraded');
+        assert.ok(health.sources, 'Health status must contain sources');
+        assert.ok(health.sources.personal, 'Health status must contain personal source');
+    });
 });

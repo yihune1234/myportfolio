@@ -374,8 +374,9 @@ export function useTechnologies(includeAll = false) {
     queryFn: async (): Promise<Technology[]> => {
       try {
         const res = (await apiFetch(API_ENDPOINTS.TECHNOLOGIES_LIST(includeAll))) as any;
-        if (res?.success && Array.isArray(res.technologies) && res.technologies.length > 0) {
-          return res.technologies;
+        const list = res?.technologies || res?.data?.technologies || (Array.isArray(res?.data) ? res.data : null);
+        if (res?.success && Array.isArray(list) && list.length > 0) {
+          return list;
         }
         return includeAll
           ? FALLBACK_TECHNOLOGIES

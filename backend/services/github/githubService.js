@@ -665,6 +665,14 @@ class GitHubService {
     }
 
     /**
+     * Aggregated monitoring and health status endpoint (compatibility alias for getHealth)
+     * @returns {Promise<Object>}
+     */
+    async getHealthStatus() {
+        return this.getHealth();
+    }
+
+    /**
      * Retrieve full repository details with languages breakdown and README
      * Used for preview and importing into portfolio
      */
