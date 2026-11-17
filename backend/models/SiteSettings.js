@@ -15,6 +15,7 @@ const siteSettingsSchema = new mongoose.Schema({
     showHeroPulse: { type: Boolean, default: true },
     showSkillsIntegration: { type: Boolean, default: true },
     showEngineeringShowcase: { type: Boolean, default: true },
+    showRepositoryExplorer: { type: Boolean, default: true },
     autoSyncEnabled: { type: Boolean, default: true },
     syncIntervalMs: { type: Number, default: 900000 },
     featuredRepos: [{ type: String }],

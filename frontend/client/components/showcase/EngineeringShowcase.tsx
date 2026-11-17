@@ -33,15 +33,18 @@ export default function EngineeringShowcase() {
     refetchAll,
   } = useGitHubPulse('ALL');
 
-  if (settings && settings.showEngineeringShowcase === false) {
+  if (settings && (settings.showEngineeringShowcase === false || settings.showRepositoryExplorer === false)) {
     return null;
   }
 
   return (
     <section
-      id="engineering"
+      id="repository-explorer"
       className="section-padding relative overflow-hidden bg-background border-t border-white/[0.08]"
     >
+      {/* Anchor for backward-compatible #engineering hash links */}
+      <div id="engineering" className="absolute -top-24 pointer-events-none" />
+
       {/* Background Ambience */}
       <div className="absolute top-1/4 -right-32 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[200px] pointer-events-none" />
       <div className="absolute bottom-1/4 -left-32 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[150px] pointer-events-none" />

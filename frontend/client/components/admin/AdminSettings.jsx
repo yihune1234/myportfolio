@@ -410,21 +410,27 @@ export function AdminSettings() {
                   </span>
                 </label>
 
-                <label className="flex items-center gap-2.5 cursor-pointer sm:col-span-2">
+                <label className="flex items-start gap-3 cursor-pointer sm:col-span-2 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.04] transition-all">
                   <input
                     type="checkbox"
-                    checked={githubSettings.showEngineeringShowcase}
+                    checked={githubSettings.showEngineeringShowcase !== false && githubSettings.showRepositoryExplorer !== false}
                     onChange={(e) =>
                       setGithubSettings({
                         ...githubSettings,
                         showEngineeringShowcase: e.target.checked,
+                        showRepositoryExplorer: e.target.checked,
                       })
                     }
-                    className="w-4 h-4 accent-[#FF8A00] rounded cursor-pointer"
+                    className="w-4 h-4 mt-0.5 accent-[var(--primary-accent,#FFDD9B)] rounded cursor-pointer"
                   />
-                  <span className="text-xs font-bold text-[#B7C0D1]">
-                    Engineering Showcase Section (Inline between Projects & Platform Showcase)
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold text-[#F5F7FA]">
+                      Repository Explorer & Live Telemetry Section (Public Display)
+                    </span>
+                    <span className="text-[11px] text-[#B7C0D1] mt-0.5">
+                      Controls whether the interactive Repository Explorer and live GitHub pulse are displayed to public visitors. When unchecked, it is completely hidden from the public website while remaining accessible in Admin.
+                    </span>
+                  </div>
                 </label>
               </div>
             </div>

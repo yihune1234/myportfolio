@@ -42,11 +42,51 @@ export function GitHubAccountManager() {
     showHeroPulse: true,
     showSkillsIntegration: true,
     showEngineeringShowcase: true,
+    showRepositoryExplorer: true,
   });
 
   const [health, setHealth] = useState(null);
   const [loading, setLoading] = useState(true);
   const [syncingAll, setSyncingAll] = useState(false);
+  const [togglingExplorer, setTogglingExplorer] = useState(false);
+
+  const isPublicExplorerVisible =
+    settings.showRepositoryExplorer !== false &&
+    settings.showEngineeringShowcase !== false;
+
+  const handleToggleRepositoryExplorer = async () => {
+    setTogglingExplorer(true);
+    try {
+      const nextState = !isPublicExplorerVisible;
+      const res = await apiFetch(API_ENDPOINTS.ADMIN_REPOSITORY_EXPLORER_TOGGLE, {
+        method: "PUT",
+        body: JSON.stringify({ visible: nextState }),
+      });
+      if (res.success) {
+        setSettings((prev) => ({
+          ...prev,
+          showRepositoryExplorer: nextState,
+          showEngineeringShowcase: nextState,
+        }));
+        toast({
+          title: nextState ? "Repository Explorer Visible" : "Repository Explorer Hidden",
+          description: res.message || (nextState
+            ? "Repository Explorer is now visible on the public website."
+            : "Repository Explorer is now hidden from public visitors."),
+        });
+      } else {
+        throw new Error(res.message || "Failed to toggle visibility");
+      }
+    } catch (err) {
+      toast({
+        title: "Toggle Error",
+        description: err.message || "Could not update Repository Explorer visibility.",
+        variant: "destructive",
+      });
+    } finally {
+      setTogglingExplorer(false);
+    }
+  };
 
   // Personal Account Form State
   const [personalUsernameInput, setPersonalUsernameInput] = useState("");
@@ -367,6 +407,87 @@ export function GitHubAccountManager() {
           <span>
             <strong>Note:</strong> Updating a username changes the GitHub data source used by your portfolio. It does not rename the account on GitHub.
           </span>
+        </div>
+      </div>
+
+      {/* Public Repository Explorer Governance Card */}
+      <div className="p-6 rounded-2xl bg-[var(--card-surface,#403C38)] border border-[var(--border-color,rgba(255,221,155,0.18))] shadow-xl relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-secondary,#FFF1D8)]/80">
+                Public Portfolio Visibility
+              </span>
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+                  isPublicExplorerVisible
+                    ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                    : "bg-amber-500/15 text-amber-400 border border-amber-500/30"
+                }`}
+              >
+                {isPublicExplorerVisible ? (
+                  <>
+                    <Eye size={13} />
+                    <span>Visible to Public</span>
+                  </>
+                ) : (
+                  <>
+                    <EyeOff size={13} />
+                    <span>Hidden (Admin Only)</span>
+                  </>
+                )}
+              </span>
+            </div>
+
+            <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)] font-heading">
+              Repository Explorer Display Control
+            </h3>
+
+            <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed">
+              {isPublicExplorerVisible
+                ? "The Repository Explorer and live GitHub telemetry directory are currently live and visible to public visitors at #repository-explorer."
+                : "The Repository Explorer is currently hidden from the public portfolio and navigation. It remains fully accessible and operational here in the Admin Dashboard."}
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <button
+              onClick={handleToggleRepositoryExplorer}
+              disabled={togglingExplorer}
+              className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-50 ${
+                isPublicExplorerVisible
+                  ? "bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30"
+                  : "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D]"
+              }`}
+            >
+              {togglingExplorer ? (
+                <RefreshCw size={14} className="animate-spin" />
+              ) : isPublicExplorerVisible ? (
+                <EyeOff size={14} />
+              ) : (
+                <Eye size={14} />
+              )}
+              <span>
+                {togglingExplorer
+                  ? "Updating..."
+                  : isPublicExplorerVisible
+                  ? "Hide From Public"
+                  : "Allow Public Visibility"}
+              </span>
+            </button>
+
+            {isPublicExplorerVisible && (
+              <a
+                href="/#repository-explorer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 rounded-xl font-mono text-xs font-bold uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] transition-all flex items-center justify-center gap-1.5"
+              >
+                <span>Preview</span>
+                <ExternalLink size={13} />
+              </a>
+            )}
+          </div>
         </div>
       </div>
 

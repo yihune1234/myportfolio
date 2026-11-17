@@ -248,6 +248,7 @@ export interface GitHubPublicSettings {
   showHeroPulse: boolean;
   showSkillsIntegration: boolean;
   showEngineeringShowcase: boolean;
+  showRepositoryExplorer?: boolean;
 }
 
 export async function fetchGitHubPublicSettings(): Promise<GitHubPublicSettings> {
@@ -259,7 +260,25 @@ export async function fetchGitHubPublicSettings(): Promise<GitHubPublicSettings>
       showHeroPulse: true,
       showSkillsIntegration: true,
       showEngineeringShowcase: true,
+      showRepositoryExplorer: true,
     };
+  }
+  return res.json();
+}
+
+export async function toggleRepositoryExplorerVisibility(visible?: boolean): Promise<{ success: boolean; visible: boolean; message: string }> {
+  const token = localStorage.getItem('adminToken');
+  const res = await fetch(`${getBaseUrl()}/api/admin/repository-explorer/toggle`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify(visible !== undefined ? { visible } : {})
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to toggle repository explorer visibility: HTTP ${res.status}`);
   }
   return res.json();
 }

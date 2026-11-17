@@ -3,6 +3,7 @@ import { Menu, X, ArrowRight, Sparkles, Activity, Palette, ChevronDown } from "l
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubHealth } from "@/lib/githubApi";
+import { useGitHubSettings } from "@/hooks/useGitHubSettings";
 import { PublicThemeSwitcher } from "./PublicThemeSwitcher";
 import { YBLogo } from "./YBLogo";
 
@@ -25,6 +26,9 @@ export default function Navigation() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(true);
 
+  const { data: githubSettings } = useGitHubSettings();
+  const showRepoExplorer = githubSettings?.showRepositoryExplorer !== false && githubSettings?.showEngineeringShowcase !== false;
+
   const { data: health, isLoading: healthLoading, isError: healthError } = useQuery({
     queryKey: ["github", "health"],
     queryFn: fetchGitHubHealth,
@@ -45,6 +49,7 @@ export default function Navigation() {
         "skills",
         "my-projects",
         "ariitii-tech-projects",
+        "repository-explorer",
         "engineering",
         "experience",
         "education",
@@ -59,7 +64,7 @@ export default function Navigation() {
         }
         return false;
       });
-      if (current) setActiveSection(current);
+      if (current) setActiveSection(current === "engineering" ? "repository-explorer" : current);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -86,7 +91,9 @@ export default function Navigation() {
         },
       ],
     },
-    { name: "Engineering", id: "engineering" },
+    ...(showRepoExplorer
+      ? [{ name: "Repository Explorer", id: "repository-explorer" }]
+      : []),
     { name: "Experience", id: "experience" },
     { name: "Education", id: "education" },
     { name: "Contact", id: "contact" },
@@ -95,7 +102,9 @@ export default function Navigation() {
   const scrollToSection = (id: string) => {
     setIsOpen(false);
     setDropdownOpen(false);
-    const element = document.getElementById(id);
+    const element =
+      document.getElementById(id) ||
+      (id === "repository-explorer" ? document.getElementById("engineering") : null);
     if (element) {
       const navHeight = 80;
       const elementPosition = element.getBoundingClientRect().top;

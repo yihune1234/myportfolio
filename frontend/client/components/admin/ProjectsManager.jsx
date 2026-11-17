@@ -23,6 +23,48 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   // Active View: 'my-projects' | 'ariitii-tech' | 'all-projects' | 'github-browser'
   const [activeView, setActiveView] = useState("my-projects");
 
+  // Repository Explorer Public Visibility Toggle State
+  const [explorerVisibilityOverride, setExplorerVisibilityOverride] = useState(null);
+  const [togglingPublicExplorer, setTogglingPublicExplorer] = useState(false);
+
+  const isPublicExplorerVisible =
+    explorerVisibilityOverride !== null
+      ? explorerVisibilityOverride
+      : (gitHubSettings?.showRepositoryExplorer !== false &&
+         gitHubSettings?.showEngineeringShowcase !== false);
+
+  const handleTogglePublicExplorer = async () => {
+    setTogglingPublicExplorer(true);
+    try {
+      const nextState = !isPublicExplorerVisible;
+      const res = await apiFetch(API_ENDPOINTS.ADMIN_REPOSITORY_EXPLORER_TOGGLE, {
+        method: "PUT",
+        body: JSON.stringify({ visible: nextState }),
+      });
+      if (res.success) {
+        setExplorerVisibilityOverride(nextState);
+        toast({
+          title: nextState ? "Repository Explorer Visible" : "Repository Explorer Hidden",
+          description:
+            res.message ||
+            (nextState
+              ? "Repository Explorer is now visible to public visitors."
+              : "Repository Explorer is now hidden from public visitors."),
+        });
+      } else {
+        throw new Error(res.message || "Failed to toggle visibility");
+      }
+    } catch (err) {
+      toast({
+        title: "Toggle Error",
+        description: err.message || "Failed to update visibility.",
+        variant: "destructive",
+      });
+    } finally {
+      setTogglingPublicExplorer(false);
+    }
+  };
+
   // ==========================================
   // Portfolio Projects State
   // ==========================================
@@ -1077,6 +1119,9 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
           onOpenPreview={handleOpenPreview}
           onImportRepo={handleImportRepo}
           onForceRefresh={fetchRealGitHubRepos}
+          isPublicExplorerVisible={isPublicExplorerVisible}
+          onTogglePublicExplorer={handleTogglePublicExplorer}
+          togglingPublicExplorer={togglingPublicExplorer}
         />
       )}
 

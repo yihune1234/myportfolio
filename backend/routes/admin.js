@@ -303,6 +303,7 @@ router.put('/github-settings', auth, async (req, res) => {
             showHeroPulse,
             showSkillsIntegration,
             showEngineeringShowcase,
+            showRepositoryExplorer,
             autoSyncEnabled,
             syncIntervalMs,
             featuredRepos
@@ -338,7 +339,13 @@ router.put('/github-settings', auth, async (req, res) => {
         if (orgEnabled !== undefined) settings.orgEnabled = Boolean(orgEnabled);
         if (showHeroPulse !== undefined) settings.showHeroPulse = Boolean(showHeroPulse);
         if (showSkillsIntegration !== undefined) settings.showSkillsIntegration = Boolean(showSkillsIntegration);
-        if (showEngineeringShowcase !== undefined) settings.showEngineeringShowcase = Boolean(showEngineeringShowcase);
+        if (showRepositoryExplorer !== undefined) {
+            settings.showRepositoryExplorer = Boolean(showRepositoryExplorer);
+            settings.showEngineeringShowcase = Boolean(showRepositoryExplorer);
+        } else if (showEngineeringShowcase !== undefined) {
+            settings.showEngineeringShowcase = Boolean(showEngineeringShowcase);
+            settings.showRepositoryExplorer = Boolean(showEngineeringShowcase);
+        }
         if (autoSyncEnabled !== undefined) settings.autoSyncEnabled = Boolean(autoSyncEnabled);
         if (syncIntervalMs !== undefined) settings.syncIntervalMs = Number(syncIntervalMs);
         if (Array.isArray(featuredRepos)) settings.featuredRepos = featuredRepos;
@@ -368,6 +375,37 @@ router.put('/github-settings', auth, async (req, res) => {
         res.json({ success: true, message: 'GitHub settings saved successfully', settings });
     } catch (error) {
         console.error('Error saving GitHub settings:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Toggle Repository Explorer public visibility (admin only)
+router.put('/repository-explorer/toggle', auth, async (req, res) => {
+    try {
+        let settings = await SiteSettings.findOne({ key: 'site_settings' });
+        if (!settings) {
+            settings = new SiteSettings({ key: 'site_settings' });
+        }
+
+        const explicitVisible = (req.body && typeof req.body.visible === 'boolean')
+            ? req.body.visible
+            : !(settings.showRepositoryExplorer !== false && settings.showEngineeringShowcase !== false);
+
+        settings.showRepositoryExplorer = explicitVisible;
+        settings.showEngineeringShowcase = explicitVisible;
+        settings.updatedAt = new Date();
+        await settings.save();
+
+        res.json({
+            success: true,
+            visible: explicitVisible,
+            message: explicitVisible
+                ? 'Repository Explorer is now visible on the public portfolio.'
+                : 'Repository Explorer is now hidden from the public portfolio (accessible in Admin only).',
+            settings
+        });
+    } catch (error) {
+        console.error('Error toggling repository explorer visibility:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });

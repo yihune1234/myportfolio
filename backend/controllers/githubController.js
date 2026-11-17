@@ -230,9 +230,11 @@ async function getPublicSettings(req, res) {
                 orgVisibility: true,
                 showHeroPulse: true,
                 showSkillsIntegration: true,
-                showEngineeringShowcase: true
+                showEngineeringShowcase: true,
+                showRepositoryExplorer: true
             };
         }
+        const isExplorerVisible = settings.showRepositoryExplorer !== false && settings.showEngineeringShowcase !== false;
         res.json({
             githubUsername: settings.githubUsername || githubConfig.username,
             githubOrg: settings.githubOrg || githubConfig.org,
@@ -240,7 +242,8 @@ async function getPublicSettings(req, res) {
             orgVisibility: settings.orgVisibility,
             showHeroPulse: settings.showHeroPulse,
             showSkillsIntegration: settings.showSkillsIntegration,
-            showEngineeringShowcase: settings.showEngineeringShowcase
+            showEngineeringShowcase: isExplorerVisible,
+            showRepositoryExplorer: isExplorerVisible
         });
     } catch (err) {
         const githubConfig = require('../config/githubConfig');
@@ -251,7 +254,8 @@ async function getPublicSettings(req, res) {
             orgVisibility: true,
             showHeroPulse: true,
             showSkillsIntegration: true,
-            showEngineeringShowcase: true
+            showEngineeringShowcase: true,
+            showRepositoryExplorer: true
         });
     }
 }

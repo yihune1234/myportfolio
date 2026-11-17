@@ -13,6 +13,8 @@ import {
   Calendar,
   BookOpen,
   ExternalLink,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 export function GitHubRepoBrowser({
@@ -40,9 +42,83 @@ export function GitHubRepoBrowser({
   onOpenPreview,
   onImportRepo,
   onForceRefresh,
+  isPublicExplorerVisible,
+  onTogglePublicExplorer,
+  togglingPublicExplorer,
 }) {
   return (
     <div className="space-y-6">
+      {/* Public Repository Explorer Visibility Banner */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-[var(--card-surface,#403C38)] border border-[var(--border-color,rgba(255,221,155,0.18))] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+              isPublicExplorerVisible
+                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+            }`}
+          >
+            {isPublicExplorerVisible ? <Eye size={18} /> : <EyeOff size={18} />}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">
+                Public Repository Explorer:
+              </span>
+              <span
+                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                  isPublicExplorerVisible
+                    ? "bg-emerald-500/20 text-emerald-300"
+                    : "bg-amber-500/20 text-amber-300"
+                }`}
+              >
+                {isPublicExplorerVisible ? "Visible to Public" : "Hidden (Admin Only)"}
+              </span>
+            </div>
+            <p className="text-[11px] text-[var(--text-secondary,#FFF1D8)]/80 mt-0.5">
+              {isPublicExplorerVisible
+                ? "Visitors can explore these repositories on the public website at #repository-explorer."
+                : "This directory is hidden from public portfolio visitors. You can still browse and import projects here in Admin."}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 self-end sm:self-center">
+          {onTogglePublicExplorer && (
+            <button
+              onClick={onTogglePublicExplorer}
+              disabled={togglingPublicExplorer}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95 disabled:opacity-50 ${
+                isPublicExplorerVisible
+                  ? "bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                  : "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D]"
+              }`}
+            >
+              {togglingPublicExplorer ? (
+                <RefreshCw size={12} className="animate-spin" />
+              ) : isPublicExplorerVisible ? (
+                <EyeOff size={12} />
+              ) : (
+                <Eye size={12} />
+              )}
+              <span>{isPublicExplorerVisible ? "Hide from Public" : "Make Visible to Public"}</span>
+            </button>
+          )}
+
+          {isPublicExplorerVisible && (
+            <a
+              href="/#repository-explorer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-[var(--primary-accent,#FFDD9B)] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors"
+              title="Open public repository explorer in new tab"
+            >
+              <ExternalLink size={16} />
+            </a>
+          )}
+        </div>
+      </div>
+
       {/* Source Selector & Account Bar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Personal Account Option */}
