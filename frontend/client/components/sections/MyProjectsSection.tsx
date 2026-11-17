@@ -12,6 +12,7 @@ import {
   Sparkles,
   Layers,
   Search,
+  X,
 } from "lucide-react";
 import { useProjects, Project } from "@/hooks/useProjects";
 import { ProjectCardCarousel } from "@/components/ProjectCardCarousel";
@@ -114,6 +115,30 @@ export default function MyProjectsSection() {
     };
   }, [projectList]);
 
+  const filterTabs = useMemo(() => {
+    const tabs: { id: ProjectTypeFilter; label: string; count: number; icon: any }[] = [
+      { id: "all", label: "All Projects", count: counts.all, icon: Layers },
+    ];
+    if (counts.completed > 0 || (counts.ongoing === 0 && counts.proposed === 0)) {
+      tabs.push({ id: "completed", label: "Completed", count: counts.completed, icon: CheckCircle2 });
+    }
+    if (counts.ongoing > 0) {
+      tabs.push({ id: "ongoing", label: "In Progress", count: counts.ongoing, icon: Clock });
+    }
+    if (counts.proposed > 0) {
+      tabs.push({ id: "proposed", label: "Initiatives & Proposals", count: counts.proposed, icon: Sparkles });
+    }
+    return tabs;
+  }, [counts]);
+
+  const hasActiveFilters = searchQuery.trim() !== "" || selectedCategory !== "ALL" || typeFilter !== "all";
+
+  const clearAllFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("ALL");
+    setTypeFilter("all");
+  };
+
   return (
     <section
       id="my-projects"
@@ -141,26 +166,35 @@ export default function MyProjectsSection() {
           </div>
 
           {/* Search & Category Filter */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 self-start md:self-auto">
-            <div className="relative min-w-[200px]">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
+            <div className="relative flex-1 sm:w-60">
               <Search
                 size={13}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary,#FFF1D8)]/60"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary,#FFF1D8)]/60 pointer-events-none"
               />
               <input
                 type="text"
                 placeholder="Search my projects..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs text-[var(--text-primary,#FFFFFF)] placeholder-[var(--text-secondary,#FFF1D8)]/50 focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]"
+                className="w-full pl-8 pr-8 py-2 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs text-[var(--text-primary,#FFFFFF)] placeholder-[var(--text-secondary,#FFF1D8)]/50 focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)] transition-all"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-[var(--text-secondary,#FFF1D8)]/60 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Clear search"
+                >
+                  <X size={12} />
+                </button>
+              )}
             </div>
 
             {categories.length > 0 && (
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-1.5 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs font-mono text-[var(--text-secondary,#FFF1D8)] focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]"
+                className="px-3 py-2 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs font-mono text-[var(--text-secondary,#FFF1D8)] focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)] cursor-pointer"
               >
                 <option value="ALL">All Categories</option>
                 {categories.map((c) => (
@@ -170,42 +204,50 @@ export default function MyProjectsSection() {
                 ))}
               </select>
             )}
+
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/20 transition-all whitespace-nowrap self-start sm:self-auto"
+                title="Clear all filters"
+              >
+                <X size={12} />
+                <span>Clear</span>
+              </button>
+            )}
           </div>
         </div>
 
         {/* Project Type Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 mb-10 pb-2 border-b border-white/[0.06]">
-          {[
-            { id: "all", label: "All My Projects", count: counts.all, icon: Layers },
-            { id: "completed", label: "Completed Work", count: counts.completed, icon: CheckCircle2 },
-            { id: "ongoing", label: "Ongoing Deployments", count: counts.ongoing, icon: Clock },
-            { id: "proposed", label: "Proposed Solutions", count: counts.proposed, icon: Sparkles },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = typeFilter === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setTypeFilter(tab.id as ProjectTypeFilter)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
-                  isActive
-                    ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
-                    : "text-[var(--text-secondary,#FFF1D8)] hover:text-white bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.04]"
-                }`}
-              >
-                <Icon size={13} />
-                <span>{tab.label}</span>
-                <span
-                  className={`px-1.5 py-0.2 rounded text-[10px] ${
-                    isActive ? "bg-black/20 text-[#302E2D]" : "bg-white/10 text-white/70"
+        {filterTabs.length > 1 && (
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap mb-8 pb-2 border-b border-white/[0.06]">
+            {filterTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = typeFilter === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setTypeFilter(tab.id)}
+                  className={`whitespace-nowrap flex-shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                    isActive
+                      ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
+                      : "text-[var(--text-secondary,#FFF1D8)] hover:text-white bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.04]"
                   }`}
                 >
-                  {tab.count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                  <Icon size={13} className="flex-shrink-0" />
+                  <span>{tab.label}</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-[10px] leading-none ${
+                      isActive ? "bg-black/20 text-[#302E2D]" : "bg-white/10 text-white/70"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Projects Grid */}
         {loading ? (
@@ -226,14 +268,25 @@ export default function MyProjectsSection() {
             </button>
           </div>
         ) : sorted.length === 0 ? (
-          <div className="py-20 text-center rounded-2xl bg-[var(--card-surface,#403C38)]/40 border border-white/[0.06] p-8 space-y-3">
+          <div className="py-16 sm:py-20 text-center rounded-2xl bg-[var(--card-surface,#403C38)]/40 border border-white/[0.06] p-6 sm:p-8 space-y-4">
             <User className="w-12 h-12 mx-auto text-[var(--primary-accent,#FFDD9B)]/40 mb-2" />
             <p className="text-lg font-bold text-[var(--text-primary,#FFFFFF)] font-heading">
-              No personal projects found
+              {hasActiveFilters ? "No matching projects found" : "No personal projects found"}
             </p>
-            <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] max-w-md mx-auto">
-              Personal projects published by the administrator will be showcased here.
+            <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] max-w-md mx-auto leading-relaxed">
+              {hasActiveFilters
+                ? "No personal projects match your current search and filter criteria. Try clearing filters to see all available projects."
+                : "Personal projects published by the administrator will be showcased here."}
             </p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] font-mono font-bold rounded-xl text-xs hover:opacity-90 transition-all shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
+              >
+                <X size={14} />
+                <span>Clear All Filters</span>
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

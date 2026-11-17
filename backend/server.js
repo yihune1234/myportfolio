@@ -77,7 +77,17 @@ app.use((req, res) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.set('bufferTimeoutMS', 30000);
+
+const mongooseOptions = {
+    serverSelectionTimeoutMS: 30000,
+    connectTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+    family: 4
+};
+
+mongoose.connect(process.env.MONGODB_URI, mongooseOptions)
     .then(async () => {
         console.log('✅ MongoDB connected successfully');
         try {

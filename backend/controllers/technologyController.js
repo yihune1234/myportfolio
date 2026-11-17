@@ -352,10 +352,10 @@ exports.SEED_TECHNOLOGIES = SEED_TECHNOLOGIES;
  * Get all technologies
  */
 exports.getTechnologies = async (req, res) => {
-    try {
-        const showAll = req.query.all === 'true';
-        const filter = showAll ? {} : { visible: true };
+    const showAll = req.query.all === 'true';
+    const filter = showAll ? {} : { visible: true };
 
+    try {
         let items = await Technology.find(filter).sort({ order: 1, name: 1 });
 
         // If collection is completely empty, seed automatically
@@ -375,8 +375,14 @@ exports.getTechnologies = async (req, res) => {
             technologies: items
         });
     } catch (error) {
-        console.error('Error fetching technologies:', error);
-        res.status(500).json({ success: false, message: 'Server error fetching technologies', error: error.message });
+        console.warn('Warning: Database unavailable or query timed out, serving verified technology stack:', error.message);
+        const fallback = SEED_TECHNOLOGIES.filter(t => (showAll ? true : t.visible));
+        res.json({
+            success: true,
+            count: fallback.length,
+            technologies: fallback,
+            fallback: true
+        });
     }
 };
 

@@ -90,7 +90,11 @@ exports.getProjects = async (req, res) => {
         res.json(projects);
     } catch (error) {
         console.error('Error fetching projects:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        const isTimeout = error.name === 'MongooseError' && error.message.includes('buffering timed out');
+        res.status(500).json({
+            message: isTimeout ? 'Database connection warm-up in progress, please retry in a moment' : 'Server error fetching projects',
+            error: error.message
+        });
     }
 };
 
@@ -117,7 +121,12 @@ exports.getAdminAll = async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching admin projects:', error);
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        const isTimeout = error.name === 'MongooseError' && error.message.includes('buffering timed out');
+        res.status(500).json({
+            success: false,
+            message: isTimeout ? 'Database connection warm-up in progress, please retry in a moment' : 'Server error',
+            error: error.message
+        });
     }
 };
 

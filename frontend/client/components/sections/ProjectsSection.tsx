@@ -154,12 +154,12 @@ export default function ProjectsSection() {
         </div>
 
         {/* Project Type Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 mb-10 pb-2 border-b border-white/[0.06]">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap mb-8 pb-2 border-b border-white/[0.06]">
           {[
             { id: "all", label: "All Projects", count: counts.all, icon: Layers },
-            { id: "completed", label: "Completed Work", count: counts.completed, icon: CheckCircle2 },
-            { id: "ongoing", label: "Ongoing Deployments", count: counts.ongoing, icon: Clock },
-            { id: "proposed", label: "Approved Proposals", count: counts.proposed, icon: Sparkles },
+            { id: "completed", label: "Completed", count: counts.completed, icon: CheckCircle2 },
+            { id: "ongoing", label: "In Progress", count: counts.ongoing, icon: Clock },
+            { id: "proposed", label: "Initiatives & Proposals", count: counts.proposed, icon: Sparkles },
           ].map((tab) => {
             const Icon = tab.icon;
             const active = typeFilter === tab.id;
@@ -167,7 +167,7 @@ export default function ProjectsSection() {
               <button
                 key={tab.id}
                 onClick={() => setTypeFilter(tab.id as ProjectTypeFilter)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`whitespace-nowrap flex-shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
                   active
                     ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
                     : "bg-[var(--card-surface,#403C38)]/60 text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-[var(--card-surface,#403C38)] border border-white/[0.06]"
@@ -176,7 +176,7 @@ export default function ProjectsSection() {
                 <Icon size={14} className={active ? "text-[#302E2D]" : "text-[var(--primary-accent,#FFDD9B)]"} />
                 <span>{tab.label}</span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono ${
+                  className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono leading-none ${
                     active ? "bg-black/15 text-[#302E2D]" : "bg-white/[0.08] text-[var(--text-secondary,#FFF1D8)]"
                   }`}
                 >
