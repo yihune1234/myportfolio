@@ -263,3 +263,46 @@ export async function fetchGitHubPublicSettings(): Promise<GitHubPublicSettings>
   }
   return res.json();
 }
+
+export interface GitHubRepoDetailsResponse {
+  data: {
+    repository: GitHubRepository;
+    languages: Record<string, number>;
+    readme: {
+      content: string;
+      summary: string;
+    };
+    suggested: {
+      title: string;
+      description: string;
+      technologies: string[];
+      githubUrl: string;
+      demoUrl: string;
+      role: string;
+      category: string;
+      githubRepoId: number;
+      githubRepoFullName: string;
+      githubOwnerLogin: string;
+      githubSourceScope: 'PERSONAL' | 'ORGANIZATION';
+      sourceType: 'personal' | 'organization';
+      stars: number;
+      forks: number;
+      defaultBranch: string;
+      pushedAt: string;
+      createdAt: string;
+    };
+  };
+  cached: boolean;
+  last_synchronized_at: string;
+}
+
+export async function fetchGitHubRepoDetails(owner: string, repo: string, forceRefresh = false): Promise<GitHubRepoDetailsResponse> {
+  const query = new URLSearchParams({
+    owner,
+    repo,
+    ...(forceRefresh ? { refresh: 'true' } : {})
+  });
+  const res = await fetch(`${getBaseUrl()}/api/github/repo-details?${query}`);
+  if (!res.ok) throw new Error(`Failed to fetch repository details: HTTP ${res.status}`);
+  return res.json();
+}

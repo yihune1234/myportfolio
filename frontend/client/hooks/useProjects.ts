@@ -7,18 +7,46 @@ export interface Project {
   description: string;
   technologies: string[];
   image?: string;
+  images?: Array<{
+    _id?: string;
+    url: string;
+    public_id?: string;
+    title?: string;
+    order: number;
+    isFeatured: boolean;
+  }>;
   githubUrl?: string;
   demoUrl?: string;
   role?: string;
+  category?: string;
+  highlights?: string[];
   isMini?: boolean;
   pinned?: boolean;
+  status?: "published" | "draft";
   challenges?: string;
   createdAt: string;
+  updatedAt?: string;
+  lastSyncedAt?: string;
+  githubRepoId?: number;
   githubRepoFullName?: string;
+  githubOwnerLogin?: string;
   githubRepoUrl?: string;
   githubSourceScope?: 'PERSONAL' | 'ORGANIZATION';
+  sourceType?: 'personal' | 'organization' | 'manual';
   showGithubMetrics?: boolean;
   autoSyncMetrics?: boolean;
+  githubMetadata?: {
+    stars?: number;
+    forks?: number;
+    primaryLanguage?: string;
+    languages?: Record<string, number>;
+    topics?: string[];
+    defaultBranch?: string;
+    openIssues?: number;
+    repoCreatedAt?: string;
+    repoPushedAt?: string;
+    readmeSummary?: string;
+  };
 }
 
 export interface ProjectSection {

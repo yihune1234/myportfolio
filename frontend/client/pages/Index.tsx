@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/sections/HeroSection";
+import YBLogo from "@/components/YBLogo";
 import AboutSection from "@/components/sections/AboutSection";
 import SkillsSection from "@/components/sections/SkillsSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
@@ -110,40 +111,7 @@ export default function Index() {
             {/* Brand & Monogram */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-10 h-10 rounded-xl bg-[var(--card-surface,#3A3836)] border border-white/10 flex items-center justify-center shadow-lg shadow-black/40 group">
-                  <svg
-                    className="w-5 h-5 text-[var(--primary-accent,#FFDD9B)] group-hover:scale-110 transition-transform duration-300"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7 6L16 19L25 6"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M16 19V26"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M16 6H25C27.5 6 27.5 12 25 12H16"
-                      stroke="var(--secondary-accent, #FFDD9B)"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M16 12H26C28.5 12 28.5 18 26 18H16"
-                      stroke="var(--secondary-accent, #FFDD9B)"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
+                <YBLogo size="md" />
                 <div>
                   <span className="font-black text-xl text-[var(--text-primary,#FFFFFF)] tracking-tight block">
                     Yihune Belay

@@ -256,6 +256,27 @@ async function getPublicSettings(req, res) {
     }
 }
 
+/**
+ * GET /api/github/repo-details
+ * Retrieve detailed repository information, languages breakdown, and README
+ */
+async function getRepoDetails(req, res) {
+    try {
+        const owner = req.query.owner || req.params.owner;
+        const repo = req.query.repo || req.params.repo;
+        const forceRefresh = req.query.refresh === 'true' || req.query.refresh === '1';
+
+        if (!owner || !repo) {
+            return res.status(400).json({ message: 'Both "owner" and "repo" parameters are required' });
+        }
+
+        const result = await githubService.getRepoDetails(owner, repo, { forceRefresh });
+        res.json(result);
+    } catch (err) {
+        handleGitHubError(err, res);
+    }
+}
+
 module.exports = {
     getOverview,
     getPersonal,
@@ -267,5 +288,6 @@ module.exports = {
     getLanguages,
     getHealth,
     handleWebhook,
-    getPublicSettings
+    getPublicSettings,
+    getRepoDetails
 };

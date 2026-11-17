@@ -257,6 +257,27 @@ class GitHubClient {
     }
 
     /**
+     * Fetch single repository: GET /repos/:owner/:repo
+     */
+    async getRepo(owner, repo, options = {}) {
+        return this.request(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`, options);
+    }
+
+    /**
+     * Fetch repository languages: GET /repos/:owner/:repo/languages
+     */
+    async getRepoLanguages(owner, repo, options = {}) {
+        return this.request(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/languages`, options);
+    }
+
+    /**
+     * Fetch repository README: GET /repos/:owner/:repo/readme
+     */
+    async getRepoReadme(owner, repo, options = {}) {
+        return this.request(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/readme`, options);
+    }
+
+    /**
      * Check current rate limit: GET /rate_limit
      */
     async getRateLimit() {

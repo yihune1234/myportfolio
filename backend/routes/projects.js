@@ -4,20 +4,242 @@ const Project = require('../models/Project');
 const auth = require('../middleware/auth');
 const cloudinary = require('cloudinary').v2;
 const { upload, cloudinaryUpload } = require('../middleware/upload');
+const { githubService } = require('../services/github/githubService');
 
 // Validate ObjectId
 const isValidObjectId = (id) => {
     return /^[0-9a-fA-F]{24}$/.test(id);
 };
 
-// Get all projects (public) — pinned first, then by date
+// Get all projects
+// For public: only returns published projects (status !== 'draft')
+// For admin: ?includeDrafts=true returns all projects
 router.get('/', async (req, res) => {
     try {
-        const projects = await Project.find().sort({ pinned: -1, createdAt: -1 });
+        const includeDrafts = req.query.includeDrafts === 'true' || req.query.all === 'true';
+        const filter = includeDrafts ? {} : { status: { $ne: 'draft' } };
+
+        const projects = await Project.find(filter).sort({ pinned: -1, createdAt: -1 });
         res.json(projects);
     } catch (error) {
         console.error('Error fetching projects:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
+// Admin-only: Get all projects including drafts with summary telemetry
+router.get('/admin/all', auth, async (req, res) => {
+    try {
+        const projects = await Project.find().sort({ pinned: -1, createdAt: -1 });
+        const publishedCount = projects.filter(p => p.status !== 'draft').length;
+        const draftCount = projects.filter(p => p.status === 'draft').length;
+        const personalCount = projects.filter(p => p.sourceType === 'personal' || p.githubSourceScope === 'PERSONAL').length;
+        const orgCount = projects.filter(p => p.sourceType === 'organization' || p.githubSourceScope === 'ORGANIZATION').length;
+        const manualCount = projects.filter(p => p.sourceType === 'manual' && !p.githubRepoFullName).length;
+
+        res.json({
+            success: true,
+            total: projects.length,
+            counts: {
+                published: publishedCount,
+                draft: draftCount,
+                personal: personalCount,
+                org: orgCount,
+                manual: manualCount
+            },
+            projects
+        });
+    } catch (error) {
+        console.error('Error fetching admin projects:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Import one or multiple repositories directly from GitHub (admin only)
+router.post('/import-github', auth, async (req, res) => {
+    try {
+        const { owner, repo, publishNow = false, customData = {} } = req.body;
+
+        if (!owner || !repo) {
+            return res.status(400).json({ success: false, message: 'Both owner and repo are required for GitHub import' });
+        }
+
+        const fullName = `${owner}/${repo}`.trim();
+
+        // Prevent duplicate imports unless forceOverwrite is passed
+        const existing = await Project.findOne({
+            $or: [
+                { githubRepoFullName: { $regex: new RegExp(`^${fullName}$`, 'i') } }
+            ]
+        });
+
+        if (existing && !req.body.forceOverwrite) {
+            return res.status(409).json({
+                success: false,
+                isDuplicate: true,
+                existingProjectId: existing._id,
+                message: `Repository "${fullName}" is already imported as "${existing.title}".`
+            });
+        }
+
+        // Fetch rich details from GitHub
+        const detailsRes = await githubService.getRepoDetails(owner, repo);
+        const repoDetails = detailsRes.data;
+        const s = repoDetails.suggested;
+
+        let parsedTech = customData.technologies || s.technologies;
+        if (typeof parsedTech === 'string') {
+            try { parsedTech = JSON.parse(parsedTech); } catch (e) { parsedTech = parsedTech.split(',').map(t => t.trim()); }
+        }
+
+        const projectData = {
+            title: customData.title?.trim() || s.title,
+            description: customData.description?.trim() || s.description,
+            technologies: parsedTech,
+            githubUrl: customData.githubUrl?.trim() || s.githubUrl,
+            demoUrl: customData.demoUrl?.trim() || s.demoUrl,
+            role: customData.role?.trim() || s.role,
+            category: customData.category?.trim() || s.category,
+            highlights: customData.highlights || [],
+            isMini: customData.isMini === true,
+            pinned: customData.pinned === true,
+            status: publishNow ? 'published' : (customData.status || 'draft'),
+            githubRepoId: s.githubRepoId,
+            githubRepoFullName: s.githubRepoFullName,
+            githubOwnerLogin: s.githubOwnerLogin,
+            githubRepoUrl: s.githubUrl,
+            githubSourceScope: s.githubSourceScope,
+            sourceType: s.sourceType,
+            showGithubMetrics: customData.showGithubMetrics !== false,
+            autoSyncMetrics: customData.autoSyncMetrics !== false,
+            lastSyncedAt: new Date(),
+            githubMetadata: {
+                stars: s.stars,
+                forks: s.forks,
+                primaryLanguage: repoDetails.repository.primary_language,
+                languages: repoDetails.languages,
+                topics: repoDetails.repository.topics,
+                defaultBranch: s.defaultBranch,
+                openIssues: repoDetails.repository.open_issues_count,
+                repoCreatedAt: s.createdAt,
+                repoPushedAt: s.pushedAt,
+                readmeSummary: repoDetails.readme?.summary || ''
+            },
+            images: []
+        };
+
+        if (customData.image) {
+            projectData.image = customData.image;
+            projectData.images.push({
+                url: customData.image,
+                title: 'Cover Image',
+                order: 0,
+                isFeatured: true
+            });
+        }
+
+        let project;
+        if (existing && req.body.forceOverwrite) {
+            project = await Project.findByIdAndUpdate(existing._id, projectData, { new: true });
+        } else {
+            project = new Project(projectData);
+            await project.save();
+        }
+
+        res.status(201).json({
+            success: true,
+            message: `Successfully imported "${project.title}" from GitHub as ${project.status}`,
+            project
+        });
+    } catch (error) {
+        console.error('Error importing from GitHub:', error);
+        res.status(500).json({ success: false, message: 'Failed to import repository', error: error.message });
+    }
+});
+
+// Toggle publish status (admin only)
+router.put('/:id/publish', auth, async (req, res) => {
+    try {
+        if (!isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: 'Invalid project ID' });
+        }
+
+        const project = await Project.findById(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+
+        // If explicitly specified in body, set it; otherwise toggle
+        if (req.body.status && ['published', 'draft'].includes(req.body.status)) {
+            project.status = req.body.status;
+        } else {
+            project.status = project.status === 'draft' ? 'published' : 'draft';
+        }
+
+        project.updatedAt = new Date();
+        await project.save();
+
+        res.json({
+            success: true,
+            message: project.status === 'published' ? 'Project published publicly' : 'Project moved to draft',
+            status: project.status,
+            project
+        });
+    } catch (error) {
+        console.error('Error toggling project publish status:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Synchronize repository metadata from GitHub (admin only)
+router.post('/:id/sync', auth, async (req, res) => {
+    try {
+        if (!isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: 'Invalid project ID' });
+        }
+
+        const project = await Project.findById(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+
+        if (!project.githubRepoFullName) {
+            return res.status(400).json({ message: 'Project is not linked to any GitHub repository' });
+        }
+
+        const [owner, repo] = project.githubRepoFullName.split('/');
+        if (!owner || !repo) {
+            return res.status(400).json({ message: 'Invalid repository name format on project' });
+        }
+
+        const detailsRes = await githubService.getRepoDetails(owner, repo, { forceRefresh: true });
+        const repoDetails = detailsRes.data;
+        const s = repoDetails.suggested;
+
+        project.githubMetadata = {
+            stars: s.stars,
+            forks: s.forks,
+            primaryLanguage: repoDetails.repository.primary_language,
+            languages: repoDetails.languages,
+            topics: repoDetails.repository.topics,
+            defaultBranch: s.defaultBranch,
+            openIssues: repoDetails.repository.open_issues_count,
+            repoCreatedAt: s.createdAt,
+            repoPushedAt: s.pushedAt,
+            readmeSummary: repoDetails.readme?.summary || project.githubMetadata?.readmeSummary || ''
+        };
+        project.lastSyncedAt = new Date();
+        project.updatedAt = new Date();
+        await project.save();
+
+        res.json({
+            success: true,
+            message: `Synchronized telemetry for "${project.githubRepoFullName}"`,
+            project
+        });
+    } catch (error) {
+        console.error('Error syncing project GitHub telemetry:', error);
+        res.status(500).json({ success: false, message: 'Failed to sync with GitHub', error: error.message });
     }
 });
 
@@ -43,7 +265,8 @@ router.get('/:id', async (req, res) => {
 router.post('/', auth, upload.single('image'), cloudinaryUpload, async (req, res) => {
     try {
         const { title, description, technologies, githubUrl, demoUrl, role, isMini,
-                githubRepoFullName, githubSourceScope, showGithubMetrics, autoSyncMetrics } = req.body;
+                githubRepoFullName, githubSourceScope, showGithubMetrics, autoSyncMetrics,
+                category, highlights, status, pinned, githubRepoId, githubOwnerLogin, sourceType, githubMetadata } = req.body;
 
         const missing = [];
         if (!title || !title.trim()) missing.push('title');
@@ -67,6 +290,42 @@ router.post('/', auth, upload.single('image'), cloudinaryUpload, async (req, res
             return res.status(400).json({ message: 'Invalid GitHub repository format. Expected: owner/repo' });
         }
 
+        // Check for duplicate repository import
+        if (githubRepoFullName && !req.body.allowDuplicate) {
+            const existing = await Project.findOne({
+                githubRepoFullName: { $regex: new RegExp(`^${githubRepoFullName.trim()}$`, 'i') }
+            });
+            if (existing) {
+                return res.status(409).json({
+                    success: false,
+                    isDuplicate: true,
+                    existingProjectId: existing._id,
+                    message: `Repository "${githubRepoFullName.trim()}" is already connected to project "${existing.title}".`
+                });
+            }
+        }
+
+        let parsedHighlights = [];
+        if (highlights) {
+            try {
+                parsedHighlights = typeof highlights === 'string' ? JSON.parse(highlights) : highlights;
+            } catch (e) {
+                parsedHighlights = typeof highlights === 'string' ? highlights.split('\n').map(h => h.trim()).filter(Boolean) : [];
+            }
+        }
+
+        let parsedMetadata = {};
+        if (githubMetadata) {
+            try {
+                parsedMetadata = typeof githubMetadata === 'string' ? JSON.parse(githubMetadata) : githubMetadata;
+            } catch (e) {
+                parsedMetadata = {};
+            }
+        }
+
+        const resolvedSourceScope = githubSourceScope || (githubRepoFullName ? (githubRepoFullName.toLowerCase().startsWith('ariitimarket') ? 'ORGANIZATION' : 'PERSONAL') : null);
+        const resolvedSourceType = sourceType || (resolvedSourceScope === 'ORGANIZATION' ? 'organization' : (resolvedSourceScope === 'PERSONAL' ? 'personal' : 'manual'));
+
         const projectData = {
             title: title.trim(),
             description: description.trim(),
@@ -74,12 +333,21 @@ router.post('/', auth, upload.single('image'), cloudinaryUpload, async (req, res
             githubUrl: githubUrl?.trim() || (githubRepoFullName ? `https://github.com/${githubRepoFullName.trim()}` : ''),
             demoUrl: demoUrl?.trim() || '',
             role: role || 'Developer',
+            category: category || 'Full-Stack',
+            highlights: parsedHighlights,
             isMini: isMini === 'true' || isMini === true,
+            pinned: pinned === 'true' || pinned === true,
+            status: status === 'draft' ? 'draft' : 'published',
+            githubRepoId: githubRepoId ? Number(githubRepoId) : null,
             githubRepoFullName: githubRepoFullName ? githubRepoFullName.trim() : null,
+            githubOwnerLogin: githubOwnerLogin ? githubOwnerLogin.trim() : (githubRepoFullName ? githubRepoFullName.split('/')[0] : null),
             githubRepoUrl: githubRepoFullName ? (githubUrl?.trim() || `https://github.com/${githubRepoFullName.trim()}`) : null,
-            githubSourceScope: githubSourceScope || (githubRepoFullName ? 'PERSONAL' : null),
-            showGithubMetrics: showGithubMetrics === 'true' || showGithubMetrics === true,
+            githubSourceScope: resolvedSourceScope,
+            sourceType: resolvedSourceType,
+            showGithubMetrics: showGithubMetrics === undefined ? true : (showGithubMetrics === 'true' || showGithubMetrics === true),
             autoSyncMetrics: autoSyncMetrics === undefined ? true : (autoSyncMetrics === 'true' || autoSyncMetrics === true),
+            lastSyncedAt: githubRepoFullName ? new Date() : null,
+            githubMetadata: parsedMetadata,
             images: []
         };
 
@@ -120,33 +388,70 @@ router.put('/:id', auth, upload.single('image'), cloudinaryUpload, async (req, r
         }
 
         const { title, description, technologies, githubUrl, demoUrl, role, isMini,
-                githubRepoFullName, githubSourceScope, showGithubMetrics, autoSyncMetrics } = req.body;
+                githubRepoFullName, githubSourceScope, showGithubMetrics, autoSyncMetrics,
+                category, highlights, status, pinned, githubRepoId, githubOwnerLogin, sourceType, githubMetadata } = req.body;
         
         if (githubRepoFullName && !/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(githubRepoFullName.trim())) {
             return res.status(400).json({ message: 'Invalid GitHub repository format. Expected: owner/repo' });
         }
 
         const updateData = {
-            title: title?.trim(),
-            description: description?.trim(),
-            technologies: typeof technologies === 'string' ? JSON.parse(technologies) : technologies,
-            githubUrl: githubUrl?.trim(),
-            demoUrl: demoUrl?.trim(),
-            role: role || 'Developer',
-            isMini: isMini === 'true' || isMini === true
+            updatedAt: new Date()
         };
+
+        if (title !== undefined) updateData.title = title.trim();
+        if (description !== undefined) updateData.description = description.trim();
+        if (technologies !== undefined) {
+            updateData.technologies = typeof technologies === 'string' ? JSON.parse(technologies) : technologies;
+        }
+        if (githubUrl !== undefined) updateData.githubUrl = githubUrl.trim();
+        if (demoUrl !== undefined) updateData.demoUrl = demoUrl.trim();
+        if (role !== undefined) updateData.role = role.trim();
+        if (category !== undefined) updateData.category = category.trim();
+        if (isMini !== undefined) updateData.isMini = isMini === 'true' || isMini === true;
+        if (pinned !== undefined) updateData.pinned = pinned === 'true' || pinned === true;
+        if (status !== undefined) updateData.status = status;
+        if (sourceType !== undefined) updateData.sourceType = sourceType;
+        if (githubRepoId !== undefined) updateData.githubRepoId = githubRepoId ? Number(githubRepoId) : null;
+        if (githubOwnerLogin !== undefined) updateData.githubOwnerLogin = githubOwnerLogin;
+
+        if (highlights !== undefined) {
+            try {
+                updateData.highlights = typeof highlights === 'string' ? JSON.parse(highlights) : highlights;
+            } catch (e) {
+                updateData.highlights = typeof highlights === 'string' ? highlights.split('\n').map(h => h.trim()).filter(Boolean) : highlights;
+            }
+        }
+
+        if (githubMetadata !== undefined) {
+            try {
+                updateData.githubMetadata = typeof githubMetadata === 'string' ? JSON.parse(githubMetadata) : githubMetadata;
+            } catch (e) {
+                // Keep existing or leave as object
+            }
+        }
 
         if (githubRepoFullName !== undefined) {
             updateData.githubRepoFullName = githubRepoFullName ? githubRepoFullName.trim() : null;
             if (githubRepoFullName) {
                 updateData.githubRepoUrl = githubUrl?.trim() || `https://github.com/${githubRepoFullName.trim()}`;
+                if (!updateData.githubOwnerLogin) {
+                    updateData.githubOwnerLogin = githubRepoFullName.split('/')[0];
+                }
             } else {
                 updateData.githubRepoUrl = null;
+                updateData.githubRepoId = null;
+                updateData.githubOwnerLogin = null;
             }
         }
+
         if (githubSourceScope !== undefined) {
             updateData.githubSourceScope = githubSourceScope || null;
+            if (!sourceType) {
+                updateData.sourceType = githubSourceScope === 'ORGANIZATION' ? 'organization' : (githubSourceScope === 'PERSONAL' ? 'personal' : 'manual');
+            }
         }
+
         if (showGithubMetrics !== undefined) {
             updateData.showGithubMetrics = showGithubMetrics === 'true' || showGithubMetrics === true;
         }
@@ -156,7 +461,6 @@ router.put('/:id', auth, upload.single('image'), cloudinaryUpload, async (req, r
 
         if (req.file && req.file.cloudinaryUrl) {
             updateData.image = req.file.cloudinaryUrl;
-            // Add the new image to the images array if it's not a duplicate
             const project = await Project.findById(req.params.id);
             if (project) {
                 const existingUrls = project.images.map(img => img.url);

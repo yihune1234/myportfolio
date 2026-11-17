@@ -19,11 +19,23 @@ export const API_ENDPOINTS = {
 
   // Projects
   PROJECTS_LIST: `${API_URL}/api/projects`,
+  PROJECTS_ADMIN_ALL: `${API_URL}/api/projects/admin/all`,
   PROJECTS_GET: (id: string) => `${API_URL}/api/projects/${id}`,
   PROJECTS_CREATE: `${API_URL}/api/projects`,
   PROJECTS_UPDATE: (id: string) => `${API_URL}/api/projects/${id}`,
   PROJECTS_DELETE: (id: string) => `${API_URL}/api/projects/${id}`,
   PROJECTS_PIN_TOGGLE: (id: string) => `${API_URL}/api/projects/${id}/pin`,
+  PROJECTS_PUBLISH_TOGGLE: (id: string) => `${API_URL}/api/projects/${id}/publish`,
+  PROJECTS_SYNC: (id: string) => `${API_URL}/api/projects/${id}/sync`,
+  PROJECTS_IMPORT_GITHUB: `${API_URL}/api/projects/import-github`,
+
+  // GitHub Telemetry & Browsing
+  GITHUB_REPO_DETAILS: (owner: string, repo: string, refresh = false) =>
+    `${API_URL}/api/github/repo-details?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(repo)}${refresh ? '&refresh=true' : ''}`,
+  GITHUB_PERSONAL_REPOS: (params: string = '') =>
+    `${API_URL}/api/github/personal/repos${params ? `?${params}` : ''}`,
+  GITHUB_ORG_REPOS: (params: string = '') =>
+    `${API_URL}/api/github/organization/repos${params ? `?${params}` : ''}`,
 
   // Project Images
   PROJECT_IMAGES_LIST: (id: string) => `${API_URL}/api/projects/${id}/images`,

@@ -4,54 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubHealth } from "@/lib/githubApi";
 import { PublicThemeSwitcher } from "./PublicThemeSwitcher";
-
-function ArchitecturalMonogram() {
-  return (
-    <div className="relative w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-[var(--card-surface,#3A3836)] border border-[var(--primary-accent,#FFDD9B)]/30 group-hover:border-[var(--primary-accent,#FFDD9B)]/60 transition-colors shadow-lg shadow-black/20">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-6 h-6 text-[var(--primary-accent,#FFDD9B)] group-hover:scale-105 transition-transform"
-      >
-        {/* Architectural node bracket frame */}
-        <path
-          d="M3 7V3H7M17 3H21V7M21 17V21H17M7 21H3V17"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="opacity-50"
-        />
-        {/* Geometric Y */}
-        <path
-          d="M6.5 7.5L9.5 12V16.5"
-          stroke="var(--primary-accent, #FFDD9B)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M12.5 7.5L9.5 12"
-          stroke="var(--primary-accent, #FFDD9B)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {/* Geometric B */}
-        <path
-          d="M13 7.5H16.5C17.6 7.5 18.5 8.4 18.5 9.5C18.5 10.6 17.6 11.5 16.5 11.5H13V16.5H16.8C17.9 16.5 18.8 15.6 18.8 14.5C18.8 13.4 17.9 12.5 16.8 12.5"
-          stroke="var(--secondary-accent, #FFDD9B)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
-  );
-}
+import { YBLogo } from "./YBLogo";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -143,7 +96,7 @@ export default function Navigation() {
               onClick={() => scrollToSection("home")}
               className="flex items-center gap-3 group text-left"
             >
-              <ArchitecturalMonogram />
+              <YBLogo />
 
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">

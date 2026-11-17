@@ -10,22 +10,49 @@ const projectImageSchema = new mongoose.Schema({
 });
 
 const projectSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    technologies: [{ type: String }],
+    title: { type: String, required: true, trim: true },
+    description: { type: String, required: true, trim: true },
+    technologies: [{ type: String, trim: true }],
     image: { type: String },
     images: [projectImageSchema],
-    githubUrl: { type: String },
-    demoUrl: { type: String },
-    role: { type: String, default: 'Developer' },
+    githubUrl: { type: String, trim: true },
+    demoUrl: { type: String, trim: true },
+    role: { type: String, default: 'Developer', trim: true },
+    category: { type: String, default: 'Full-Stack', trim: true },
+    highlights: [{ type: String, trim: true }],
     isMini: { type: Boolean, default: false },
     pinned: { type: Boolean, default: false },
-    githubRepoFullName: { type: String, default: null },
-    githubRepoUrl: { type: String, default: null },
+    status: { type: String, enum: ['published', 'draft'], default: 'published', index: true },
+
+    // Stable GitHub references
+    githubRepoId: { type: Number, default: null, index: true },
+    githubRepoFullName: { type: String, default: null, trim: true, index: true },
+    githubOwnerLogin: { type: String, default: null, trim: true },
+    githubRepoUrl: { type: String, default: null, trim: true },
     githubSourceScope: { type: String, enum: ['PERSONAL', 'ORGANIZATION', null], default: null },
-    showGithubMetrics: { type: Boolean, default: false },
+    sourceType: { type: String, enum: ['personal', 'organization', 'manual'], default: 'manual' },
+
+    // Telemetry and Synchronization
+    showGithubMetrics: { type: Boolean, default: true },
     autoSyncMetrics: { type: Boolean, default: true },
-    createdAt: { type: Date, default: Date.now }
+    lastSyncedAt: { type: Date, default: null },
+
+    // Isolated imported metadata
+    githubMetadata: {
+        stars: { type: Number, default: 0 },
+        forks: { type: Number, default: 0 },
+        primaryLanguage: { type: String, default: null },
+        languages: { type: mongoose.Schema.Types.Mixed, default: {} },
+        topics: [{ type: String }],
+        defaultBranch: { type: String, default: 'main' },
+        openIssues: { type: Number, default: 0 },
+        repoCreatedAt: { type: Date },
+        repoPushedAt: { type: Date },
+        readmeSummary: { type: String, default: '' }
+    },
+
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Project', projectSchema);

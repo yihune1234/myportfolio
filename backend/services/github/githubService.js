@@ -663,6 +663,138 @@ class GitHubService {
             timestamp: new Date().toISOString()
         };
     }
+
+    /**
+     * Retrieve full repository details with languages breakdown and README
+     * Used for preview and importing into portfolio
+     */
+    async getRepoDetails(owner, repo, options = {}) {
+        if (!owner || !repo) {
+            throw new Error('Both owner and repo are required');
+        }
+
+        const cacheKey = `github:repo:details:${owner.toLowerCase()}:${repo.toLowerCase()}`;
+        const existing = this.cache.getEntry(cacheKey, { allowStale: true });
+
+        if (existing && !existing.metadata.is_expired && !options.forceRefresh) {
+            return {
+                data: existing.value,
+                cached: true,
+                last_synchronized_at: existing.metadata.last_synchronized_at
+            };
+        }
+
+        // Determine scope
+        const isOrg = this.config.org && owner.toLowerCase() === this.config.org.toLowerCase();
+        const sourceScope = isOrg ? 'ORGANIZATION' : 'PERSONAL';
+
+        // Fetch repo, languages, and readme in parallel
+        const [repoRes, langRes, readmeRes] = await Promise.allSettled([
+            this.client.getRepo(owner, repo),
+            this.client.getRepoLanguages(owner, repo),
+            this.client.getRepoReadme(owner, repo)
+        ]);
+
+        if (repoRes.status !== 'fulfilled' || !repoRes.value?.data) {
+            const err = repoRes.reason || new Error(`Repository ${owner}/${repo} not found`);
+            throw err;
+        }
+
+        const rawRepo = repoRes.value.data;
+        const mappedRepo = mapRepository(rawRepo, sourceScope);
+
+        // Languages breakdown
+        let languages = {};
+        if (langRes.status === 'fulfilled' && langRes.value?.data && typeof langRes.value.data === 'object') {
+            languages = langRes.value.data;
+        }
+
+        // README extraction
+        let readmeContent = '';
+        let readmeSummary = '';
+        if (readmeRes.status === 'fulfilled' && readmeRes.value?.data) {
+            const rawReadme = readmeRes.value.data;
+            if (rawReadme.content && rawReadme.encoding === 'base64') {
+                try {
+                    readmeContent = Buffer.from(rawReadme.content, 'base64').toString('utf8');
+                } catch (e) {
+                    readmeContent = '';
+                }
+            } else if (typeof rawReadme === 'string') {
+                readmeContent = rawReadme;
+            }
+
+            if (readmeContent) {
+                // Strip markdown headers, images, badges for a clean summary
+                const cleaned = readmeContent
+                    .replace(/!\[.*?\]\(.*?\)/g, '') // remove images
+                    .replace(/\[(.*?)\]\(.*?\)/g, '$1') // unwrap links
+                    .replace(/#{1,6}\s+/g, '') // remove markdown headings
+                    .replace(/```[\s\S]*?```/g, '') // remove code blocks
+                    .replace(/`([^`]+)`/g, '$1') // unwrap inline code
+                    .replace(/\r\n/g, '\n')
+                    .trim();
+
+                const paragraphs = cleaned.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+                readmeSummary = paragraphs.slice(0, 3).join('\n\n').slice(0, 800);
+            }
+        }
+
+        // Synthesize technologies: primary language + top breakdown languages + topics
+        const techSet = new Set();
+        if (mappedRepo.primary_language) techSet.add(mappedRepo.primary_language);
+        Object.keys(languages).slice(0, 4).forEach(l => techSet.add(l));
+        (mappedRepo.topics || []).forEach(t => {
+            // Capitalize or preserve topic
+            const formatted = t.charAt(0).toUpperCase() + t.slice(1);
+            techSet.add(formatted);
+        });
+
+        const techArray = Array.from(techSet);
+
+        // Clean title
+        const humanTitle = mappedRepo.name
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, c => c.toUpperCase());
+
+        const payload = {
+            repository: mappedRepo,
+            languages,
+            readme: {
+                content: readmeContent,
+                summary: readmeSummary
+            },
+            suggested: {
+                title: humanTitle,
+                description: mappedRepo.description || readmeSummary.slice(0, 200) || `${humanTitle} system architecture and implementation.`,
+                technologies: techArray.length ? techArray : ['Full-Stack', 'Software Engineering'],
+                githubUrl: mappedRepo.html_url,
+                demoUrl: mappedRepo.homepage || '',
+                role: 'Full-Stack Architect',
+                category: isOrg ? 'Distributed Systems' : 'Full-Stack Platform',
+                githubRepoId: mappedRepo.id,
+                githubRepoFullName: mappedRepo.full_name,
+                githubOwnerLogin: mappedRepo.owner?.login || owner,
+                githubSourceScope: sourceScope,
+                sourceType: isOrg ? 'organization' : 'personal',
+                stars: mappedRepo.stars,
+                forks: mappedRepo.forks,
+                defaultBranch: mappedRepo.default_branch,
+                pushedAt: mappedRepo.pushed_at,
+                createdAt: mappedRepo.created_at
+            }
+        };
+
+        this.cache.set(cacheKey, payload, this.config.ttlReposMs, {
+            last_successful_update: new Date().toISOString()
+        });
+
+        return {
+            data: payload,
+            cached: false,
+            last_synchronized_at: new Date().toISOString()
+        };
+    }
 }
 
 // Default singleton instance

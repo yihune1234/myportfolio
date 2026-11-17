@@ -19,6 +19,8 @@ router.post('/webhook', verifyWebhookSignature, githubController.handleWebhook);
 router.get('/settings', githubController.getPublicSettings);
 router.get('/overview', githubController.getOverview);
 router.get('/languages', githubController.getLanguages);
+router.get('/repo-details', githubController.getRepoDetails);
+router.get('/repos/:owner/:repo', githubController.getRepoDetails);
 
 // Personal Account Endpoints
 router.get('/personal', githubController.getPersonal);
