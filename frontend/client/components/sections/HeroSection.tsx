@@ -103,7 +103,7 @@ export default function HeroSection({
 
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-[var(--text-secondary,#FFF1D8)] text-xs font-mono">
                   <Radio size={12} className="text-[var(--primary-accent,#FFDD9B)]" />
-                  <span>Personal Lab &bull; Ariiti Tech Hub</span>
+                  <span>Personal Lab &bull; Ariiti Tech Co-Founder & Lead</span>
                 </div>
               </div>
 
@@ -119,9 +119,8 @@ export default function HeroSection({
 
               {/* Subheading & Description */}
               <p className="text-base sm:text-lg text-[var(--text-secondary,#FFF1D8)] leading-relaxed max-w-xl mb-8 font-normal mx-auto lg:mx-0">
-                Full-Stack Systems Engineer specializing in backend infrastructure,
-                distributed microservices, and cross-platform mobile architectures.
-                Operating between individual engineering research and the Ariiti Tech ecosystem.
+                Full-Stack Systems Engineer and Co-Founder & Technical Lead at Ariiti Tech.
+                Designing scalable digital architectures, enterprise web platforms, and mobile solutions.
               </p>
 
               {/* Actions & Buttons */}

@@ -45,19 +45,19 @@ export default function ExperienceSection() {
   ];
 
   const organizationExperience = {
-    role: "Platform Architecture & Engineering Contributor",
-    organization: `Ariiti Tech Ecosystem (@${orgLogin})`,
+    role: "Co-Founder & Technical Lead",
+    organization: `Ariiti Tech (@${orgLogin})`,
     period: "2024 — Present",
-    scope: "Organization Development Activities",
+    scope: "Co-Founder & Initiative Leadership",
     url: orgUrl,
     gradient: "from-amber-400 to-amber-500",
     activities: [
-      "Modular repository structure and distributed API architecture design across platform repos",
-      "E-commerce backend services, database schema modeling, and endpoint security hardening",
-      "Automated CI/CD workflows and multi-service deployment pipelines with containerization",
-      "Collaborative pull request reviews, architecture decision records (ADRs), and open documentation",
+      "Co-founding and directing technology initiatives and digital commerce platforms",
+      "Leading technical strategy, scalable software architecture, and engineering direction",
+      "Overseeing enterprise platform development, secure integration, and digital workflows",
+      "Mentoring engineers and collaborating on product roadmaps and strategic solutions",
     ],
-    technologies: ["Microservices", "Docker", "PostgreSQL", "Redis", "Multi-Tenant Architecture", "GitHub Actions"],
+    technologies: ["Enterprise Architecture", "Cloud Platforms", "Microservices", "Scalable Systems", "Security"],
   };
 
   return (
@@ -83,7 +83,7 @@ export default function ExperienceSection() {
             Engineering Experience
           </h2>
           <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-2 font-body mx-auto lg:mx-0">
-            Professional industry engineering internships alongside verified technical contributions to the Ariiti Tech organization.
+            Professional industry engineering internships alongside executive leadership and technology delivery as Co-Founder of Ariiti Tech.
           </p>
         </motion.div>
 

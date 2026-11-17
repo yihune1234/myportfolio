@@ -23,52 +23,50 @@ export default function PlatformShowcase() {
   const orgUrl = `https://github.com/${orgLogin}`;
 
   const featuredCapabilities = [
-    "Multi-tenant schema isolation with tenant-scoped MongoDB & PostgreSQL clusters",
-    "Sub-50ms API response latency via Redis cache indexing & ETag validations",
-    "Real-time webhook dispatcher with automated idempotency & exponential backoff",
-    "Granular Role-Based Access Control (RBAC) with token rotation & audit logging",
+    "Enterprise multi-tenant platform architecture tailored for digital commerce businesses",
+    "High-speed transaction processing and optimized operational response times",
+    "Automated business event notifications with guaranteed delivery and reliability",
+    "Enterprise access control with role-based permissions and comprehensive security logging",
   ];
 
   const featuredTechStack = [
-    "Node.js",
-    "Express",
-    "React 19",
-    "TypeScript",
-    "Redis",
-    "PostgreSQL",
-    "Docker",
-    "Tailwind CSS",
+    "Enterprise Web",
+    "Digital Commerce",
+    "Cloud Services",
+    "Modern APIs",
+    "Security & Auth",
+    "Mobile Platform",
   ];
 
   const supportingPlatforms = [
     {
-      title: "Ariiti Mobile Merchant & Offline POS",
-      subtitle: "Offline-First Mobile Commerce Engine",
+      title: "Ariiti Mobile Commerce & Point-of-Sale",
+      subtitle: "Enterprise Mobile Commerce Solution",
       icon: Smartphone,
       accent: "text-[var(--primary-accent,#FFDD9B)] border-[var(--primary-accent,#FFDD9B)]/30",
       badge: "Mobile Architecture",
-      desc: "Cross-platform merchant console with embedded SQLite persistence and conflict-free delta sync designed for intermittent mobile connectivity.",
+      desc: "Cross-platform merchant application engineered for dependable in-person and online retail operations with seamless sync.",
       capabilities: [
-        "Local SQLite cache with background transaction synchronization",
-        "Deterministic conflict resolution for concurrent inventory updates",
-        "Biometric merchant authentication and hardware barcode integration",
+        "Reliable point-of-sale console operating seamlessly even in low-connectivity areas",
+        "Automated background transaction reconciliation and inventory tracking",
+        "Secure merchant authentication and business account management",
       ],
-      tech: ["React Native", "Expo SDK", "SQLite", "WatermelonDB", "JWT"],
+      tech: ["Mobile Commerce", "Cross-Platform", "Cloud Sync", "Secure POS"],
       url: orgUrl,
     },
     {
-      title: "Distributed Microservices & Event Gateway",
-      subtitle: "High-Throughput Ingestion & Authentication Proxy",
+      title: "Enterprise Solutions & System Integration",
+      subtitle: "High-Availability Business Platform",
       icon: Server,
       accent: "text-amber-400 border-amber-500/30",
-      badge: "Core Infrastructure",
-      desc: "Asynchronous API gateway handling authentication verification, rate-limiting, and request routing across organization microservices.",
+      badge: "Enterprise Platform",
+      desc: "Centralized enterprise technology services providing high-availability routing, automated business workflows, and business connectivity.",
       capabilities: [
-        "Token verification middleware and IP-based distributed rate limiting",
-        "Zero-downtime containerized deploys with automated health monitoring",
-        "Real-time service health monitoring and centralized audit logs",
+        "High-availability platform operations designed for enterprise business continuity",
+        "Automated business workflow orchestration and partner integration",
+        "Centralized security governance and enterprise access compliance",
       ],
-      tech: ["Node.js", "Redis", "Nginx", "Docker Compose", "Prometheus"],
+      tech: ["Enterprise Services", "System Integration", "Cloud Operations", "Workflow Automation"],
       url: orgUrl,
     },
   ];
@@ -124,7 +122,10 @@ export default function PlatformShowcase() {
                   </span>
                   <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
                     <Building2 className="w-3 h-3" />
-                    Ariiti Tech Platform
+                    Ariiti Tech Venture
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-white/[0.06] text-[var(--primary-accent,#FFDD9B)] border border-white/[0.1]">
+                    Co-Founder & Lead: Yihune Belay
                   </span>
                 </div>
 
@@ -133,8 +134,8 @@ export default function PlatformShowcase() {
                 </h3>
 
                 <p className="text-sm sm:text-base text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6 font-body">
-                  A high-availability multi-tenant digital commerce infrastructure engineered for Ethiopian and East African enterprises.
-                  Combines modular merchant portals, distributed order routing, telemetric inventory tracking, and unified local payment reconciliation.
+                  A high-availability digital commerce platform engineered for modern enterprises in Ethiopia and East Africa.
+                  Combines modular merchant portals, unified order workflows, inventory coordination, and streamlined payment solutions.
                 </p>
 
                 {/* Key Capabilities */}

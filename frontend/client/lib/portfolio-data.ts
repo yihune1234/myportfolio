@@ -63,9 +63,9 @@ export interface PortfolioData {
 export const portfolioData: PortfolioData = {
   personal: {
     name: "Yihune Belay",
-    title: "Full-Stack Software Engineer",
+    title: "Full-Stack Software Engineer & Co-Founder of Ariiti Tech",
     tagline:
-      "Building scalable backend systems, robust APIs, and cross-platform experiences. Focused on architecture, performance, and clean code.",
+      "Co-Founder & Technical Lead at Ariiti Tech. Building scalable digital systems, modern web platforms, and mobile solutions.",
     location: "Addis Ababa, Ethiopia",
     email: "yihunebelay859@gmail.com",
     phone: "+251 987 414 282",
@@ -77,10 +77,10 @@ export const portfolioData: PortfolioData = {
     responseTime: "24 hours",
   },
   summary:
-    "Software engineer based in Addis Ababa, Ethiopia. Currently pursuing Software Engineering at Haramaya University, building production systems and digital infrastructure. Specializes in backend systems, API architecture, and scalable digital infrastructure.",
+    "Software engineer based in Addis Ababa, Ethiopia, pursuing Software Engineering at Haramaya University. Co-Founder & Technical Lead at Ariiti Tech, architecting high-level digital commerce platforms and scalable technology initiatives.",
   about: {
     description:
-      "Software engineer based in Addis Ababa, Ethiopia. Currently pursuing Software Engineering at Haramaya University, building production systems and digital infrastructure.",
+      "Software engineer and Co-Founder of Ariiti Tech based in Addis Ababa, Ethiopia. Building modern digital platforms, enterprise web solutions, and mobile architectures.",
     highlights: [
       {
         title: "Full-Stack Engineering",
@@ -167,6 +167,15 @@ export const portfolioData: PortfolioData = {
     },
   ],
   experience: [
+    {
+      position: "Co-Founder & Technical Lead",
+      company: "Ariiti Tech",
+      responsibilities: [
+        "Co-founded and led technological initiatives and platform architecture across the Ariiti Tech organization",
+        "Directing strategic technology roadmaps, modern digital platforms, and enterprise solutions",
+        "Overseeing cross-functional engineering execution and delivery of digital commerce systems",
+      ],
+    },
     {
       position: "Software Engineering Intern",
       company: "INSA — Information Network Security Administration",

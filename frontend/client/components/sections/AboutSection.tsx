@@ -46,14 +46,14 @@ export default function AboutSection() {
           className="mb-14 text-center lg:text-left"
         >
           <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold">
-            Engineering Identity & Bento Overview
+            Engineering Identity & Leadership
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] mt-2 mb-3 tracking-tight font-heading">
             Architectural Focus & Organization
           </h2>
           <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mx-auto lg:mx-0 font-body">
             Software engineer based in Addis Ababa, Ethiopia, pursuing Software Engineering
-            at Haramaya University. Constructing resilient backend systems, secure APIs, and organizational technology at scale.
+            at Haramaya University. Co-Founder and Technical Lead at Ariiti Tech, building scalable digital platforms, modern software solutions, and enterprise systems.
           </p>
         </motion.div>
 
@@ -124,24 +124,23 @@ export default function AboutSection() {
                 </div>
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
-                    Domain 02 // Venture Ecosystem
+                    Domain 02 // Enterprise Initiative
                   </span>
                   <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
-                    Ariiti Tech Platform
+                    Ariiti Tech Venture
                   </h3>
                 </div>
               </div>
 
               <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
-                Directing open platform repositories under <code className="text-amber-300 font-mono bg-amber-500/10 px-1 rounded">@{orgLogin}</code>.
-                Building modular digital commerce infrastructure, developer integration SDKs, and high-concurrency payment gateways.
+                Co-Founder and Technical Lead directing digital commerce initiatives and enterprise technology solutions under <code className="text-amber-300 font-mono bg-amber-500/10 px-1 rounded">@{orgLogin}</code>. Leading high-level architecture, technological strategy, and reliable software delivery.
               </p>
             </div>
 
             <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20 flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-mono text-[#A8A29E] block">CONTRIBUTOR ROLE</span>
-                <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">Platform Architecture Lead</span>
+                <span className="text-[10px] font-mono text-[#A8A29E] block">ORGANIZATION ROLE</span>
+                <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">Co-Founder & Technical Lead</span>
               </div>
               <a
                 href={orgUrl}
@@ -251,15 +250,15 @@ export default function AboutSection() {
                     <span>{orgName} (@{orgLogin})</span>
                   </div>
                   <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
-                    Multi-contributor platform engineering, shared pull request reviews, and ecosystem tooling.
+                    Co-founded organizational initiatives, digital commerce platforms, and scalable technology solutions.
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center justify-between text-xs font-mono text-[#A8A29E] pt-3 border-t border-white/[0.06]">
-              <span>ETag-Cached Multi-Source Aggregation</span>
-              <span className="text-[var(--primary-accent,#FFDD9B)] font-semibold">Zero Fake Metrics</span>
+              <span>Verified Production Technology</span>
+              <span className="text-[var(--primary-accent,#FFDD9B)] font-semibold">Live Enterprise Delivery</span>
             </div>
           </motion.div>
         </div>
