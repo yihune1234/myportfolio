@@ -150,13 +150,18 @@ export const apiFetchFormData = async (
     }
 
     if (!response.ok) {
-      throw new Error(data.message || `API Error: ${response.status}`);
+      throw new Error(data?.message || data?.error || `API Error: ${response.status}`);
     }
 
-    return { success: true, data, status: response.status };
+    return {
+      success: true,
+      data,
+      ...(data && typeof data === "object" && !Array.isArray(data) ? data : {}),
+      status: response.status,
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("API Fetch Form Data Error:", message);
-    return { success: false, error: message, status: 500 };
+    return { success: false, error: message, message, status: 500 };
   }
 };

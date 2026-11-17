@@ -13,9 +13,9 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadDir = 'uploads';
+const uploadDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 // Temporary storage for multer before uploading to Cloudinary
@@ -53,6 +53,15 @@ const cloudinaryUpload = async (req, res, next) => {
         return next();
     }
 
+    const localFilename = path.basename(req.file.path);
+    const localFallbackUrl = `/uploads/${localFilename}`;
+
+    // If Cloudinary is not configured, keep the local upload and continue
+    if (!process.env.CLOUDINARY_CLOUD_NAME || (!process.env.CLOUDINARY_API_KEY && !process.env.CLOUDINARY_UPLOAD_PRESET)) {
+        req.file.cloudinaryUrl = localFallbackUrl;
+        return next();
+    }
+
     try {
         const preset = process.env.CLOUDINARY_UPLOAD_PRESET || 'portfolio';
 
@@ -60,7 +69,7 @@ const cloudinaryUpload = async (req, res, next) => {
             folder: 'portfolio',
             use_filename: true,
             unique_filename: true,
-            timeout: 120000 // Increased timeout to 120 seconds
+            timeout: 60000
         };
 
         let result;
@@ -71,31 +80,25 @@ const cloudinaryUpload = async (req, res, next) => {
             result = await cloudinary.uploader.unsigned_upload(req.file.path, preset, uploadOptions);
         }
 
-        // Delete the local file after uploading to Cloudinary
+        // Delete the local temp file after uploading to Cloudinary
         if (fs.existsSync(req.file.path)) {
-            fs.unlinkSync(req.file.path);
+            try {
+                fs.unlinkSync(req.file.path);
+            } catch (unlinkErr) {
+                console.warn('Could not remove local temp upload:', unlinkErr.message);
+            }
         }
 
-        // Replace the file object or just add the cloudinary URL
+        // Add the cloudinary URL
         req.file.cloudinaryUrl = result.secure_url;
         req.file.public_id = result.public_id;
 
         next();
     } catch (error) {
-        console.error('Cloudinary Upload Error:', error);
-
-        // Ensure local file is deleted even on failure
-        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
-            try {
-                fs.unlinkSync(req.file.path);
-            } catch (unlinkError) {
-                console.error('Failed to delete temp file after upload error:', unlinkError);
-            }
-        }
-
-        // Wrap error in a proper Error object if it's not one
-        const finalError = error instanceof Error ? error : new Error(error.message || JSON.stringify(error) || 'Cloudinary upload failed');
-        next(finalError);
+        console.warn('⚠️ Cloudinary Upload Warning (falling back to local file storage):', error.message || error);
+        // Fall back gracefully to local file so project creation or image upload never fails with 500
+        req.file.cloudinaryUrl = localFallbackUrl;
+        next();
     }
 };
 

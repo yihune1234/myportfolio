@@ -72,7 +72,7 @@ const projectSchema = new mongoose.Schema({
     challenges: { type: String, default: '', trim: true },
     proposedSolution: { type: String, default: '', trim: true },
     expectedOutcomes: [{ type: String, trim: true }],
-    resultsAndImpact: { type: String, default: '', trim: true },
+    resultsAndImpact: [{ type: String, trim: true }],
 
     // Content Sections & Gallery
     contentSections: [contentSectionSchema],

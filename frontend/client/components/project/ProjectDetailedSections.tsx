@@ -114,7 +114,7 @@ export function ProjectDetailedSections({
           <div className="p-8 rounded-3xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] space-y-4">
             {project.resultsAndImpact && (
               <p className="text-sm sm:text-base text-[var(--text-secondary,#FFF1D8)] leading-relaxed whitespace-pre-line font-normal">
-                {project.resultsAndImpact}
+                {Array.isArray(project.resultsAndImpact) ? project.resultsAndImpact.join("\n") : project.resultsAndImpact}
               </p>
             )}
 

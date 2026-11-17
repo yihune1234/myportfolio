@@ -42,7 +42,7 @@ export interface Project {
   challenges?: string;
   proposedSolution?: string;
   expectedOutcomes?: string[];
-  resultsAndImpact?: string;
+  resultsAndImpact?: string | string[];
   technologies: string[];
   equipment?: string[];
   contentSections?: ContentSection[];

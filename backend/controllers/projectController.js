@@ -442,10 +442,15 @@ exports.createProject = async (req, res) => {
         if (typeof technologies === 'undefined') missing.push('technologies');
 
         let parsedTech = [];
-        try {
-            parsedTech = typeof technologies === 'string' ? JSON.parse(technologies || '[]') : (technologies || []);
-        } catch (e) {
-            return res.status(400).json({ message: 'Technologies must be valid JSON array' });
+        if (Array.isArray(technologies)) {
+            parsedTech = technologies;
+        } else if (typeof technologies === 'string') {
+            try {
+                const parsed = JSON.parse(technologies);
+                parsedTech = Array.isArray(parsed) ? parsed : [parsed];
+            } catch (e) {
+                parsedTech = technologies.split(',').map(t => t.trim()).filter(Boolean);
+            }
         }
 
         if (!parsedTech.length) missing.push('technologies');
@@ -474,11 +479,15 @@ exports.createProject = async (req, res) => {
 
         const parseJSONorList = (input, delim = '\n') => {
             if (!input) return [];
-            try {
-                return typeof input === 'string' ? JSON.parse(input) : input;
-            } catch (e) {
-                return typeof input === 'string' ? input.split(delim).map(item => item.trim()).filter(Boolean) : [];
+            let result = input;
+            if (typeof input === 'string') {
+                try {
+                    result = JSON.parse(input);
+                } catch (e) {
+                    result = input.split(delim).map(item => item.trim()).filter(Boolean);
+                }
             }
+            return Array.isArray(result) ? result.map(String).map(s => s.trim()).filter(Boolean) : [];
         };
 
         let finalOwnership = 'PERSONAL';
@@ -520,7 +529,7 @@ exports.createProject = async (req, res) => {
             pinned: pinned === 'true' || pinned === true,
             isMini: isMini === 'true' || isMini === true,
             showGithubLink: showGithubLink !== 'false' && showGithubLink !== false,
-            githubRepoId: githubRepoId ? Number(githubRepoId) : null,
+            githubRepoId: (githubRepoId && !isNaN(Number(githubRepoId))) ? Number(githubRepoId) : null,
             githubRepoFullName: githubRepoFullName ? githubRepoFullName.trim() : '',
             githubOwnerLogin: githubOwnerLogin ? githubOwnerLogin.trim() : '',
             githubSourceScope: ['PERSONAL', 'ORGANIZATION'].includes(githubSourceScope) ? githubSourceScope : null,
@@ -528,12 +537,17 @@ exports.createProject = async (req, res) => {
             showGithubMetrics: showGithubMetrics !== 'false' && showGithubMetrics !== false,
             autoSyncMetrics: autoSyncMetrics !== 'false' && autoSyncMetrics !== false,
             highlights: parseJSONorList(highlights, '\n'),
-            githubMetadata: parseJSONorList(githubMetadata) || {},
-            image: req.file ? (req.file.path || `/uploads/${req.file.filename}`) : undefined
+            githubMetadata: (typeof githubMetadata === 'object' && !Array.isArray(githubMetadata) ? githubMetadata : {}) || {},
+            image: req.file ? (req.file.cloudinaryUrl || `/uploads/${req.file.filename}` || req.file.path) : (req.body.image || undefined)
         });
 
         await project.save();
-        res.status(201).json(project);
+        res.status(201).json({
+            success: true,
+            message: `Project "${project.title}" created successfully`,
+            project,
+            ...project.toObject()
+        });
     } catch (error) {
         console.error('Error creating project:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -630,13 +644,18 @@ exports.updateProject = async (req, res) => {
         if (githubMetadata !== undefined) updateData.githubMetadata = parseJSONorList(githubMetadata) || {};
 
         if (req.file) {
-            updateData.image = req.file.path || `/uploads/${req.file.filename}`;
+            updateData.image = req.file.cloudinaryUrl || `/uploads/${req.file.filename}` || req.file.path;
         }
 
         const project = await Project.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!project) return res.status(404).json({ message: 'Project not found' });
 
-        res.json(project);
+        res.json({
+            success: true,
+            message: `Project "${project.title}" updated successfully`,
+            project,
+            ...project.toObject()
+        });
     } catch (error) {
         console.error('Error updating project:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
