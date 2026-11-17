@@ -103,9 +103,88 @@ export function ProjectFormModal({
               />
             ) : (
               <form id="project-form" onSubmit={onSubmit} className="space-y-6">
+                {/* Explicit Project Ownership Classification */}
+                <div className="p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] space-y-3">
+                  <label className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/80 uppercase tracking-wider block font-bold">
+                    Project Ownership Classification *
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          ownership: "PERSONAL",
+                          sourceType: formData.githubRepoFullName ? "personal" : "manual",
+                          githubSourceScope: "PERSONAL",
+                          clientOrPartner:
+                            formData.clientOrPartner === "Ariitii Tech"
+                              ? "Personal Lab"
+                              : formData.clientOrPartner,
+                        })
+                      }
+                      className={`p-3.5 rounded-xl border text-left transition-all ${
+                        formData.ownership === "PERSONAL"
+                          ? "bg-sky-500/15 border-sky-500/50 text-white shadow-md shadow-sky-500/10 ring-1 ring-sky-500/30"
+                          : "bg-[var(--card-surface,#403C38)] border-white/[0.08] text-[var(--text-secondary,#FFF1D8)]/70 hover:border-white/20"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider">
+                          My Project (Personal)
+                        </span>
+                        {formData.ownership === "PERSONAL" && (
+                          <span className="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50" />
+                        )}
+                      </div>
+                      <p className="text-[11px] text-[var(--text-secondary,#FFF1D8)]/80 leading-snug">
+                        Personal software projects, applications, experiments, and solutions that I independently develop and maintain.
+                      </p>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          ownership: "ARIITII_TECH",
+                          sourceType: "organization",
+                          githubSourceScope: "ORGANIZATION",
+                          clientOrPartner:
+                            !formData.clientOrPartner ||
+                            formData.clientOrPartner === "Personal Lab"
+                              ? "Ariitii Tech"
+                              : formData.clientOrPartner,
+                          role:
+                            !formData.role || formData.role === "Full-Stack Architect"
+                              ? "Co-Founder and Lead"
+                              : formData.role,
+                        })
+                      }
+                      className={`p-3.5 rounded-xl border text-left transition-all ${
+                        formData.ownership === "ARIITII_TECH"
+                          ? "bg-amber-500/15 border-amber-500/50 text-white shadow-md shadow-amber-500/10 ring-1 ring-amber-500/30"
+                          : "bg-[var(--card-surface,#403C38)] border-white/[0.08] text-[var(--text-secondary,#FFF1D8)]/70 hover:border-white/20"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider">
+                          Ariitii Tech Project
+                        </span>
+                        {formData.ownership === "ARIITII_TECH" && (
+                          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50" />
+                        )}
+                      </div>
+                      <p className="text-[11px] text-[var(--text-secondary,#FFF1D8)]/80 leading-snug">
+                        Software products, digital platforms, and solutions developed under Ariitii Tech (Haramaya University initiative).
+                      </p>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Publication & Status Bar */}
                 <div className="p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {/* Publication Status Selector */}
                     <div>
                       <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 uppercase tracking-wider block mb-1">
@@ -124,6 +203,23 @@ export function ProjectFormModal({
                       </select>
                     </div>
 
+                    {/* Development Status Selector */}
+                    <div>
+                      <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 uppercase tracking-wider block mb-1">
+                        Development Status
+                      </span>
+                      <select
+                        value={formData.developmentStatus || "completed"}
+                        onChange={(e) => setFormData({ ...formData, developmentStatus: e.target.value })}
+                        className="w-full px-3 py-2 rounded-lg bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs font-mono text-[var(--text-primary,#FFFFFF)] focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+                      >
+                        <option value="completed">Completed & Stable</option>
+                        <option value="in_progress">In Progress (Active Dev)</option>
+                        <option value="active">Active (Production / Live)</option>
+                        <option value="maintenance">Maintenance</option>
+                      </select>
+                    </div>
+
                     {/* Project Type Selector */}
                     <div>
                       <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/70 uppercase tracking-wider block mb-1">
@@ -134,8 +230,8 @@ export function ProjectFormModal({
                         onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                         className="w-full px-3 py-2 rounded-lg bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs font-mono text-[var(--text-primary,#FFFFFF)] focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
                       >
-                        <option value="completed">Completed Project</option>
-                        <option value="ongoing">Ongoing Deployment</option>
+                        <option value="completed">Standard Portfolio Project</option>
+                        <option value="ongoing">Ongoing Platform Deployment</option>
                         <option value="proposed">Proposed Project (Proposal)</option>
                       </select>
                     </div>
@@ -534,34 +630,49 @@ export function ProjectFormModal({
                           onClick={() =>
                             setFormData({
                               ...formData,
+                              ownership: "PERSONAL",
                               githubSourceScope: "PERSONAL",
                               sourceType: "personal",
+                              clientOrPartner:
+                                formData.clientOrPartner === "Ariitii Tech"
+                                  ? "Personal Lab"
+                                  : formData.clientOrPartner,
                             })
                           }
                           className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold transition-all ${
-                            formData.sourceType === "personal" || formData.githubSourceScope === "PERSONAL"
+                            formData.ownership === "PERSONAL" ||
+                            formData.sourceType === "personal" ||
+                            formData.githubSourceScope === "PERSONAL"
                               ? "bg-sky-500/20 text-sky-300 border border-sky-500/40"
                               : "bg-white/[0.04] text-[var(--text-secondary,#FFF1D8)]/60"
                           }`}
                         >
-                          Personal Lab
+                          My Projects
                         </button>
                         <button
                           type="button"
                           onClick={() =>
                             setFormData({
                               ...formData,
+                              ownership: "ARIITII_TECH",
                               githubSourceScope: "ORGANIZATION",
                               sourceType: "organization",
+                              clientOrPartner:
+                                !formData.clientOrPartner ||
+                                formData.clientOrPartner === "Personal Lab"
+                                  ? "Ariitii Tech"
+                                  : formData.clientOrPartner,
                             })
                           }
                           className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold transition-all ${
-                            formData.sourceType === "organization" || formData.githubSourceScope === "ORGANIZATION"
+                            formData.ownership === "ARIITII_TECH" ||
+                            formData.sourceType === "organization" ||
+                            formData.githubSourceScope === "ORGANIZATION"
                               ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
                               : "bg-white/[0.04] text-[var(--text-secondary,#FFF1D8)]/60"
                           }`}
                         >
-                          Ariiti Org
+                          Ariitii Tech
                         </button>
                         <button
                           type="button"

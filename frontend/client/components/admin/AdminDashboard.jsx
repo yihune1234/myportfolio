@@ -55,7 +55,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
 
   const tabs = [
     { id: "overview", label: "Overview", icon: Home },
-    { id: "projects", label: "Projects", icon: FolderKanban },
+    { id: "projects", label: "Projects Management", icon: FolderKanban },
     { id: "sections", label: "Project Sections", icon: FileText },
     { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "github", label: "GitHub Accounts", icon: Github },

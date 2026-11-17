@@ -3,9 +3,9 @@ import HeroSection from "@/components/sections/HeroSection";
 import YBLogo from "@/components/YBLogo";
 import AboutSection from "@/components/sections/AboutSection";
 import SkillsSection from "@/components/sections/SkillsSection";
-import ProjectsSection from "@/components/sections/ProjectsSection";
+import MyProjectsSection from "@/components/sections/MyProjectsSection";
+import AriitiiProjectsSection from "@/components/sections/AriitiiProjectsSection";
 import EngineeringShowcase from "@/components/showcase/EngineeringShowcase";
-import PlatformShowcase from "@/components/sections/PlatformShowcase";
 import ExperienceSection from "@/components/sections/ExperienceSection";
 import EducationSection, {
   ContactSection,
@@ -40,7 +40,7 @@ export default function Index() {
   };
 
   const handleProjectsClick = () => {
-    const element = document.getElementById("projects");
+    const element = document.getElementById("my-projects") || document.getElementById("projects");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -87,13 +87,15 @@ export default function Index() {
         />
         <AboutSection />
         <SkillsSection />
-        <ErrorBoundary fallbackTitle="Projects Section">
-          <ProjectsSection />
+        <ErrorBoundary fallbackTitle="My Projects Section">
+          <MyProjectsSection />
+        </ErrorBoundary>
+        <ErrorBoundary fallbackTitle="Ariitii Tech Projects Section">
+          <AriitiiProjectsSection />
         </ErrorBoundary>
         <ErrorBoundary fallbackTitle="Engineering Showcase">
           <EngineeringShowcase />
         </ErrorBoundary>
-        <PlatformShowcase />
         <ExperienceSection />
         <EducationSection />
         <ContactSection />

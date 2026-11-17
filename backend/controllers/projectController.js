@@ -45,6 +45,22 @@ exports.getProjects = async (req, res) => {
             filter.proposalStatus = req.query.proposalStatus;
         }
 
+        // Ownership filter: PERSONAL vs ARIITII_TECH
+        if (req.query.ownership) {
+            const requestedOwnership = String(req.query.ownership).toUpperCase();
+            if (requestedOwnership === 'PERSONAL') {
+                filter.$or = [
+                    { ownership: 'PERSONAL' },
+                    { ownership: { $exists: false }, sourceType: { $ne: 'organization' }, githubSourceScope: { $ne: 'ORGANIZATION' } }
+                ];
+            } else if (requestedOwnership === 'ARIITII_TECH' || requestedOwnership === 'ORGANIZATION') {
+                filter.$or = [
+                    { ownership: 'ARIITII_TECH' },
+                    { ownership: { $exists: false }, $or: [{ sourceType: 'organization' }, { githubSourceScope: 'ORGANIZATION' }, { clientOrPartner: /ariiti/i }] }
+                ];
+            }
+        }
+
         if (req.query.search && typeof req.query.search === 'string' && req.query.search.trim()) {
             const query = req.query.search.trim();
             filter.$or = [
@@ -187,8 +203,13 @@ exports.importGitHub = async (req, res) => {
             });
         }
 
+        const targetOwnership = req.body.ownership || (suggested.githubSourceScope === 'ORGANIZATION' ? 'ARIITII_TECH' : 'PERSONAL');
+
         const newProject = new Project({
             title: suggested.title,
+            ownership: targetOwnership,
+            developmentStatus: 'completed',
+            clientOrPartner: targetOwnership === 'ARIITII_TECH' ? 'Ariitii Tech' : 'Personal Lab',
             description: suggested.description,
             shortSummary: suggested.description.slice(0, 150),
             technologies: suggested.technologies,
@@ -451,8 +472,20 @@ exports.createProject = async (req, res) => {
             }
         };
 
+        let finalOwnership = 'PERSONAL';
+        if (req.body.ownership === 'ARIITII_TECH' || req.body.ownership === 'PERSONAL') {
+            finalOwnership = req.body.ownership;
+        } else if (sourceType === 'organization' || githubSourceScope === 'ORGANIZATION' || /ariiti/i.test(clientOrPartner || '')) {
+            finalOwnership = 'ARIITII_TECH';
+        }
+
+        const validDevStatuses = ['completed', 'in_progress', 'active', 'maintenance'];
+        const devStatus = validDevStatuses.includes(req.body.developmentStatus) ? req.body.developmentStatus : 'completed';
+
         const project = new Project({
             title: title.trim(),
+            ownership: finalOwnership,
+            developmentStatus: devStatus,
             description: description.trim(),
             shortSummary: shortSummary ? shortSummary.trim() : description.trim().slice(0, 150),
             technologies: parsedTech,
@@ -462,7 +495,7 @@ exports.createProject = async (req, res) => {
             role: role ? role.trim() : 'Developer',
             category: category ? category.trim() : 'Full-Stack',
             location: location ? location.trim() : undefined,
-            clientOrPartner: clientOrPartner ? clientOrPartner.trim() : undefined,
+            clientOrPartner: clientOrPartner ? clientOrPartner.trim() : (finalOwnership === 'ARIITII_TECH' ? 'Ariitii Tech' : 'Personal Lab'),
             startDate: startDate ? startDate.trim() : undefined,
             completionDate: completionDate ? completionDate.trim() : undefined,
             projectType: ['completed', 'ongoing', 'proposed'].includes(projectType) ? projectType : 'completed',
@@ -518,6 +551,19 @@ exports.updateProject = async (req, res) => {
         }
 
         const updateData = { updatedAt: new Date() };
+
+        if (req.body.ownership !== undefined) {
+            updateData.ownership = req.body.ownership === 'ARIITII_TECH' ? 'ARIITII_TECH' : 'PERSONAL';
+            if (!req.body.clientOrPartner) {
+                updateData.clientOrPartner = updateData.ownership === 'ARIITII_TECH' ? 'Ariitii Tech' : 'Personal Lab';
+            }
+        }
+        if (req.body.developmentStatus !== undefined) {
+            const validDevStatuses = ['completed', 'in_progress', 'active', 'maintenance'];
+            if (validDevStatuses.includes(req.body.developmentStatus)) {
+                updateData.developmentStatus = req.body.developmentStatus;
+            }
+        }
 
         if (title !== undefined) updateData.title = title.trim();
         if (description !== undefined) updateData.description = description.trim();

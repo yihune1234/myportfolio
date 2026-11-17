@@ -124,23 +124,23 @@ export default function AboutSection() {
                 </div>
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
-                    Domain 02 // Enterprise Initiative
+                    Domain 02 // Technology Initiative
                   </span>
                   <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
-                    Ariiti Tech Venture
+                    Ariitii Tech
                   </h3>
                 </div>
               </div>
 
               <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
-                Co-Founder and Technical Lead directing digital commerce initiatives and enterprise technology solutions under <code className="text-amber-300 font-mono bg-amber-500/10 px-1 rounded">@{orgLogin}</code>. Leading high-level architecture, technological strategy, and reliable software delivery.
+                Ariitii Tech is a technology initiative originating at Haramaya University, established by three co-founders, including me as Co-Founder and Lead. It focuses on developing software products, digital platforms, and technology-driven solutions.
               </p>
             </div>
 
             <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-mono text-[#A8A29E] block">ORGANIZATION ROLE</span>
-                <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">Co-Founder & Technical Lead</span>
+                <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">Co-Founder and Lead</span>
               </div>
               <a
                 href={orgUrl}
@@ -247,10 +247,10 @@ export default function AboutSection() {
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20">
                   <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400 mb-1">
                     <CheckCircle2 size={13} />
-                    <span>{orgName} (@{orgLogin})</span>
+                    <span>Ariitii Tech (@{orgLogin})</span>
                   </div>
                   <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
-                    Co-founded organizational initiatives, digital commerce platforms, and scalable technology solutions.
+                    Technology initiative originating at Haramaya University, established by three co-founders, including me as Co-Founder and Lead.
                   </p>
                 </div>
               </div>

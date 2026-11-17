@@ -63,10 +63,10 @@ export interface PortfolioData {
 export const portfolioData: PortfolioData = {
   personal: {
     name: "Yihune Belay",
-    title: "Full-Stack Software Engineer & Co-Founder of Ariiti Tech",
+    title: "Full-Stack Software Engineer & Co-Founder and Lead of Ariitii Tech",
     tagline:
-      "Co-Founder & Technical Lead at Ariiti Tech. Building scalable digital systems, modern web platforms, and mobile solutions.",
-    location: "Addis Ababa, Ethiopia",
+      "Co-Founder and Lead at Ariitii Tech. Developing personal software projects, applications, and technology-driven solutions.",
+    location: "Easter Ethiopia",
     email: "yihunebelay859@gmail.com",
     phone: "+251 987 414 282",
     github: "https://github.com/yihune1234",
@@ -77,10 +77,10 @@ export const portfolioData: PortfolioData = {
     responseTime: "24 hours",
   },
   summary:
-    "Software engineer based in Addis Ababa, Ethiopia, pursuing Software Engineering at Haramaya University. Co-Founder & Technical Lead at Ariiti Tech, architecting high-level digital commerce platforms and scalable technology initiatives.",
+    "Software engineer in Easter Ethiopia, pursuing Software Engineering at Haramaya University. Co-Founder and Lead at Ariitii Tech, a technology initiative originating at Haramaya University established by three co-founders, including me as Co-Founder and Lead.",
   about: {
     description:
-      "Software engineer and Co-Founder of Ariiti Tech based in Addis Ababa, Ethiopia. Building modern digital platforms, enterprise web solutions, and mobile architectures.",
+      "Software engineer and Co-Founder and Lead of Ariitii Tech based in Easter Ethiopia. Developing personal software projects, applications, and digital platforms.",
     highlights: [
       {
         title: "Full-Stack Engineering",
@@ -168,12 +168,12 @@ export const portfolioData: PortfolioData = {
   ],
   experience: [
     {
-      position: "Co-Founder & Technical Lead",
-      company: "Ariiti Tech",
+      position: "Co-Founder and Lead",
+      company: "Ariitii Tech",
       responsibilities: [
-        "Co-founded and led technological initiatives and platform architecture across the Ariiti Tech organization",
-        "Directing strategic technology roadmaps, modern digital platforms, and enterprise solutions",
-        "Overseeing cross-functional engineering execution and delivery of digital commerce systems",
+        "Co-founded and led the technology initiative originating at Haramaya University with three co-founders",
+        "Directing software product architecture, digital platforms, and technology solutions",
+        "Overseeing technical strategy and engineering execution across organization projects",
       ],
     },
     {
@@ -251,7 +251,7 @@ export const portfolioData: PortfolioData = {
   contact: {
     email: "yihunebelay859@gmail.com",
     phone: "+251 987 414 282",
-    location: "Addis Ababa, Ethiopia",
+    location: "Easter Ethiopia",
   },
 };
 

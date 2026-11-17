@@ -23,6 +23,8 @@ export interface ContentSection {
 export interface Project {
   _id: string;
   title: string;
+  ownership?: 'PERSONAL' | 'ARIITII_TECH';
+  developmentStatus?: 'completed' | 'in_progress' | 'active' | 'maintenance';
   category?: string;
   shortSummary?: string;
   description: string;
@@ -101,7 +103,7 @@ export interface SectionMedia {
   createdAt: string;
 }
 
-export const useProjects = () => {
+export const useProjects = (ownershipFilter?: 'PERSONAL' | 'ARIITII_TECH') => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -110,7 +112,10 @@ export const useProjects = () => {
     try {
       setLoading(true);
       setError(null);
-      const result = await apiFetch(API_ENDPOINTS.PROJECTS_LIST);
+      const url = ownershipFilter
+        ? `${API_ENDPOINTS.PROJECTS_LIST}?ownership=${ownershipFilter}`
+        : API_ENDPOINTS.PROJECTS_LIST;
+      const result = await apiFetch(url);
       if (result.success) {
         if (Array.isArray(result.data)) {
           setProjects(result.data);
@@ -129,7 +134,7 @@ export const useProjects = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [ownershipFilter]);
 
   useEffect(() => {
     fetchProjects();

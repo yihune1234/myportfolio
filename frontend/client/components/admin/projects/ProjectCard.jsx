@@ -27,11 +27,11 @@ export function ProjectCard({
 }) {
   const isPublished = project.status === "published";
   const isOrg =
+    project.ownership === "ARIITII_TECH" ||
     project.sourceType === "organization" ||
-    project.githubSourceScope === "ORGANIZATION";
-  const isPersonal =
-    project.sourceType === "personal" ||
-    project.githubSourceScope === "PERSONAL";
+    project.githubSourceScope === "ORGANIZATION" ||
+    (project.clientOrPartner && /ariiti/i.test(project.clientOrPartner));
+  const isPersonal = !isOrg;
 
   return (
     <motion.div
@@ -99,18 +99,29 @@ export function ProjectCard({
               : "Draft"}
           </span>
 
-          {/* Source Badge */}
+          {/* Ownership Badge */}
           <span
             className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider border shadow-md backdrop-blur-md ${
               isOrg
                 ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                : isPersonal
-                ? "bg-sky-500/20 text-sky-300 border-sky-500/40"
-                : "bg-white/10 text-white/80 border-white/20"
+                : "bg-sky-500/20 text-sky-300 border-sky-500/40"
             }`}
           >
-            {isOrg ? "Ariiti Org" : isPersonal ? "Personal Lab" : "Manual"}
+            {isOrg ? "Ariitii Tech" : "My Project"}
           </span>
+
+          {/* Development Status Badge */}
+          {project.developmentStatus && (
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider border shadow-md backdrop-blur-md bg-white/10 text-white/80 border-white/20">
+              {project.developmentStatus === "in_progress"
+                ? "In Progress"
+                : project.developmentStatus === "active"
+                ? "Active"
+                : project.developmentStatus === "maintenance"
+                ? "Maintenance"
+                : "Completed"}
+            </span>
+          )}
         </div>
 
         {/* Pinned & Image Count Badges */}

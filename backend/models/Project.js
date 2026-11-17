@@ -24,6 +24,18 @@ const contentSectionSchema = new mongoose.Schema({
 
 const projectSchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
+    ownership: {
+        type: String,
+        enum: ['PERSONAL', 'ARIITII_TECH'],
+        default: 'PERSONAL',
+        index: true
+    },
+    developmentStatus: {
+        type: String,
+        enum: ['completed', 'in_progress', 'active', 'maintenance'],
+        default: 'completed',
+        index: true
+    },
     category: { type: String, default: 'Enterprise Solutions', trim: true },
     shortSummary: { type: String, default: '', trim: true },
     description: { type: String, required: true, trim: true },
@@ -105,6 +117,18 @@ const projectSchema = new mongoose.Schema({
 
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
+});
+
+projectSchema.pre('save', function (next) {
+    if (!this.ownership) {
+        if (this.sourceType === 'organization' || this.githubSourceScope === 'ORGANIZATION' || /ariiti/i.test(this.clientOrPartner || '')) {
+            this.ownership = 'ARIITII_TECH';
+        } else {
+            this.ownership = 'PERSONAL';
+        }
+    }
+    this.updatedAt = new Date();
+    next();
 });
 
 module.exports = mongoose.model('Project', projectSchema);

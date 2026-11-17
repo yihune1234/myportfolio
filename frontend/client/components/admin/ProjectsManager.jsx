@@ -20,8 +20,8 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const { toast } = useToast();
   const { data: gitHubSettings } = useGitHubSettings();
 
-  // Active View: 'portfolio' | 'github-browser'
-  const [activeView, setActiveView] = useState("portfolio");
+  // Active View: 'my-projects' | 'ariitii-tech' | 'all-projects' | 'github-browser'
+  const [activeView, setActiveView] = useState("my-projects");
 
   // ==========================================
   // Portfolio Projects State
@@ -32,6 +32,21 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   const [projectStatusFilter, setProjectStatusFilter] = useState("ALL");
   const [projectCategoryFilter, setProjectCategoryFilter] = useState("ALL");
   const [syncingProjectId, setSyncingProjectId] = useState(null);
+
+  // Helper to reliably determine project ownership
+  const getProjectOwnership = (p) => {
+    if (p.ownership === "ARIITII_TECH" || p.ownership === "PERSONAL") {
+      return p.ownership;
+    }
+    if (
+      p.sourceType === "organization" ||
+      p.githubSourceScope === "ORGANIZATION" ||
+      (p.clientOrPartner && /ariiti/i.test(p.clientOrPartner))
+    ) {
+      return "ARIITII_TECH";
+    }
+    return "PERSONAL";
+  };
 
   // ==========================================
   // GitHub Browser State
@@ -67,6 +82,8 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     description: "",
     shortSummary: "",
     technologies: "",
+    ownership: "PERSONAL",
+    developmentStatus: "completed",
     githubUrl: "",
     demoUrl: "",
     role: "Full-Stack Architect",
@@ -117,10 +134,10 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
   useEffect(() => {
     if (showAddProject) {
-      openCreateModal();
+      openCreateModal(activeView === "ariitii-tech" ? "ARIITII_TECH" : "PERSONAL");
       setShowAddProject(false);
     }
-  }, [showAddProject, setShowAddProject]);
+  }, [showAddProject, setShowAddProject, activeView]);
 
   useEffect(() => {
     if (activeView === "github-browser") {
@@ -212,16 +229,30 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     return null;
   };
 
+  const personalProjects = useMemo(() => {
+    return projects.filter((p) => getProjectOwnership(p) === "PERSONAL");
+  }, [projects]);
+
+  const ariitiiProjects = useMemo(() => {
+    return projects.filter((p) => getProjectOwnership(p) === "ARIITII_TECH");
+  }, [projects]);
+
+  const currentScopedProjects = useMemo(() => {
+    if (activeView === "my-projects") return personalProjects;
+    if (activeView === "ariitii-tech") return ariitiiProjects;
+    return projects;
+  }, [activeView, personalProjects, ariitiiProjects, projects]);
+
   const availableCategories = useMemo(() => {
     const set = new Set();
-    projects.forEach((p) => {
+    currentScopedProjects.forEach((p) => {
       if (p.category) set.add(p.category);
     });
     return Array.from(set);
-  }, [projects]);
+  }, [currentScopedProjects]);
 
   const filteredProjects = useMemo(() => {
-    return projects.filter((p) => {
+    return currentScopedProjects.filter((p) => {
       if (projectSearch.trim()) {
         const query = projectSearch.toLowerCase();
         const matchesTitle = p.title?.toLowerCase().includes(query);
@@ -237,15 +268,15 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       if (projectStatusFilter === "PROPOSALS" && p.projectType !== "proposed") return false;
       if (projectStatusFilter === "COMPLETED" && (p.projectType || "completed") !== "completed") return false;
       if (projectStatusFilter === "ONGOING" && p.projectType !== "ongoing") return false;
-      if (projectStatusFilter === "PERSONAL" && (p.sourceType !== "personal" && p.githubSourceScope !== "PERSONAL")) return false;
-      if (projectStatusFilter === "ORGANIZATION" && (p.sourceType !== "organization" && p.githubSourceScope !== "ORGANIZATION")) return false;
+      if (projectStatusFilter === "PERSONAL" && getProjectOwnership(p) !== "PERSONAL") return false;
+      if (projectStatusFilter === "ORGANIZATION" && getProjectOwnership(p) !== "ARIITII_TECH") return false;
       if (projectStatusFilter === "MANUAL" && (p.sourceType !== "manual" || p.githubRepoFullName)) return false;
 
       if (projectCategoryFilter !== "ALL" && p.category !== projectCategoryFilter) return false;
 
       return true;
     });
-  }, [projects, projectSearch, projectStatusFilter, projectCategoryFilter]);
+  }, [currentScopedProjects, projectSearch, projectStatusFilter, projectCategoryFilter]);
 
   const availableRepoLanguages = useMemo(() => {
     const set = new Set();
@@ -434,6 +465,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
       const detailsRes = await fetchGitHubRepoDetails(owner, repoName);
       const suggested = detailsRes.data.suggested;
+      const targetOwnership = repo.source_scope === "ORGANIZATION" ? "ARIITII_TECH" : "PERSONAL";
 
       setEditingProject(null);
       setFormData({
@@ -441,17 +473,19 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         description: suggested.description || repo.description || "",
         shortSummary: (suggested.description || repo.description || "").slice(0, 150),
         technologies: (suggested.technologies || []).join(", "),
+        ownership: targetOwnership,
+        developmentStatus: "completed",
         githubUrl: suggested.githubUrl || repo.html_url,
         demoUrl: suggested.demoUrl || repo.homepage || "",
-        role: suggested.role || "Full-Stack Architect",
-        category: suggested.category || (repo.source_scope === "ORGANIZATION" ? "Distributed Systems" : "Full-Stack"),
+        role: suggested.role || (targetOwnership === "ARIITII_TECH" ? "Co-Founder and Lead" : "Full-Stack Architect"),
+        category: suggested.category || (targetOwnership === "ARIITII_TECH" ? "Distributed Systems" : "Full-Stack"),
         highlights: detailsRes.data.readme?.summary
           ? detailsRes.data.readme.summary.slice(0, 300)
           : "",
         status: asDraft ? "draft" : "published",
         projectType: "completed",
         proposalStatus: "pending",
-        clientOrPartner: "",
+        clientOrPartner: targetOwnership === "ARIITII_TECH" ? "Ariitii Tech" : "Personal Lab",
         location: "",
         startDate: "",
         completionDate: "",
@@ -468,7 +502,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         githubRepoFullName: suggested.githubRepoFullName || repo.full_name,
         githubOwnerLogin: suggested.githubOwnerLogin || owner,
         githubSourceScope: suggested.githubSourceScope || repo.source_scope,
-        sourceType: suggested.sourceType || (repo.source_scope === "ORGANIZATION" ? "organization" : "personal"),
+        sourceType: suggested.sourceType || (targetOwnership === "ARIITII_TECH" ? "organization" : "personal"),
         showGithubMetrics: true,
         autoSyncMetrics: true,
         image: null,
@@ -529,6 +563,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
             owner,
             repo: repoName,
             publishNow: false,
+            ownership: repoSource === "ORGANIZATION" ? "ARIITII_TECH" : "PERSONAL",
           }),
         });
         if (res.success) {
@@ -548,29 +583,35 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       description: `Successfully imported ${successCount} project(s)${failCount > 0 ? `, ${failCount} failed or skipped` : ""}.`,
     });
     fetchProjects();
-    setActiveView("portfolio");
+    setActiveView(repoSource === "ORGANIZATION" ? "ariitii-tech" : "my-projects");
     window.dispatchEvent(new Event("projectsUpdated"));
   };
 
   // ==========================================
   // Modal Open & Close Handlers
   // ==========================================
-  const openCreateModal = () => {
+  const openCreateModal = (initialOwnership) => {
+    const defaultOwnership =
+      initialOwnership ||
+      (activeView === "ariitii-tech" ? "ARIITII_TECH" : "PERSONAL");
+
     setEditingProject(null);
     setFormData({
       title: "",
       description: "",
       shortSummary: "",
       technologies: "",
+      ownership: defaultOwnership,
+      developmentStatus: "completed",
       githubUrl: "",
       demoUrl: "",
-      role: "Full-Stack Architect",
-      category: "Full-Stack",
+      role: defaultOwnership === "ARIITII_TECH" ? "Co-Founder and Lead" : "Full-Stack Architect",
+      category: defaultOwnership === "ARIITII_TECH" ? "Distributed Systems" : "Full-Stack",
       highlights: "",
       status: "published",
       projectType: "completed",
       proposalStatus: "pending",
-      clientOrPartner: "",
+      clientOrPartner: defaultOwnership === "ARIITII_TECH" ? "Ariitii Tech" : "Personal Lab",
       location: "",
       startDate: "",
       completionDate: "",
@@ -586,8 +627,8 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       githubRepoId: null,
       githubRepoFullName: "",
       githubOwnerLogin: "",
-      githubSourceScope: "PERSONAL",
-      sourceType: "manual",
+      githubSourceScope: defaultOwnership === "ARIITII_TECH" ? "ORGANIZATION" : "PERSONAL",
+      sourceType: defaultOwnership === "ARIITII_TECH" ? "organization" : "personal",
       showGithubMetrics: true,
       autoSyncMetrics: true,
       image: null,
@@ -600,14 +641,17 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
 
   const openEditModal = (project) => {
     setEditingProject(project);
+    const ownership = getProjectOwnership(project);
     setFormData({
       title: project.title,
       description: project.description,
       shortSummary: project.shortSummary || "",
       technologies: (project.technologies || []).join(", "),
+      ownership: ownership,
+      developmentStatus: project.developmentStatus || "completed",
       githubUrl: project.githubUrl || "",
       demoUrl: project.demoUrl || "",
-      role: project.role || "Developer",
+      role: project.role || (ownership === "ARIITII_TECH" ? "Co-Founder and Lead" : "Developer"),
       category: project.category || "Full-Stack",
       highlights: Array.isArray(project.highlights)
         ? project.highlights.join("\n")
@@ -615,7 +659,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       status: project.status || "published",
       projectType: project.projectType || "completed",
       proposalStatus: project.proposalStatus || "pending",
-      clientOrPartner: project.clientOrPartner || "",
+      clientOrPartner: project.clientOrPartner || (ownership === "ARIITII_TECH" ? "Ariitii Tech" : "Personal Lab"),
       location: project.location || "",
       startDate: project.startDate || "",
       completionDate: project.completionDate || "",
@@ -639,8 +683,8 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
       githubRepoId: project.githubRepoId || null,
       githubRepoFullName: project.githubRepoFullName || "",
       githubOwnerLogin: project.githubOwnerLogin || "",
-      githubSourceScope: project.githubSourceScope || "PERSONAL",
-      sourceType: project.sourceType || (project.githubSourceScope === "ORGANIZATION" ? "organization" : project.githubSourceScope === "PERSONAL" ? "personal" : "manual"),
+      githubSourceScope: project.githubSourceScope || (ownership === "ARIITII_TECH" ? "ORGANIZATION" : "PERSONAL"),
+      sourceType: project.sourceType || (ownership === "ARIITII_TECH" ? "organization" : "personal"),
       showGithubMetrics: project.showGithubMetrics !== false,
       autoSyncMetrics: project.autoSyncMetrics !== false,
       image: null,
@@ -707,6 +751,8 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
     formDataToSend.append("showGithubLink", formData.showGithubLink !== false);
     formDataToSend.append("pinned", formData.pinned);
     formDataToSend.append("isMini", formData.isMini);
+    formDataToSend.append("ownership", formData.ownership || "PERSONAL");
+    formDataToSend.append("developmentStatus", formData.developmentStatus || "completed");
     formDataToSend.append("githubRepoFullName", formData.githubRepoFullName || "");
     formDataToSend.append("githubOwnerLogin", formData.githubOwnerLogin || "");
     formDataToSend.append("githubSourceScope", formData.githubSourceScope || "");
@@ -876,7 +922,7 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
   return (
     <div className="space-y-6 sm:space-y-8 font-body">
       {/* View Switcher Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-xl">
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 p-5 rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-xl">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--primary-accent,#FFDD9B)] font-bold">
@@ -884,11 +930,11 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
             <span className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">
-              Live GitHub Bridge
+              Projects Management
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-[var(--text-primary,#FFFFFF)] font-heading tracking-tight">
-            Projects & GitHub Integration
+            Projects Management
           </h2>
         </div>
 
@@ -896,46 +942,86 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="inline-flex p-1 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08]">
             <button
-              onClick={() => setActiveView("portfolio")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold font-mono transition-all ${
-                activeView === "portfolio"
+              onClick={() => setActiveView("my-projects")}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold font-mono transition-all ${
+                activeView === "my-projects"
                   ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] shadow-md shadow-[#FFDD9B]/20"
                   : "text-[var(--text-secondary,#FFF1D8)] hover:text-white"
               }`}
             >
               <FolderKanban size={14} />
-              <span>Portfolio Projects ({projects.length})</span>
+              <span>My Projects ({personalProjects.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveView("ariitii-tech")}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold font-mono transition-all ${
+                activeView === "ariitii-tech"
+                  ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] shadow-md shadow-[#FFDD9B]/20"
+                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-white"
+              }`}
+            >
+              <FolderKanban size={14} />
+              <span>Ariitii Tech ({ariitiiProjects.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveView("all-projects")}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold font-mono transition-all ${
+                activeView === "all-projects"
+                  ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] shadow-md shadow-[#FFDD9B]/20"
+                  : "text-[var(--text-secondary,#FFF1D8)] hover:text-white"
+              }`}
+            >
+              <FolderKanban size={14} />
+              <span>All ({projects.length})</span>
             </button>
 
             <button
               onClick={() => setActiveView("github-browser")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold font-mono transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold font-mono transition-all ${
                 activeView === "github-browser"
                   ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] shadow-md shadow-[#FFDD9B]/20"
                   : "text-[var(--text-secondary,#FFF1D8)] hover:text-white"
               }`}
             >
               <Github size={14} />
-              <span>Browse Real GitHub Repos</span>
+              <span>GitHub Browser</span>
             </button>
           </div>
 
-          <button
-            onClick={openCreateModal}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-[var(--text-primary,#FFFFFF)] border border-white/[0.1] text-xs font-bold transition-all"
-          >
-            <Plus size={14} className="text-[var(--primary-accent,#FFDD9B)]" />
-            <span>New Manual Project</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => openCreateModal("PERSONAL")}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-bold transition-all"
+              title="Create a personal project"
+            >
+              <Plus size={14} />
+              <span>+ New Personal Project</span>
+            </button>
+
+            <button
+              onClick={() => openCreateModal("ARIITII_TECH")}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition-all"
+              title="Create an Ariitii Tech organization project"
+            >
+              <Plus size={14} />
+              <span>+ New Ariitii Tech Project</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* VIEW 1: PORTFOLIO PROJECTS MANAGEMENT                                     */}
+      {/* VIEW 1/2/3: PORTFOLIO PROJECTS MANAGEMENT (MY PROJECTS / ARIITII / ALL)    */}
       {/* ========================================================================= */}
-      {activeView === "portfolio" && (
+      {activeView !== "github-browser" && (
         <PortfolioProjectsView
-          projects={projects}
+          activeView={activeView}
+          projects={currentScopedProjects}
+          allProjects={projects}
+          personalCount={personalProjects.length}
+          ariitiiCount={ariitiiProjects.length}
           projectsLoading={projectsLoading}
           filteredProjects={filteredProjects}
           projectSearch={projectSearch}
@@ -951,8 +1037,14 @@ export function ProjectsManager({ showAddProject, setShowAddProject }) {
           onSyncProject={handleSyncProject}
           onEditProject={openEditModal}
           onDeleteProject={handleDeleteProject}
-          onSwitchToGithubBrowser={() => setActiveView("github-browser")}
+          onSwitchToGithubBrowser={(scope) => {
+            if (scope) setRepoSource(scope);
+            else if (activeView === "ariitii-tech") setRepoSource("ORGANIZATION");
+            else setRepoSource("PERSONAL");
+            setActiveView("github-browser");
+          }}
           onOpenCreateModal={openCreateModal}
+          onSwitchView={(v) => setActiveView(v)}
         />
       )}
 

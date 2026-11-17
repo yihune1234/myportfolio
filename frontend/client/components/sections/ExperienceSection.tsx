@@ -45,19 +45,19 @@ export default function ExperienceSection() {
   ];
 
   const organizationExperience = {
-    role: "Co-Founder & Technical Lead",
-    organization: `Ariiti Tech (@${orgLogin})`,
+    role: "Co-Founder and Lead",
+    organization: `Ariitii Tech (@${orgLogin})`,
     period: "2024 — Present",
-    scope: "Co-Founder & Initiative Leadership",
+    scope: "Technology Initiative & Leadership",
     url: orgUrl,
     gradient: "from-amber-400 to-amber-500",
     activities: [
-      "Co-founding and directing technology initiatives and digital commerce platforms",
-      "Leading technical strategy, scalable software architecture, and engineering direction",
-      "Overseeing enterprise platform development, secure integration, and digital workflows",
-      "Mentoring engineers and collaborating on product roadmaps and strategic solutions",
+      "Co-founding and leading the technology initiative originating at Haramaya University with three co-founders",
+      "Leading software product architecture, digital platforms, and technology solutions",
+      "Directing technical strategy, product roadmaps, and engineering execution",
+      "Overseeing modern web architectures, mobile solutions, and enterprise platform delivery",
     ],
-    technologies: ["Enterprise Architecture", "Cloud Platforms", "Microservices", "Scalable Systems", "Security"],
+    technologies: ["Enterprise Architecture", "Cloud Platforms", "Digital Platforms", "Scalable Systems", "Security"],
   };
 
   return (
@@ -83,7 +83,7 @@ export default function ExperienceSection() {
             Engineering Experience
           </h2>
           <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-2 font-body mx-auto lg:mx-0">
-            Professional industry engineering internships alongside executive leadership and technology delivery as Co-Founder of Ariiti Tech.
+            Professional industry engineering internships alongside initiative leadership as Co-Founder and Lead of Ariitii Tech.
           </p>
         </motion.div>
 
