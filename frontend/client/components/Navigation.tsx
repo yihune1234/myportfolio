@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowRight, Sparkles, Activity, Palette, ChevronDown } from "lucide-react";
+import { Menu, X, ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubHealth } from "@/lib/githubApi";
-import { useGitHubSettings } from "@/hooks/useGitHubSettings";
 import { PublicThemeSwitcher } from "./PublicThemeSwitcher";
 import { YBLogo } from "./YBLogo";
 
@@ -26,17 +25,14 @@ export default function Navigation() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(true);
 
-  const { data: githubSettings } = useGitHubSettings();
-  const showRepoExplorer = githubSettings?.showRepositoryExplorer !== false && githubSettings?.showEngineeringShowcase !== false;
-
-  const { data: health, isLoading: healthLoading, isError: healthError } = useQuery({
+  const { data: health, isLoading: healthLoading } = useQuery({
     queryKey: ["github", "health"],
     queryFn: fetchGitHubHealth,
     staleTime: 60 * 1000,
     retry: 1,
   });
 
-  const isConnected = !healthError && (health?.status === "healthy" || health?.sources?.personal?.status === "ok");
+  const isConnected = health?.status === "healthy" || health?.sources?.personal?.status === "ok";
   const isSyncing = healthLoading;
 
   useEffect(() => {
@@ -49,7 +45,7 @@ export default function Navigation() {
         "skills",
         "my-projects",
         "ariitii-tech-projects",
-        "repository-explorer",
+        "repositories",
         "engineering",
         "experience",
         "education",
@@ -60,11 +56,11 @@ export default function Navigation() {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 120 && rect.bottom >= 120;
+          return rect.top <= 140 && rect.bottom >= 140;
         }
         return false;
       });
-      if (current) setActiveSection(current === "engineering" ? "repository-explorer" : current);
+      if (current) setActiveSection(current);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -73,7 +69,7 @@ export default function Navigation() {
 
   const navItems: NavItem[] = [
     { name: "Home", id: "home" },
-    { name: "About", id: "about" },
+    { name: "Approach", id: "about" },
     { name: "Technologies", id: "skills" },
     {
       name: "Projects",
@@ -82,18 +78,17 @@ export default function Navigation() {
         {
           name: "My Projects",
           id: "my-projects",
-          description: "Personal software & lab experiments",
+          description: "Personal software & lab tools",
         },
         {
-          name: "Ariitii Tech Projects",
+          name: "Ariitii Tech",
           id: "ariitii-tech-projects",
-          description: "Haramaya University tech initiative",
+          description: "Initiative & digital platforms",
         },
       ],
     },
-    ...(showRepoExplorer
-      ? [{ name: "Repository Explorer", id: "repository-explorer" }]
-      : []),
+    { name: "Repositories", id: "repositories" },
+    { name: "Terminal", id: "engineering" },
     { name: "Experience", id: "experience" },
     { name: "Education", id: "education" },
     { name: "Contact", id: "contact" },
@@ -102,11 +97,9 @@ export default function Navigation() {
   const scrollToSection = (id: string) => {
     setIsOpen(false);
     setDropdownOpen(false);
-    const element =
-      document.getElementById(id) ||
-      (id === "repository-explorer" ? document.getElementById("engineering") : null);
+    const element = document.getElementById(id);
     if (element) {
-      const navHeight = 80;
+      const navHeight = 75;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - navHeight;
       window.scrollTo({
@@ -123,175 +116,146 @@ export default function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[var(--bg-base,#302E2D)]/90 backdrop-blur-2xl border-b border-[var(--border-color,rgba(255,221,155,0.18))] shadow-2xl shadow-black/40 py-2.5"
+          ? "bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-xl border-b border-[var(--border-color,rgba(255,221,155,0.18))] shadow-xl shadow-black/30 py-2.5"
           : "bg-transparent py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 gap-6">
-          {/* Brand Logo & Telemetry Indicator */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex-shrink-0"
-          >
+        <div className="flex justify-between items-center h-16 gap-4">
+          {/* Brand Logo & Name */}
+          <div className="flex-shrink-0">
             <button
               onClick={() => scrollToSection("home")}
               className="flex items-center gap-3 group text-left"
             >
               <YBLogo />
-
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-heading font-black text-lg leading-tight text-[var(--text-primary,#FFFFFF)] tracking-tight">
+                  <span className="font-heading font-black text-base sm:text-lg leading-tight text-white tracking-tight">
                     Yihune Belay
                   </span>
-                  {/* Live Status Indicator */}
                   <span
                     className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold ${
                       isSyncing
                         ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
                         : isConnected
                         ? "bg-[var(--primary-accent,#FFDD9B)]/15 text-[var(--primary-accent,#FFDD9B)] border border-[var(--primary-accent,#FFDD9B)]/30"
-                        : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                        : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                     }`}
-                    title={isSyncing ? "Updating Services" : isConnected ? "Services Online" : "Cached View"}
+                    title={isSyncing ? "Syncing GitHub" : "Online"}
                   >
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isSyncing
-                          ? "bg-sky-400 animate-pulse"
-                          : isConnected
-                          ? "bg-[var(--primary-accent,#FFDD9B)] animate-ping"
-                          : "bg-amber-400"
-                      }`}
-                    />
-                    <span className="hidden sm:inline">
-                      {isSyncing ? "SYNC" : isConnected ? "LIVE" : "CACHED"}
-                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)] animate-pulse" />
+                    <span>ONLINE</span>
                   </span>
                 </div>
-                <span className="text-[10px] font-mono font-semibold tracking-wider text-[var(--text-secondary,#FFF1D8)] uppercase">
-                  Full-Stack Systems Engineer
+                <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/80 uppercase">
+                  Software Engineer
                 </span>
               </div>
             </button>
-          </motion.div>
-
-          {/* Navigation Links */}
-          <div className="hidden lg:flex items-center gap-2 flex-1 justify-center">
-            <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[var(--card-surface,#3A3836)] border border-[var(--border-color,rgba(255,221,155,0.18))] backdrop-blur-md shadow-inner">
-              {navItems.map((item, index) => {
-                if (item.subItems) {
-                  return (
-                    <div
-                      key={item.id}
-                      className="relative"
-                      onMouseEnter={() => setDropdownOpen(true)}
-                      onMouseLeave={() => setDropdownOpen(false)}
-                    >
-                      <motion.button
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.04 }}
-                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                        className={`relative px-4 py-1.5 text-xs font-bold transition-all duration-300 rounded-full flex items-center gap-1.5 ${
-                          isProjectsActive
-                            ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/25"
-                            : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
-                        }`}
-                      >
-                        <span className="relative z-10">{item.name}</span>
-                        <ChevronDown
-                          size={12}
-                          className={`transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
-                        />
-                      </motion.button>
-
-                      {/* Dropdown Menu */}
-                      <AnimatePresence>
-                        {dropdownOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                            transition={{ duration: 0.15 }}
-                            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-2 rounded-2xl bg-[var(--card-surface,#403C38)]/95 backdrop-blur-2xl border border-[var(--border-color,rgba(255,221,155,0.18))] shadow-2xl z-50 space-y-1"
-                          >
-                            {item.subItems.map((sub) => (
-                              <button
-                                key={sub.id}
-                                onClick={() => scrollToSection(sub.id)}
-                                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all flex flex-col ${
-                                  activeSection === sub.id
-                                    ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] font-bold shadow-md shadow-[#FFDD9B]/20"
-                                    : "text-white hover:bg-white/[0.08]"
-                                }`}
-                              >
-                                <span className="font-heading font-black text-xs">
-                                  {sub.name}
-                                </span>
-                                <span className={`text-[10px] mt-0.5 ${
-                                  activeSection === sub.id ? "text-[#302E2D]/80" : "text-[var(--text-secondary,#FFF1D8)]/70"
-                                }`}>
-                                  {sub.description}
-                                </span>
-                              </button>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                }
-
-                return (
-                  <motion.button
-                    key={item.id}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.04 }}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`relative px-4 py-1.5 text-xs font-bold transition-all duration-300 rounded-full ${
-                      activeSection === item.id
-                        ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/25"
-                        : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <span className="relative z-10">{item.name}</span>
-                  </motion.button>
-                );
-              })}
-            </div>
           </div>
 
-          {/* Contact Action, Mobile Menu Toggle & Right-Most Theme Switcher */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2.5 sm:gap-3"
-          >
+          {/* Desktop Navigation Links */}
+          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--card-surface,#403C38)] border border-[var(--border-color,rgba(255,221,155,0.18))] shadow-inner">
+            {navItems.map((item) => {
+              if (item.subItems) {
+                return (
+                  <div
+                    key={item.id}
+                    className="relative"
+                    onMouseEnter={() => setDropdownOpen(true)}
+                    onMouseLeave={() => setDropdownOpen(false)}
+                  >
+                    <button
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      className={`relative px-3.5 py-1.5 text-xs font-bold transition-all duration-200 rounded-full flex items-center gap-1 ${
+                        isProjectsActive
+                          ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
+                          : "text-[var(--text-secondary,#FFF1D8)] hover:text-white hover:bg-white/[0.05]"
+                      }`}
+                    >
+                      <span>{item.name}</span>
+                      <ChevronDown
+                        size={12}
+                        className={`transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    <AnimatePresence>
+                      {dropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 p-1.5 rounded-2xl bg-[var(--card-surface,#403C38)] border border-[var(--border-color,rgba(255,221,155,0.18))] shadow-2xl z-50 space-y-1"
+                        >
+                          {item.subItems.map((sub) => (
+                            <button
+                              key={sub.id}
+                              onClick={() => scrollToSection(sub.id)}
+                              className={`w-full text-left px-3.5 py-2 rounded-xl text-xs transition-all flex flex-col ${
+                                activeSection === sub.id
+                                  ? "bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] font-bold"
+                                  : "text-white hover:bg-white/[0.08]"
+                              }`}
+                            >
+                              <span className="font-heading font-black text-xs">
+                                {sub.name}
+                              </span>
+                              <span className={`text-[10px] mt-0.5 ${
+                                activeSection === sub.id ? "text-[#302E2D]/80" : "text-[var(--text-secondary,#FFF1D8)]/70"
+                              }`}>
+                                {sub.description}
+                              </span>
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`relative px-3.5 py-1.5 text-xs font-bold transition-all duration-200 rounded-full ${
+                    activeSection === item.id
+                      ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
+                      : "text-[var(--text-secondary,#FFF1D8)] hover:text-white hover:bg-white/[0.05]"
+                  }`}
+                >
+                  <span>{item.name}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Action & Theme Switcher */}
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => scrollToSection("contact")}
-              className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D] rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-[var(--primary-accent,#FFDD9B)]/25 active:scale-95"
+              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] hover:brightness-105 text-[#302E2D] rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20 active:scale-95"
             >
-              <span>Let's Talk</span>
+              <span>Contact</span>
               <Sparkles className="w-3.5 h-3.5" />
             </button>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-[var(--card-surface,#3A3836)] text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.08] transition-all border border-[var(--border-color,rgba(255,221,155,0.18))]"
+              className="lg:hidden p-2 rounded-xl bg-[var(--card-surface,#403C38)] text-[var(--text-secondary,#FFF1D8)] hover:text-white transition-all border border-[var(--border-color,rgba(255,221,155,0.18))]"
               aria-label="Toggle menu"
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
 
-            {/* Top Right-Most Public Theme Switcher */}
             <PublicThemeSwitcher />
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -299,31 +263,20 @@ export default function Navigation() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="lg:hidden fixed inset-x-0 top-[72px] mx-4 border border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl z-50 max-h-[85vh] overflow-y-auto"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="lg:hidden fixed inset-x-0 top-[70px] mx-4 border border-[var(--border-color,rgba(255,221,155,0.18))] bg-[var(--card-surface,#403C38)]/98 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl z-50 max-h-[85vh] overflow-y-auto"
           >
-            <div className="p-5 space-y-1.5">
-              {/* Mobile Quick Theme Icons */}
-              <div className="flex items-center justify-between pb-3 mb-2 border-b border-white/[0.08]">
-                <span className="text-[11px] font-mono font-bold text-[var(--text-secondary,#FFF1D8)] uppercase tracking-wider flex items-center gap-1.5">
-                  <Palette className="w-3.5 h-3.5 text-[var(--primary-accent,#FFDD9B)]" />
-                  Theme
-                </span>
-                <PublicThemeSwitcher inline />
-              </div>
-
+            <div className="p-4 space-y-1">
               {navItems.map((item) => {
                 if (item.subItems) {
                   return (
                     <div key={item.id} className="space-y-1 py-1">
                       <button
                         onClick={() => setMobileProjectsOpen(!mobileProjectsOpen)}
-                        className={`w-full flex items-center justify-between px-4 py-2.5 text-sm font-bold rounded-xl transition-all ${
-                          isProjectsActive
-                            ? "text-[var(--primary-accent,#FFDD9B)]"
-                            : "text-[var(--text-secondary,#FFF1D8)] hover:text-white"
+                        className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold rounded-xl ${
+                          isProjectsActive ? "text-[var(--primary-accent,#FFDD9B)]" : "text-[var(--text-secondary,#FFF1D8)]"
                         }`}
                       >
                         <span className="font-heading font-black">{item.name}</span>
@@ -334,15 +287,15 @@ export default function Navigation() {
                       </button>
 
                       {mobileProjectsOpen && (
-                        <div className="pl-4 space-y-1 border-l-2 border-[var(--primary-accent,#FFDD9B)]/20 ml-4">
+                        <div className="pl-3 space-y-1 border-l border-[var(--primary-accent,#FFDD9B)]/20 ml-3">
                           {item.subItems.map((sub) => (
                             <button
                               key={sub.id}
                               onClick={() => scrollToSection(sub.id)}
-                              className={`block w-full text-left px-3.5 py-2 text-xs font-bold rounded-xl transition-all ${
+                              className={`block w-full text-left px-3 py-2 text-xs font-bold rounded-xl ${
                                 activeSection === sub.id
-                                  ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-sm"
-                                  : "text-[var(--text-secondary,#FFF1D8)]/80 hover:text-white hover:bg-white/[0.04]"
+                                  ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8]"
+                                  : "text-[var(--text-secondary,#FFF1D8)]/80 hover:text-white"
                               }`}
                             >
                               {sub.name}
@@ -358,10 +311,10 @@ export default function Navigation() {
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className={`block w-full text-left px-4 py-3 text-sm font-bold rounded-xl transition-all ${
+                    className={`block w-full text-left px-3.5 py-2.5 text-xs font-bold rounded-xl ${
                       activeSection === item.id
-                        ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] shadow-md shadow-[var(--primary-accent,#FFDD9B)]/20"
-                        : "text-[var(--text-secondary,#FFF1D8)] hover:text-[var(--text-primary,#FFFFFF)] hover:bg-white/[0.04]"
+                        ? "text-[#302E2D] bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8]"
+                        : "text-[var(--text-secondary,#FFF1D8)] hover:text-white"
                     }`}
                   >
                     {item.name}
@@ -369,12 +322,12 @@ export default function Navigation() {
                 );
               })}
 
-              <div className="pt-3">
+              <div className="pt-2">
                 <button
                   onClick={() => scrollToSection("contact")}
-                  className="w-full px-5 py-3 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[var(--primary-accent,#FFDD9B)]/20"
+                  className="w-full px-4 py-2.5 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
                 >
-                  Let's Talk
+                  Contact Me
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

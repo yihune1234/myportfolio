@@ -10,6 +10,9 @@ import {
   Upload,
   RefreshCw,
   Save,
+  Star,
+  Trash2,
+  CheckCircle2,
 } from "lucide-react";
 import ProjectImageManagerModal from "./ProjectImageManagerModal.jsx";
 
@@ -69,15 +72,14 @@ export function ProjectFormModal({
               {editingProject && (
                 <button
                   type="button"
-                  onClick={() => setShowImageManager(!showImageManager)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all ${
-                    showImageManager
-                      ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D]"
-                      : "bg-white/[0.06] text-[var(--text-secondary,#FFF1D8)] hover:text-white"
-                  }`}
+                  onClick={() => {
+                    const el = document.getElementById("project-gallery-section");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all bg-white/[0.06] text-[var(--text-secondary,#FFF1D8)] hover:text-white"
                 >
                   <ImageIcon size={14} />
-                  <span>{showImageManager ? "Back to Edit" : "Screenshots"}</span>
+                  <span>Images ({projectImages?.length || 0})</span>
                 </button>
               )}
 
@@ -93,16 +95,7 @@ export function ProjectFormModal({
 
           {/* Modal Body */}
           <div className="overflow-y-auto flex-1 p-6">
-            {showImageManager && editingProject ? (
-              <ProjectImageManagerModal
-                projectImages={projectImages}
-                uploadingImages={uploadingImages}
-                onUploadImages={onUploadImages}
-                onSetFeatured={onSetFeatured}
-                onDeleteImage={onDeleteImage}
-              />
-            ) : (
-              <form id="project-form" onSubmit={onSubmit} className="space-y-6">
+            <form id="project-form" onSubmit={onSubmit} className="space-y-6">
                 {/* Explicit Project Ownership Classification */}
                 <div className="p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] space-y-3">
                   <label className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/80 uppercase tracking-wider block font-bold">
@@ -731,9 +724,14 @@ export function ProjectFormModal({
 
                 {/* Primary Cover Image Upload */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
-                    Project Cover Image
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                      Project Cover Image (Main Thumbnail)
+                    </label>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/60">
+                      Primary image shown on portfolio cards
+                    </span>
+                  </div>
                   <label className="flex flex-col items-center justify-center aspect-video rounded-xl bg-[var(--bg-base,#302E2D)] border-2 border-dashed border-white/[0.1] hover:border-[var(--primary-accent,#FFDD9B)]/40 cursor-pointer overflow-hidden transition-all group">
                     {imagePreview ? (
                       <img
@@ -762,8 +760,130 @@ export function ProjectFormModal({
                     />
                   </label>
                 </div>
+
+                {/* Multi-Image Gallery & Screenshots Section */}
+                <div id="project-gallery-section" className="space-y-3 pt-4 border-t border-white/[0.08]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08]">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-mono font-bold text-white block">
+                          Project Screenshots & Gallery
+                        </label>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-white/[0.06] text-[var(--primary-accent,#FFDD9B)] border border-white/[0.08]">
+                          {projectImages?.length || 0} Attached
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[var(--text-secondary,#FFF1D8)]/70 mt-0.5">
+                        Upload multiple images, diagrams, or UI captures. You can make any screenshot the featured cover.
+                      </p>
+                    </div>
+
+                    {editingProject && (
+                      <label className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-md shadow-[#FFDD9B]/20 transition-all hover:brightness-105 self-start sm:self-auto">
+                        <Upload size={14} />
+                        <span>{uploadingImages ? "Uploading..." : "+ Add More Images"}</span>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          className="hidden"
+                          onChange={onUploadImages}
+                          disabled={uploadingImages}
+                        />
+                      </label>
+                    )}
+                  </div>
+
+                  {editingProject ? (
+                    projectImages && projectImages.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 pt-1">
+                        {projectImages.map((img) => (
+                          <div
+                            key={img._id}
+                            className={`group/img relative aspect-video rounded-xl overflow-hidden border transition-all bg-[var(--bg-base,#302E2D)] ${
+                              img.isFeatured
+                                ? "border-[var(--primary-accent,#FFDD9B)] ring-2 ring-[var(--primary-accent,#FFDD9B)]/40"
+                                : "border-white/[0.1] hover:border-white/[0.3]"
+                            }`}
+                          >
+                            <img
+                              src={img.url}
+                              alt={img.title || "Project Screenshot"}
+                              className="w-full h-full object-cover"
+                            />
+
+                            {/* Cover Badge */}
+                            {img.isFeatured && (
+                              <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] shadow">
+                                Cover
+                              </span>
+                            )}
+
+                            {/* Hover overlay actions */}
+                            <div className="absolute inset-0 bg-black/80 backdrop-blur-xs opacity-0 group-hover/img:opacity-100 flex items-center justify-center gap-1.5 transition-opacity">
+                              {!img.isFeatured && (
+                                <button
+                                  type="button"
+                                  onClick={() => onSetFeatured(img._id)}
+                                  className="px-2 py-1 rounded-lg bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] text-[10px] font-mono font-bold hover:brightness-110 flex items-center gap-1 shadow"
+                                  title="Set as featured cover image"
+                                >
+                                  <Star size={11} />
+                                  <span>Cover</span>
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => onDeleteImage(img._id)}
+                                className="p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/40 transition-colors"
+                                title="Delete this image"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Dropzone card in grid */}
+                        <label className="flex flex-col items-center justify-center aspect-video rounded-xl border border-dashed border-white/[0.15] hover:border-[var(--primary-accent,#FFDD9B)]/40 bg-[var(--bg-base,#302E2D)]/50 cursor-pointer transition-all">
+                          <Upload size={16} className="text-[var(--primary-accent,#FFDD9B)]/50 mb-1" />
+                          <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]">
+                            {uploadingImages ? "Uploading..." : "+ More Images"}
+                          </span>
+                          <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            className="hidden"
+                            onChange={onUploadImages}
+                            disabled={uploadingImages}
+                          />
+                        </label>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-white/[0.1] hover:border-[var(--primary-accent,#FFDD9B)]/40 rounded-xl bg-[var(--bg-base,#302E2D)]/40 cursor-pointer transition-all">
+                        <ImageIcon className="w-8 h-8 text-[var(--primary-accent,#FFDD9B)]/40 mb-1.5" />
+                        <span className="text-xs font-bold text-white">Click or drop multiple images here</span>
+                        <span className="text-[10px] text-[var(--text-secondary,#FFF1D8)]/60 font-mono mt-0.5">
+                          Select one or multiple PNG, JPG, or WebP files
+                        </span>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          className="hidden"
+                          onChange={onUploadImages}
+                          disabled={uploadingImages}
+                        />
+                      </label>
+                    )
+                  ) : (
+                    <div className="p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/60">
+                      💡 Once you create this project, you will be able to upload unlimited screenshots and diagrams to its gallery.
+                    </div>
+                  )}
+                </div>
               </form>
-            )}
           </div>
 
           {/* Modal Footer */}
@@ -776,21 +896,19 @@ export function ProjectFormModal({
               Cancel
             </button>
 
-            {!showImageManager && (
-              <button
-                type="submit"
-                form="project-form"
-                disabled={savingProject}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] text-xs font-bold font-mono shadow-lg shadow-[#FFDD9B]/20 flex items-center gap-2 disabled:opacity-50"
-              >
-                {savingProject ? (
-                  <RefreshCw size={14} className="animate-spin" />
-                ) : (
-                  <Save size={14} />
-                )}
-                <span>{editingProject ? "Update Project" : "Create Project"}</span>
-              </button>
-            )}
+            <button
+              type="submit"
+              form="project-form"
+              disabled={savingProject}
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] text-xs font-bold font-mono shadow-lg shadow-[#FFDD9B]/20 flex items-center gap-2 hover:brightness-105 disabled:opacity-50"
+            >
+              {savingProject ? (
+                <RefreshCw size={14} className="animate-spin" />
+              ) : (
+                <Save size={14} />
+              )}
+              <span>{editingProject ? "Update Project" : "Create Project"}</span>
+            </button>
           </div>
         </motion.div>
       </motion.div>

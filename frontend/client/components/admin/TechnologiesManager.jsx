@@ -8,26 +8,27 @@ import {
   Trash2,
   Eye,
   EyeOff,
-  Star,
   CheckCircle2,
   Sparkles,
   GitBranch,
   X,
-  Layers,
   Code2,
+  Layers,
+  LayoutGrid,
+  List,
 } from "lucide-react";
 import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 import { useToast } from "../../hooks/use-toast";
 import { TechIcon } from "../tech/TechIcon";
 
 const VALID_CATEGORIES = [
-  "Programming Languages",
   "Frontend Development",
   "Backend Development",
-  "Mobile Development",
   "Databases",
-  "DevOps and Cloud",
+  "Programming Languages",
   "Development Tools",
+  "Mobile Development",
+  "DevOps and Cloud",
   "Design and Prototyping",
   "Frameworks and Libraries",
 ];
@@ -69,8 +70,8 @@ export function TechnologiesManager() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
-  const [sourceFilter, setSourceFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [viewMode, setViewMode] = useState("list"); // 'list' or 'icons'
 
   // Syncing state
   const [syncingGithub, setSyncingGithub] = useState(false);
@@ -81,14 +82,11 @@ export function TechnologiesManager() {
   const [editingTech, setEditingTech] = useState(null);
   const [saving, setSaving] = useState(false);
 
+  // Streamlined form without unwanted card fields (no description, no experience badges)
   const [formData, setFormData] = useState({
     name: "",
-    category: "Programming Languages",
+    category: "Frontend Development",
     icon: "typescript",
-    description: "",
-    experienceLevel: "Production",
-    source: "manual",
-    featured: false,
     visible: true,
     order: 0,
   });
@@ -101,7 +99,10 @@ export function TechnologiesManager() {
     try {
       setLoading(true);
       const res = await apiFetch(API_ENDPOINTS.TECHNOLOGIES_LIST(true));
-      const list = res?.technologies || res?.data?.technologies || (Array.isArray(res?.data) ? res.data : null);
+      const list =
+        res?.technologies ||
+        res?.data?.technologies ||
+        (Array.isArray(res?.data) ? res.data : null);
       if (res?.success && Array.isArray(list)) {
         setTechnologies(list);
       }
@@ -122,33 +123,25 @@ export function TechnologiesManager() {
       if (search.trim()) {
         const q = search.toLowerCase();
         const matchesName = t.name.toLowerCase().includes(q);
-        const matchesDesc = (t.description || "").toLowerCase().includes(q);
         const matchesCat = t.category.toLowerCase().includes(q);
-        if (!matchesName && !matchesDesc && !matchesCat) return false;
+        if (!matchesName && !matchesCat) return false;
       }
 
       if (categoryFilter !== "ALL" && t.category !== categoryFilter) return false;
-      if (sourceFilter === "MANUAL" && t.source !== "manual") return false;
-      if (sourceFilter === "GITHUB" && t.source !== "github_detected") return false;
-
-      if (statusFilter === "FEATURED" && !t.featured) return false;
       if (statusFilter === "VISIBLE" && t.visible === false) return false;
       if (statusFilter === "HIDDEN" && t.visible !== false) return false;
 
       return true;
     });
-  }, [technologies, search, categoryFilter, sourceFilter, statusFilter]);
+  }, [technologies, search, categoryFilter, statusFilter]);
 
   const openCreateModal = () => {
     setEditingTech(null);
     setFormData({
       name: "",
-      category: categoryFilter !== "ALL" ? categoryFilter : "Programming Languages",
+      category:
+        categoryFilter !== "ALL" ? categoryFilter : "Frontend Development",
       icon: "typescript",
-      description: "",
-      experienceLevel: "Production",
-      source: "manual",
-      featured: false,
       visible: true,
       order: technologies.length + 1,
     });
@@ -161,10 +154,6 @@ export function TechnologiesManager() {
       name: tech.name,
       category: tech.category,
       icon: tech.icon || tech.slug,
-      description: tech.description || "",
-      experienceLevel: tech.experienceLevel || "Production",
-      source: tech.source || "manual",
-      featured: Boolean(tech.featured),
       visible: tech.visible !== false,
       order: tech.order || 0,
     });
@@ -184,14 +173,27 @@ export function TechnologiesManager() {
         ? API_ENDPOINTS.TECHNOLOGIES_UPDATE(editingTech._id)
         : API_ENDPOINTS.TECHNOLOGIES_CREATE;
 
+      // Ensure safe defaults for legacy schema fields without unwanted card fields in UI
+      const payload = {
+        name: formData.name.trim(),
+        category: formData.category,
+        icon: formData.icon.trim().toLowerCase(),
+        visible: Boolean(formData.visible),
+        order: Number(formData.order) || 0,
+        description: "",
+        experienceLevel: "Production",
+        source: "manual",
+        featured: false,
+      };
+
       const res = await apiFetch(url, {
         method: editingTech ? "PUT" : "POST",
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (res.success) {
         toast({
-          title: editingTech ? "Technology Updated" : "Technology Created",
+          title: editingTech ? "Technology Updated" : "Technology Added",
           description: `"${formData.name}" has been saved.`,
         });
         closeModal();
@@ -199,7 +201,11 @@ export function TechnologiesManager() {
       } else {
         toast({
           title: "Save Failed",
-          description: res.message || res.data?.message || res.error || "Failed to save technology.",
+          description:
+            res.message ||
+            res.data?.message ||
+            res.error ||
+            "Failed to save technology.",
           variant: "destructive",
         });
       }
@@ -207,7 +213,8 @@ export function TechnologiesManager() {
       console.error(e);
       toast({
         title: "Save Failed",
-        description: e instanceof Error ? e.message : "Error saving technology.",
+        description:
+          e instanceof Error ? e.message : "Error saving technology.",
         variant: "destructive",
       });
     } finally {
@@ -225,26 +232,9 @@ export function TechnologiesManager() {
       if (res.success) {
         toast({
           title: newVisible ? "Technology Visible" : "Technology Hidden",
-          description: `"${tech.name}" is now ${newVisible ? "visible on" : "hidden from"} the public portfolio.`,
-        });
-        fetchTechnologies();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleToggleFeatured = async (tech) => {
-    try {
-      const newFeatured = !tech.featured;
-      const res = await apiFetch(API_ENDPOINTS.TECHNOLOGIES_UPDATE(tech._id), {
-        method: "PUT",
-        body: JSON.stringify({ featured: newFeatured }),
-      });
-      if (res.success) {
-        toast({
-          title: newFeatured ? "Marked Featured" : "Unfeatured",
-          description: `"${tech.name}" featured status updated.`,
+          description: `"${tech.name}" is now ${
+            newVisible ? "visible on" : "hidden from"
+          } the portfolio.`,
         });
         fetchTechnologies();
       }
@@ -254,7 +244,12 @@ export function TechnologiesManager() {
   };
 
   const handleDelete = async (tech) => {
-    if (!confirm(`Are you sure you want to delete "${tech.name}"?`)) return;
+    if (
+      !window.confirm(
+        `Are you sure you want to remove "${tech.name}" from technologies?`
+      )
+    )
+      return;
 
     try {
       const res = await apiFetch(API_ENDPOINTS.TECHNOLOGIES_DELETE(tech._id), {
@@ -262,62 +257,64 @@ export function TechnologiesManager() {
       });
       if (res.success) {
         toast({
-          title: "Deleted",
-          description: `"${tech.name}" was removed.`,
+          title: "Technology Removed",
+          description: `"${tech.name}" has been deleted.`,
         });
         fetchTechnologies();
       }
     } catch (e) {
       console.error(e);
+      toast({
+        title: "Delete Failed",
+        description: "Failed to delete technology.",
+        variant: "destructive",
+      });
     }
   };
 
   const handleSyncGithub = async () => {
-    setSyncingGithub(true);
     try {
+      setSyncingGithub(true);
       const res = await apiFetch(API_ENDPOINTS.TECHNOLOGIES_SYNC_GITHUB, {
         method: "POST",
       });
       if (res.success) {
         toast({
           title: "GitHub Sync Complete",
-          description: res.message || res.data?.message || "Repositories scanned and matching skills tagged.",
+          description:
+            res.message || "Repositories scanned and technologies updated.",
         });
         fetchTechnologies();
       } else {
         toast({
-          title: "Sync Error",
-          description: res.message || res.data?.message || res.error || "Failed to scan GitHub repositories.",
-          variant: "destructive",
+          title: "Sync Note",
+          description: res.message || "Could not sync languages from GitHub.",
         });
       }
     } catch (e) {
       console.error(e);
+      toast({
+        title: "Sync Failed",
+        description: "Network error communicating with backend sync.",
+        variant: "destructive",
+      });
     } finally {
       setSyncingGithub(false);
     }
   };
 
   const handleSeedDefaults = async () => {
-    if (!confirm("Reset and ensure all 25+ standard verified technologies are populated?")) return;
-
-    setSeeding(true);
     try {
+      setSeeding(true);
       const res = await apiFetch(API_ENDPOINTS.TECHNOLOGIES_SEED, {
         method: "POST",
       });
       if (res.success) {
         toast({
-          title: "Verified Stack Synchronized",
-          description: res.message || res.data?.message || "Verified technologies populated.",
+          title: "Stack Loaded",
+          description: "Verified technology stack loaded successfully.",
         });
         fetchTechnologies();
-      } else {
-        toast({
-          title: "Seed Error",
-          description: res.message || res.data?.message || res.error || "Failed to synchronize verified technologies.",
-          variant: "destructive",
-        });
       }
     } catch (e) {
       console.error(e);
@@ -327,24 +324,20 @@ export function TechnologiesManager() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 font-body">
-      {/* Header Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-xl">
+    <div className="space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--primary-accent,#FFDD9B)] font-bold">
-              Engineering Console
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
-            <span className="text-xs text-[var(--text-secondary,#FFF1D8)] font-mono">
-              Technologies & Skills
+          <div className="flex items-center gap-2">
+            <h2 className="font-heading font-black text-xl text-white">
+              Technologies
+            </h2>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-white/[0.06] text-[var(--primary-accent,#FFDD9B)] border border-white/[0.08]">
+              {technologies.length} Total
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-[var(--text-primary,#FFFFFF)] font-heading tracking-tight">
-            Technologies Behind My Work
-          </h2>
-          <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)]/80 mt-1 max-w-xl">
-            Control the programming languages, frameworks, libraries, and tools displayed publicly with recognizable brand logos.
+          <p className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/70 mt-1">
+            Manage icons and technologies displayed in your portfolio showcase
           </p>
         </div>
 
@@ -353,26 +346,38 @@ export function TechnologiesManager() {
           <button
             onClick={handleSyncGithub}
             disabled={syncingGithub}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] text-xs font-mono font-bold transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] text-xs font-mono font-bold transition-all disabled:opacity-50"
             title="Scan connected repositories and identify matching languages"
           >
-            <GitBranch size={14} className={syncingGithub ? "animate-spin text-emerald-400" : "text-emerald-400"} />
-            <span>{syncingGithub ? "Scanning Repos..." : "Sync from GitHub"}</span>
+            <GitBranch
+              size={13}
+              className={
+                syncingGithub ? "animate-spin text-emerald-400" : "text-emerald-400"
+              }
+            />
+            <span>{syncingGithub ? "Scanning..." : "Sync from GitHub"}</span>
           </button>
 
           <button
             onClick={handleSeedDefaults}
             disabled={seeding}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] text-xs font-mono font-bold transition-all disabled:opacity-50"
-            title="Ensure all 25+ verified core technologies exist"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] text-xs font-mono font-bold transition-all disabled:opacity-50"
+            title="Ensure verified core stack exists"
           >
-            <Sparkles size={14} className={seeding ? "animate-spin text-[var(--primary-accent,#FFDD9B)]" : "text-[var(--primary-accent,#FFDD9B)]"} />
-            <span>{seeding ? "Seeding..." : "Load Verified Stack"}</span>
+            <Sparkles
+              size={13}
+              className={
+                seeding
+                  ? "animate-spin text-[var(--primary-accent,#FFDD9B)]"
+                  : "text-[var(--primary-accent,#FFDD9B)]"
+              }
+            />
+            <span>{seeding ? "Loading..." : "Load Verified Stack"}</span>
           </button>
 
           <button
             onClick={openCreateModal}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] text-xs font-mono font-bold shadow-md shadow-[#FFDD9B]/20 transition-all"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] text-xs font-mono font-bold shadow-md shadow-[#FFDD9B]/20 transition-all hover:brightness-105"
           >
             <Plus size={14} />
             <span>+ Add Technology</span>
@@ -380,20 +385,20 @@ export function TechnologiesManager() {
         </div>
       </div>
 
-      {/* Filter & Search Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        {/* Search Input */}
-        <div className="relative min-w-[260px]">
+      {/* Filter, Search & View Controls */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        {/* Search */}
+        <div className="relative min-w-[260px] flex-1 max-w-md">
           <Search
             size={14}
             className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary,#FFF1D8)]/50"
           />
           <input
             type="text"
-            placeholder="Search by name, description, or category..."
+            placeholder="Search technology by name or category..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs text-[var(--text-primary,#FFFFFF)] placeholder-[var(--text-secondary,#FFF1D8)]/50 focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+            className="w-full pl-9 pr-8 py-2 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs text-white placeholder-[var(--text-secondary,#FFF1D8)]/50 focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
           />
           {search && (
             <button
@@ -405,7 +410,7 @@ export function TechnologiesManager() {
           )}
         </div>
 
-        {/* Dropdowns */}
+        {/* Dropdowns & View Toggle */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Category Dropdown */}
           <select
@@ -421,17 +426,6 @@ export function TechnologiesManager() {
             ))}
           </select>
 
-          {/* Source Dropdown */}
-          <select
-            value={sourceFilter}
-            onChange={(e) => setSourceFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] text-xs font-mono text-[var(--text-secondary,#FFF1D8)] focus:outline-none"
-          >
-            <option value="ALL">All Sources</option>
-            <option value="MANUAL">Manual Standard</option>
-            <option value="GITHUB">GitHub Detected</option>
-          </select>
-
           {/* Status Dropdown */}
           <select
             value={statusFilter}
@@ -441,31 +435,56 @@ export function TechnologiesManager() {
             <option value="ALL">All Status</option>
             <option value="VISIBLE">Visible Only</option>
             <option value="HIDDEN">Hidden Only</option>
-            <option value="FEATURED">Featured Only</option>
           </select>
+
+          {/* View toggle (List vs Compact Icons) */}
+          <div className="flex items-center rounded-xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] p-0.5">
+            <button
+              onClick={() => setViewMode("list")}
+              className={`p-1.5 rounded-lg transition-colors ${
+                viewMode === "list"
+                  ? "bg-white/[0.1] text-[var(--primary-accent,#FFDD9B)]"
+                  : "text-white/40 hover:text-white"
+              }`}
+              title="Table / List View"
+            >
+              <List size={14} />
+            </button>
+            <button
+              onClick={() => setViewMode("icons")}
+              className={`p-1.5 rounded-lg transition-colors ${
+                viewMode === "icons"
+                  ? "bg-white/[0.1] text-[var(--primary-accent,#FFDD9B)]"
+                  : "text-white/40 hover:text-white"
+              }`}
+              title="Compact Icons View"
+            >
+              <LayoutGrid size={14} />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Technologies Grid */}
+      {/* Main Content Area */}
       {loading ? (
         <div className="py-24 text-center rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08]">
           <RefreshCw className="w-8 h-8 mx-auto animate-spin text-[var(--primary-accent,#FFDD9B)] mb-3" />
           <p className="text-sm font-mono text-[var(--text-secondary,#FFF1D8)]">
-            Loading technology catalog...
+            Loading technologies...
           </p>
         </div>
       ) : filteredTechnologies.length === 0 ? (
-        <div className="py-20 text-center rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] p-8 space-y-4">
-          <Code2 className="w-12 h-12 mx-auto text-[var(--primary-accent,#FFDD9B)]/40" />
+        <div className="py-16 text-center rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08] p-8 space-y-4">
+          <Code2 className="w-10 h-10 mx-auto text-[var(--primary-accent,#FFDD9B)]/40" />
           <div>
-            <p className="text-lg font-bold text-[var(--text-primary,#FFFFFF)]">
-              No technologies match your filter
+            <p className="text-base font-bold text-white">
+              No technologies found
             </p>
-            <p className="text-sm text-[var(--text-secondary,#FFF1D8)] max-w-md mx-auto mt-1">
-              You can create a new technology entry or load the pre-configured verified technology stack with one click.
+            <p className="text-xs text-[var(--text-secondary,#FFF1D8)]/70 max-w-sm mx-auto mt-1">
+              Add a new technology icon or load the verified stack.
             </p>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div className="flex items-center justify-center gap-3 pt-2">
             <button
               onClick={handleSeedDefaults}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] font-bold text-xs"
@@ -476,113 +495,164 @@ export function TechnologiesManager() {
               onClick={openCreateModal}
               className="px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] font-bold text-xs"
             >
-              + Create Manually
+              + Add Technology
             </button>
           </div>
         </div>
+      ) : viewMode === "list" ? (
+        /* CLEAN TABLE / LIST VIEW - ZERO BULKY CARDS */
+        <div className="overflow-hidden rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.08]">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/[0.06] bg-[var(--bg-base,#302E2D)]/60 text-[11px] font-mono uppercase tracking-wider text-[var(--text-secondary,#FFF1D8)]/60">
+                  <th className="py-3 px-4">Icon</th>
+                  <th className="py-3 px-4">Technology Name</th>
+                  <th className="py-3 px-4">Category</th>
+                  <th className="py-3 px-4 text-center">Order</th>
+                  <th className="py-3 px-4 text-center">Visibility</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/[0.04] text-xs">
+                {filteredTechnologies.map((tech) => (
+                  <tr
+                    key={tech._id || tech.slug}
+                    className={`hover:bg-white/[0.02] transition-colors ${
+                      tech.visible === false ? "opacity-60 bg-white/[0.01]" : ""
+                    }`}
+                  >
+                    {/* Icon */}
+                    <td className="py-3 px-4">
+                      <div className="w-8 h-8 rounded-lg bg-[var(--bg-base,#302E2D)] border border-white/[0.08] flex items-center justify-center p-1.5">
+                        <TechIcon
+                          name={tech.icon || tech.slug}
+                          size={18}
+                          colorMode="brand"
+                        />
+                      </div>
+                    </td>
+
+                    {/* Name */}
+                    <td className="py-3 px-4 font-bold text-white">
+                      <span>{tech.name}</span>
+                    </td>
+
+                    {/* Category */}
+                    <td className="py-3 px-4">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.05] text-[var(--text-secondary,#FFF1D8)]/80 border border-white/[0.06]">
+                        {tech.category}
+                      </span>
+                    </td>
+
+                    {/* Order */}
+                    <td className="py-3 px-4 text-center font-mono text-[var(--text-secondary,#FFF1D8)]/60">
+                      #{tech.order || 0}
+                    </td>
+
+                    {/* Visibility Toggle Button */}
+                    <td className="py-3 px-4 text-center">
+                      <button
+                        onClick={() => handleToggleVisible(tech)}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold transition-all ${
+                          tech.visible !== false
+                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
+                            : "bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
+                        }`}
+                        title={
+                          tech.visible !== false
+                            ? "Visible on portfolio (Click to hide)"
+                            : "Hidden (Click to publish)"
+                        }
+                      >
+                        {tech.visible !== false ? (
+                          <>
+                            <Eye size={12} />
+                            <span>Visible</span>
+                          </>
+                        ) : (
+                          <>
+                            <EyeOff size={12} />
+                            <span>Hidden</span>
+                          </>
+                        )}
+                      </button>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="py-3 px-4 text-right">
+                      <div className="inline-flex items-center gap-1.5">
+                        <button
+                          onClick={() => openEditModal(tech)}
+                          className="p-1.5 rounded-lg hover:bg-white/[0.08] text-white/70 hover:text-white transition-colors"
+                          title="Edit"
+                        >
+                          <Edit3 size={13} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(tech)}
+                          className="p-1.5 rounded-lg hover:bg-red-500/20 text-red-400/80 hover:text-red-400 transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        /* COMPACT ICONS GRID VIEW - SCAN DISPLAY ONLY */
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
           {filteredTechnologies.map((tech) => (
             <div
               key={tech._id || tech.slug}
-              className={`p-4 rounded-2xl bg-[var(--card-surface,#403C38)] border transition-all flex flex-col justify-between shadow-md ${
+              className={`p-3 rounded-xl bg-[var(--card-surface,#403C38)] border flex flex-col items-center justify-center text-center relative group transition-all ${
                 tech.visible === false
-                  ? "opacity-60 border-dashed border-white/[0.1]"
-                  : tech.featured
-                  ? "border-[var(--primary-accent,#FFDD9B)]/40 ring-1 ring-[var(--primary-accent,#FFDD9B)]/20"
-                  : "border-white/[0.08]"
+                  ? "opacity-50 border-dashed border-white/[0.1]"
+                  : "border-white/[0.08] hover:border-[var(--primary-accent,#FFDD9B)]/30"
               }`}
             >
-              <div>
-                {/* Header row: Icon & Status Badges */}
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div className="w-11 h-11 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] flex items-center justify-center p-2 shadow-inner">
-                    <TechIcon name={tech.icon || tech.slug} size={26} colorMode="brand" />
-                  </div>
-
-                  <div className="flex items-center gap-1.5">
-                    {/* Featured toggle */}
-                    <button
-                      onClick={() => handleToggleFeatured(tech)}
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        tech.featured
-                          ? "bg-[var(--primary-accent,#FFDD9B)]/20 text-[var(--primary-accent,#FFDD9B)]"
-                          : "text-white/40 hover:text-white"
-                      }`}
-                      title={tech.featured ? "Featured (Click to unfeature)" : "Click to mark as featured"}
-                    >
-                      <Star size={13} className={tech.featured ? "fill-current" : ""} />
-                    </button>
-
-                    {/* Visibility toggle */}
-                    <button
-                      onClick={() => handleToggleVisible(tech)}
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        tech.visible !== false
-                          ? "text-emerald-400 hover:bg-emerald-500/10"
-                          : "text-amber-400 hover:bg-amber-500/10"
-                      }`}
-                      title={tech.visible !== false ? "Visible (Click to hide)" : "Hidden (Click to publish)"}
-                    >
-                      {tech.visible !== false ? <Eye size={13} /> : <EyeOff size={13} />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Name & Category */}
-                <div className="mb-2">
-                  <h4 className="font-heading font-black text-sm text-white flex items-center gap-1.5">
-                    <span>{tech.name}</span>
-                    {tech.featured && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-accent,#FFDD9B)]" />
-                    )}
-                  </h4>
-                  <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/60 block">
-                    {tech.category}
-                  </span>
-                </div>
-
-                {/* Description */}
-                {tech.description && (
-                  <p className="text-[11px] text-[var(--text-secondary,#FFF1D8)]/75 line-clamp-2 leading-relaxed mb-3">
-                    {tech.description}
-                  </p>
-                )}
+              <div className="w-9 h-9 rounded-lg bg-[var(--bg-base,#302E2D)] border border-white/[0.08] flex items-center justify-center p-2 mb-2">
+                <TechIcon
+                  name={tech.icon || tech.slug}
+                  size={20}
+                  colorMode="brand"
+                />
               </div>
+              <span className="text-[11px] font-bold text-white truncate max-w-full">
+                {tech.name}
+              </span>
+              <span className="text-[9px] font-mono text-[var(--text-secondary,#FFF1D8)]/50 truncate max-w-full">
+                {tech.category.split(" ")[0]}
+              </span>
 
-              {/* Bottom Row: Source, Level & Actions */}
-              <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono">
-                <div className="flex items-center gap-1.5">
-                  <span className="px-2 py-0.5 rounded bg-white/[0.05] text-[var(--text-secondary,#FFF1D8)] border border-white/[0.08]">
-                    {tech.experienceLevel || "Production"}
-                  </span>
-
-                  {tech.source === "github_detected" ? (
-                    <span className="flex items-center gap-1 text-emerald-400">
-                      <CheckCircle2 size={10} />
-                      <span>Repo</span>
-                    </span>
-                  ) : (
-                    <span className="text-white/40">Manual</span>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => openEditModal(tech)}
-                    className="p-1 rounded hover:bg-white/[0.08] text-white/70 hover:text-white"
-                    title="Edit Technology"
-                  >
-                    <Edit3 size={13} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(tech)}
-                    className="p-1 rounded hover:bg-red-500/20 text-red-400"
-                    title="Delete Technology"
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
+              {/* Hover quick action overlay */}
+              <div className="absolute inset-0 rounded-xl bg-black/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1.5 transition-opacity">
+                <button
+                  onClick={() => openEditModal(tech)}
+                  className="p-1 rounded bg-white/[0.1] text-white hover:bg-white/[0.2]"
+                  title="Edit"
+                >
+                  <Edit3 size={12} />
+                </button>
+                <button
+                  onClick={() => handleToggleVisible(tech)}
+                  className="p-1 rounded bg-white/[0.1] text-white hover:bg-white/[0.2]"
+                  title="Toggle Visibility"
+                >
+                  {tech.visible !== false ? <EyeOff size={12} /> : <Eye size={12} />}
+                </button>
+                <button
+                  onClick={() => handleDelete(tech)}
+                  className="p-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                  title="Delete"
+                >
+                  <Trash2 size={12} />
+                </button>
               </div>
             </div>
           ))}
@@ -590,7 +660,7 @@ export function TechnologiesManager() {
       )}
 
       {/* ========================================================================= */}
-      {/* ADD / EDIT MODAL                                                          */}
+      {/* STREAMLINED ADD / EDIT MODAL - NO CARD DESCRIPTIONS OR PARAGRAPHS         */}
       {/* ========================================================================= */}
       <AnimatePresence>
         {showModal && (
@@ -598,96 +668,108 @@ export function TechnologiesManager() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-xl rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.1] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full max-w-lg rounded-2xl bg-[var(--card-surface,#403C38)] border border-white/[0.1] shadow-2xl overflow-hidden flex flex-col"
             >
               {/* Modal Header */}
               <div className="p-5 border-b border-white/[0.08] flex items-center justify-between bg-[var(--bg-base,#302E2D)]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/30 flex items-center justify-center text-[var(--primary-accent,#FFDD9B)] font-bold">
-                    {editingTech ? <Edit3 size={18} /> : <Plus size={18} />}
+                  <div className="w-9 h-9 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/30 flex items-center justify-center text-[var(--primary-accent,#FFDD9B)] font-bold">
+                    {editingTech ? <Edit3 size={16} /> : <Plus size={16} />}
                   </div>
                   <div>
-                    <h3 className="font-heading font-black text-lg text-white">
+                    <h3 className="font-heading font-black text-base text-white">
                       {editingTech ? `Edit: ${editingTech.name}` : "Add Technology"}
                     </h3>
                     <p className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/70">
-                      Configure official brand logo and presentation details
+                      Icon and technology name showcase
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={closeModal}
-                  className="p-2 rounded-lg hover:bg-white/[0.08] text-white/60 hover:text-white"
+                  className="p-1.5 rounded-lg hover:bg-white/[0.08] text-white/60 hover:text-white"
                 >
-                  <X size={18} />
+                  <X size={16} />
                 </button>
               </div>
 
-              {/* Modal Form */}
-              <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4">
-                {/* Name & Category */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
-                      Technology Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g. TypeScript"
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50 font-sans"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
-                      Category *
-                    </label>
-                    <select
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs font-mono text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
-                    >
-                      {VALID_CATEGORIES.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+              {/* Streamlined Modal Form */}
+              <form onSubmit={handleSubmit} className="p-5 space-y-4">
+                {/* Technology Name */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                    Technology Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    placeholder="e.g. React, TypeScript, Docker"
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-sm text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+                  />
                 </div>
 
-                {/* Icon Selector with Visual Presets */}
+                {/* Category */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
+                    Category *
+                  </label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs font-mono text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
+                  >
+                    {VALID_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Brand Logo / Icon Identifier */}
                 <div className="space-y-2">
                   <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
-                    Brand Logo / Icon Identifier *
+                    Brand Icon Identifier *
                   </label>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.1] flex items-center justify-center p-2 flex-shrink-0 shadow-inner">
-                      <TechIcon name={formData.icon} size={24} colorMode="brand" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.1] flex items-center justify-center p-2 flex-shrink-0">
+                      <TechIcon
+                        name={formData.icon}
+                        size={22}
+                        colorMode="brand"
+                      />
                     </div>
                     <input
                       type="text"
                       required
                       value={formData.icon}
-                      onChange={(e) => setFormData({ ...formData, icon: e.target.value.toLowerCase().trim() })}
-                      placeholder="e.g. typescript, react, docker"
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          icon: e.target.value.toLowerCase().trim(),
+                        })
+                      }
+                      placeholder="e.g. react, typescript, python, docker"
                       className="flex-1 px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs font-mono text-white focus:outline-none focus:border-[var(--primary-accent,#FFDD9B)]/50"
                     />
                   </div>
 
-                  {/* Preset Quick Chips */}
-                  <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] space-y-1.5">
+                  {/* Preset Quick Chips for Instant Selection */}
+                  <div className="p-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] space-y-1.5">
                     <span className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)]/60 block">
-                      Quick select official brand SVG:
+                      Quick select official SVG icon:
                     </span>
                     <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
                       {PRESET_ICONS.map((p) => (
@@ -695,13 +777,19 @@ export function TechnologiesManager() {
                           key={p}
                           type="button"
                           onClick={() => setFormData({ ...formData, icon: p })}
-                          className={`flex items-center gap-1 px-2 py-1 rounded text-[11px] font-mono transition-all ${
+                          className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-mono transition-all ${
                             formData.icon === p
                               ? "bg-[var(--primary-accent,#FFDD9B)] text-[#302E2D] font-bold"
                               : "bg-white/[0.05] text-[var(--text-secondary,#FFF1D8)] hover:bg-white/[0.1]"
                           }`}
                         >
-                          <TechIcon name={p} size={14} colorMode={formData.icon === p ? "monochrome" : "brand"} />
+                          <TechIcon
+                            name={p}
+                            size={12}
+                            colorMode={
+                              formData.icon === p ? "monochrome" : "brand"
+                            }
+                          />
                           <span>{p}</span>
                         </button>
                       ))}
@@ -709,52 +797,8 @@ export function TechnologiesManager() {
                   </div>
                 </div>
 
-                {/* Experience Level & Source */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
-                      Experience / Usage Classification
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.experienceLevel}
-                      onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
-                      placeholder="e.g. Primary Stack, Production, Daily Driver"
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none font-mono"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
-                      Declaration Source
-                    </label>
-                    <select
-                      value={formData.source}
-                      onChange={(e) => setFormData({ ...formData, source: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs font-mono text-white focus:outline-none"
-                    >
-                      <option value="manual">Manual Standard</option>
-                      <option value="github_detected">GitHub Detected</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-[var(--text-secondary,#FFF1D8)] block">
-                    Short Description / Role
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Brief architectural summary of role and implementation strength..."
-                    className="w-full px-3 py-2 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] text-xs text-white focus:outline-none leading-relaxed resize-none font-sans"
-                  />
-                </div>
-
-                {/* Display Order & Toggles */}
-                <div className="p-4 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
+                {/* Order & Visibility */}
+                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
                     <label className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/80">
                       Display Order:
@@ -762,36 +806,31 @@ export function TechnologiesManager() {
                     <input
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          order: Number(e.target.value),
+                        })
+                      }
                       className="w-16 px-2 py-1 rounded bg-[var(--card-surface,#403C38)] border border-white/[0.1] text-xs font-mono text-white text-center"
                     />
                   </div>
 
-                  <div className="flex items-center gap-5">
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
-                      <input
-                        type="checkbox"
-                        checked={formData.featured}
-                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                        className="w-4 h-4 accent-[var(--primary-accent,#FFDD9B)] rounded cursor-pointer"
-                      />
-                      <span>Featured (Glow)</span>
-                    </label>
-
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
-                      <input
-                        type="checkbox"
-                        checked={formData.visible}
-                        onChange={(e) => setFormData({ ...formData, visible: e.target.checked })}
-                        className="w-4 h-4 accent-[var(--primary-accent,#FFDD9B)] rounded cursor-pointer"
-                      />
-                      <span>Publicly Visible</span>
-                    </label>
-                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-mono text-[var(--text-secondary,#FFF1D8)]">
+                    <input
+                      type="checkbox"
+                      checked={formData.visible}
+                      onChange={(e) =>
+                        setFormData({ ...formData, visible: e.target.checked })
+                      }
+                      className="w-4 h-4 accent-[var(--primary-accent,#FFDD9B)] rounded cursor-pointer"
+                    />
+                    <span>Visible on Portfolio</span>
+                  </label>
                 </div>
 
                 {/* Submit Row */}
-                <div className="flex items-center justify-end gap-3 pt-3">
+                <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     type="button"
                     onClick={closeModal}
@@ -802,9 +841,13 @@ export function TechnologiesManager() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] font-bold text-xs font-mono shadow-md shadow-[#FFDD9B]/20"
+                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] font-bold text-xs font-mono shadow-md shadow-[#FFDD9B]/20"
                   >
-                    {saving ? "Saving..." : editingTech ? "Update Technology" : "Create Technology"}
+                    {saving
+                      ? "Saving..."
+                      : editingTech
+                      ? "Update Technology"
+                      : "Add Technology"}
                   </button>
                 </div>
               </form>

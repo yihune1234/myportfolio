@@ -253,6 +253,7 @@ export interface GitHubPublicSettings {
   showEngineeringShowcase: boolean;
   showRepositoryExplorer?: boolean;
   hiddenRepos?: string[];
+  featuredRepos?: string[];
 }
 
 export async function fetchGitHubPublicSettings(): Promise<GitHubPublicSettings> {
@@ -266,6 +267,7 @@ export async function fetchGitHubPublicSettings(): Promise<GitHubPublicSettings>
       showEngineeringShowcase: true,
       showRepositoryExplorer: true,
       hiddenRepos: [],
+      featuredRepos: [],
     };
   }
   return res.json();

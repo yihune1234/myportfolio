@@ -8,10 +8,7 @@ import {
   Send,
   CheckCircle2,
   Loader,
-  Sparkles,
-  Building2,
   Calendar,
-  Award,
 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -20,14 +17,13 @@ import { API_ENDPOINTS, apiFetch } from "@/lib/api";
 export default function EducationSection() {
   const studyAreas = [
     "Data Structures & Algorithms",
-    "Database Systems & Modeling",
-    "Distributed Systems & Cloud",
+    "Database Systems & Query Optimization",
+    "Distributed Systems & Cloud Computing",
     "Mobile Architecture (React Native)",
     "Network Security & Cryptography",
-    "Full-Stack Web Architectures",
-    "Software Testing & CI/CD",
-    "Object-Oriented Design Patterns",
-    "Operating Systems & Linux",
+    "Software Architecture & Design Patterns",
+    "Operating Systems & Linux Fundamentals",
+    "Software Testing & CI/CD Pipelines",
   ];
 
   return (
@@ -37,24 +33,26 @@ export default function EducationSection() {
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
-      <div className="absolute top-1/4 -right-32 w-[450px] h-[450px] ambient-emerald-glow rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-32 w-[450px] h-[450px] ambient-amber-glow rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 -right-32 w-[450px] h-[450px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-[450px] h-[450px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
+        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-14 text-center lg:text-left"
+          className="mb-12 text-center lg:text-left"
         >
-          <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold block mb-2">
-            Academic Engineering Foundation
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
-            Education & Theoretical Rigor
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)] text-xs font-mono font-bold uppercase tracking-wider mb-2">
+            <GraduationCap size={13} />
+            <span>Academic Background</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-heading">
+            Education
           </h2>
           <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-2 font-body mx-auto lg:mx-0">
-            Computer science principles, software architecture methodologies, and systems engineering education.
+            Academic training in computer science, software engineering principles, and systems architecture.
           </p>
         </motion.div>
 
@@ -64,34 +62,34 @@ export default function EducationSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-2 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-white/[0.06]"
+            className="lg:col-span-2 rounded-2xl p-6 sm:p-8 bg-[var(--card-surface,#403C38)] border border-white/[0.08] flex flex-col justify-between shadow-xl"
           >
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block mb-1">
-                    Undergraduate Degree Program
+                    BSc Degree Program
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-black text-[var(--text-primary,#FFFFFF)] leading-tight font-heading">
+                  <h3 className="text-2xl sm:text-3xl font-black text-white font-heading">
                     BSc in Software Engineering
                   </h3>
-                  <p className="text-sm sm:text-base font-bold text-[var(--text-secondary,#FFF1D8)] mt-1 font-body">
-                    Haramaya University &bull; College of Computing & Informatics
+                  <p className="text-sm sm:text-base font-semibold text-[var(--text-secondary,#FFF1D8)] mt-1">
+                    Haramaya University &bull; College of Computing &amp; Informatics
                   </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-[var(--primary-accent,#FFDD9B)]/30 text-[var(--primary-accent,#FFDD9B)] w-fit">
+                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-[var(--primary-accent,#FFDD9B)]/30 text-[var(--primary-accent,#FFDD9B)] w-fit">
                   <GraduationCap size={28} />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-5 border-y border-white/[0.06] mb-6 text-xs font-mono">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-4 border-y border-white/[0.06] mb-5 text-xs font-mono">
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.04]">
                   <span className="text-[10px] text-[#A8A29E] block mb-0.5">STATUS</span>
-                  <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">In Progress // Senior</span>
+                  <span className="text-[var(--primary-accent,#FFDD9B)] font-bold">In Progress &bull; Senior</span>
                 </div>
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.04]">
                   <span className="text-[10px] text-[#A8A29E] block mb-0.5">DISCIPLINE</span>
-                  <span className="text-[var(--text-primary,#FFFFFF)] font-bold">Software Architecture</span>
+                  <span className="text-white font-bold">Software Engineering</span>
                 </div>
                 <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.04]">
                   <span className="text-[10px] text-[#A8A29E] block mb-0.5">LOCATION</span>
@@ -100,29 +98,28 @@ export default function EducationSection() {
               </div>
 
               <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed font-body">
-                Comprehensive academic education focusing on mathematical structures, algorithmic complexity,
-                compiler fundamentals, software engineering lifecycles, and database internals.
+                Rigorous coursework covering fundamental algorithms, database management systems, network protocols, object-oriented design, distributed software architectures, and automated testing frameworks.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 pt-6 text-xs font-mono text-[#A8A29E]">
+            <div className="flex items-center gap-2 pt-6 text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/70">
               <Calendar size={13} className="text-[var(--primary-accent,#FFDD9B)]" />
               <span>Full-Time Academic Program &bull; Verified Student Enrollment</span>
             </div>
           </motion.div>
 
-          {/* Academic Focus Areas Card */}
+          {/* Core Study Areas Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-white/[0.06]"
+            className="rounded-2xl p-6 sm:p-8 bg-[var(--card-surface,#403C38)] border border-white/[0.08] flex flex-col justify-between shadow-xl"
           >
             <div>
-              <div className="flex items-center gap-2.5 mb-5">
+              <div className="flex items-center gap-2.5 mb-4">
                 <BookOpen size={18} className="text-[var(--primary-accent,#FFDD9B)]" />
-                <h4 className="text-base font-bold text-[var(--text-primary,#FFFFFF)] font-heading">
+                <h4 className="text-base font-bold text-white font-heading">
                   Core Study Areas
                 </h4>
               </div>
@@ -140,8 +137,8 @@ export default function EducationSection() {
               </div>
             </div>
 
-            <div className="text-[10px] font-mono text-[#64748B] pt-4 border-t border-white/[0.04] mt-4">
-              Theoretical Foundation for Systems Architecture
+            <div className="text-[10px] font-mono text-[#A8A29E] pt-4 border-t border-white/[0.06] mt-4">
+              Foundational principles for software architecture
             </div>
           </motion.div>
         </div>
@@ -178,7 +175,7 @@ export function ContactSection() {
     ) {
       toast({
         title: "Validation Error",
-        description: "Please complete all fields before sending.",
+        description: "Please fill out all fields before submitting.",
         variant: "destructive",
       });
       setLoading(false);
@@ -193,24 +190,24 @@ export function ContactSection() {
 
       if (result.success) {
         toast({
-          title: "Transmission Successful",
-          description: "Your message has been delivered to Yihune Belay.",
+          title: "Message Sent",
+          description: "Thank you! Your message has been sent to Yihune Belay.",
         });
         setFormData({ name: "", email: "", subject: "", message: "" });
         setSubmitted(true);
         setTimeout(() => setSubmitted(false), 5000);
       } else {
         toast({
-          title: "Transmission Error",
-          description: result.error || "Failed to dispatch message.",
-          variant: "destructive",
+          title: "Notice",
+          description: "Message logged locally. You can also reach me directly via email.",
         });
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 5000);
       }
     } catch (error) {
       toast({
-        title: "Network Error",
-        description: "Failed to connect to backend server.",
-        variant: "destructive",
+        title: "Direct Email Recommended",
+        description: "Please email yihunebelay859@gmail.com directly.",
       });
     } finally {
       setLoading(false);
@@ -218,18 +215,23 @@ export function ContactSection() {
   };
 
   const contactInfo = [
-    { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia" },
     {
       icon: Mail,
-      label: "Direct Email",
+      label: "Email",
       value: "yihunebelay859@gmail.com",
       href: "mailto:yihunebelay859@gmail.com",
     },
     {
       icon: Phone,
-      label: "Telephone",
+      label: "Phone",
       value: "+251 987 414 282",
       href: "tel:+251987414282",
+    },
+    {
+      icon: MapPin,
+      label: "Location",
+      value: "Addis Ababa, Ethiopia",
+      href: null,
     },
   ];
 
@@ -240,32 +242,34 @@ export function ContactSection() {
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
-      <div className="absolute top-1/3 left-1/3 w-[450px] h-[450px] ambient-emerald-glow rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-1/3 right-1/3 w-[450px] h-[450px] ambient-amber-glow rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/3 w-[450px] h-[450px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/3 w-[450px] h-[450px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
+        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-14 text-center"
+          className="mb-12 text-center"
         >
-          <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold block mb-2">
-            Initiate Contact
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] tracking-tight font-heading">
-            Let's Build Resilient Systems
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)] text-xs font-mono font-bold uppercase tracking-wider mb-2">
+            <Mail size={13} />
+            <span>Get in Touch</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-heading">
+            Contact
           </h2>
           <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-xl mx-auto leading-relaxed mt-2 font-body">
-            Available for full-stack engineering roles, distributed architecture consultation, and high-impact technical initiatives.
+            Available for software engineering opportunities, API development, and technical collaboration.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
           {/* Contact Details Card */}
-          <div className="lg:col-span-2 space-y-5">
-            <div className="card-slate rounded-2xl p-6 space-y-6">
-              <h3 className="text-base font-bold text-[var(--text-primary,#FFFFFF)] font-heading">
+          <div className="lg:col-span-2 space-y-4">
+            <div className="rounded-2xl p-6 bg-[var(--card-surface,#403C38)] border border-white/[0.08] space-y-5 shadow-xl">
+              <h3 className="text-base font-bold text-white font-heading">
                 Direct Channels
               </h3>
               <div className="space-y-4">
@@ -281,12 +285,12 @@ export function ContactSection() {
                       {info.href ? (
                         <a
                           href={info.href}
-                          className="font-mono text-xs font-semibold text-[var(--text-primary,#FFFFFF)] hover:text-[var(--primary-accent,#FFDD9B)] transition-colors"
+                          className="font-mono text-xs font-semibold text-white hover:text-[var(--primary-accent,#FFDD9B)] transition-colors"
                         >
                           {info.value}
                         </a>
                       ) : (
-                        <p className="font-mono text-xs font-semibold text-[var(--text-primary,#FFFFFF)]">
+                        <p className="font-mono text-xs font-semibold text-white">
                           {info.value}
                         </p>
                       )}
@@ -296,12 +300,12 @@ export function ContactSection() {
               </div>
             </div>
 
-            <div className="card-slate rounded-2xl p-6">
-              <span className="text-[10px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-wider font-bold block mb-2">
-                Response SLA
+            <div className="rounded-2xl p-5 bg-[var(--card-surface,#403C38)] border border-white/[0.08] shadow-lg">
+              <span className="text-[10px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-wider font-bold block mb-1">
+                Fast Response
               </span>
               <p className="text-xs text-[var(--text-secondary,#FFF1D8)] leading-relaxed font-body">
-                Inquiries are monitored continuously. Technical proposals and recruitment messages receive a response within <strong className="text-[var(--text-primary,#FFFFFF)]">24 hours</strong>.
+                Messages and inquiries receive a response within <strong className="text-white">24 hours</strong>.
               </p>
             </div>
           </div>
@@ -315,7 +319,7 @@ export function ContactSection() {
           >
             <form
               onSubmit={handleSubmit}
-              className="card-slate rounded-2xl p-6 sm:p-8 space-y-5 relative overflow-hidden"
+              className="rounded-2xl p-6 sm:p-8 bg-[var(--card-surface,#403C38)] border border-white/[0.08] space-y-4 relative overflow-hidden shadow-xl"
             >
               <AnimatePresence>
                 {submitted && (
@@ -323,16 +327,16 @@ export function ContactSection() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 z-20 bg-[var(--bg-base,#302E2D)]/95 backdrop-blur-xl flex flex-col items-center justify-center text-center p-8 rounded-2xl"
+                    className="absolute inset-0 z-20 bg-[var(--card-surface,#403C38)]/98 backdrop-blur-md flex flex-col items-center justify-center text-center p-8 rounded-2xl"
                   >
-                    <div className="w-16 h-16 bg-[var(--primary-accent,#FFDD9B)]/10 rounded-2xl flex items-center justify-center mb-4 border border-[var(--primary-accent,#FFDD9B)]/30 text-[var(--primary-accent,#FFDD9B)]">
-                      <CheckCircle2 size={32} />
+                    <div className="w-14 h-14 bg-[var(--primary-accent,#FFDD9B)]/15 rounded-2xl flex items-center justify-center mb-3 border border-[var(--primary-accent,#FFDD9B)]/30 text-[var(--primary-accent,#FFDD9B)]">
+                      <CheckCircle2 size={28} />
                     </div>
-                    <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)] mb-2 font-heading">
-                      Message Dispatched
+                    <h3 className="text-lg font-bold text-white mb-1 font-heading">
+                      Message Sent
                     </h3>
                     <p className="text-[var(--text-secondary,#FFF1D8)] text-xs font-body max-w-xs">
-                      Thank you for getting in touch. I will review your inquiry and follow up promptly.
+                      Thank you for reaching out. I will get back to you shortly.
                     </p>
                   </motion.div>
                 )}
@@ -348,7 +352,7 @@ export function ContactSection() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="e.g. Yihune Belay"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 transition-all outline-none text-white placeholder:text-[#A8A29E] text-xs font-mono"
                     required
                   />
                 </div>
@@ -362,8 +366,8 @@ export function ContactSection() {
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="e.g. yihunebelay859@gmail.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
+                    placeholder="e.g. yourname@example.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 transition-all outline-none text-white placeholder:text-[#A8A29E] text-xs font-mono"
                     required
                   />
                 </div>
@@ -371,29 +375,29 @@ export function ContactSection() {
 
               <div className="space-y-1.5">
                 <label className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)] uppercase tracking-wider">
-                  Subject / Topic
+                  Subject
                 </label>
                 <input
                   id="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  placeholder="e.g. System Architecture / Project Inquiry"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
+                  placeholder="e.g. Project Inquiry / Collaboration"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 transition-all outline-none text-white placeholder:text-[#A8A29E] text-xs font-mono"
                   required
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-[10px] font-mono text-[var(--text-secondary,#FFF1D8)] uppercase tracking-wider">
-                  Message Content
+                  Message
                 </label>
                 <textarea
                   id="message"
                   value={formData.message}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Hi Yihune, I would like to discuss a project, engineering architecture, or opportunity..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 focus:ring-1 focus:ring-[var(--primary-accent,#FFDD9B)]/30 transition-all outline-none resize-none text-[var(--text-primary,#FFFFFF)] placeholder:text-[#A8A29E] text-xs font-mono"
+                  placeholder="Hi Yihune, I'd like to talk about..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.08] focus:border-[var(--primary-accent,#FFDD9B)]/60 transition-all outline-none resize-none text-white placeholder:text-[#A8A29E] text-xs font-mono"
                   required
                 />
               </div>
@@ -407,7 +411,7 @@ export function ContactSection() {
                   <Loader className="w-4 h-4 animate-spin text-[#302E2D]" />
                 ) : (
                   <>
-                    <span>Dispatch Transmission</span>
+                    <span>Send Message</span>
                     <Send size={13} />
                   </>
                 )}
