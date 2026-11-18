@@ -12,6 +12,7 @@ import {
   RefreshCw,
   Edit3,
   Trash2,
+  Image as ImageIcon,
 } from "lucide-react";
 import CloudinaryImage from "../../CloudinaryImage.jsx";
 
@@ -133,9 +134,12 @@ export function ProjectCard({
             </span>
           )}
 
-          <span className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-white/80 border border-white/10 text-[9px] font-mono font-bold">
-            {project.images?.length || 0} pics
-          </span>
+          {project.images && project.images.length > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[var(--primary-accent,#FFDD9B)] border border-white/10 text-[9px] font-mono font-bold flex items-center gap-1">
+              <ImageIcon size={10} />
+              <span>{project.images.length} {project.images.length === 1 ? "image" : "images"}</span>
+            </span>
+          )}
         </div>
       </div>
 

@@ -300,7 +300,8 @@ async function getPublicSettings(req, res) {
             showSkillsIntegration: settings.showSkillsIntegration,
             showEngineeringShowcase: isExplorerVisible,
             showRepositoryExplorer: isExplorerVisible,
-            hiddenRepos: settings.hiddenRepos || []
+            hiddenRepos: settings.hiddenRepos || [],
+            featuredRepos: settings.featuredRepos || []
         });
     } catch (err) {
         const githubConfig = require('../config/githubConfig');
@@ -313,7 +314,8 @@ async function getPublicSettings(req, res) {
             showSkillsIntegration: true,
             showEngineeringShowcase: true,
             showRepositoryExplorer: true,
-            hiddenRepos: []
+            hiddenRepos: [],
+            featuredRepos: []
         });
     }
 }

@@ -1,266 +1,122 @@
 import { motion } from "framer-motion";
 import {
-  Layers,
   ShieldCheck,
-  Building2,
+  Layers,
   Smartphone,
-  Github,
-  Binary,
-  GitBranch,
-  Terminal,
-  ExternalLink,
   CheckCircle2,
-  Cpu,
+  Code2,
+  Database,
+  Terminal,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchGitHubOverview } from "@/lib/githubApi";
 
 export default function AboutSection() {
-  const { data: overview } = useQuery({
-    queryKey: ["github", "overview"],
-    queryFn: () => fetchGitHubOverview(),
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const personalLogin = overview?.accounts?.personal?.login || "yihune1234";
-  const orgLogin = overview?.accounts?.organization?.login || "AriitiMarket";
-  const orgUrl = overview?.accounts?.organization?.html_url || `https://github.com/${orgLogin}`;
-  const orgName = overview?.accounts?.organization?.name || "Ariiti Tech";
+  const principles = [
+    {
+      icon: ShieldCheck,
+      title: "Resilient System Architecture",
+      subtitle: "Backend Services & APIs",
+      description:
+        "Designing modular, maintainable server-side architectures and clean RESTful APIs with structured data models, token security, and predictable performance.",
+      practices: ["Clean Architecture", "RESTful API Standards", "Security Best Practices", "Database Optimization"],
+    },
+    {
+      icon: Layers,
+      title: "Scalable Full-Stack Development",
+      subtitle: "Web & Distributed Systems",
+      description:
+        "Bridging intuitive user interfaces with robust server logic. Delivering reliable end-to-end features through clean TypeScript codebases and modern frameworks.",
+      practices: ["React & Modern Frontend", "Node.js & Express / NestJS", "PostgreSQL & MongoDB", "Component Systems"],
+    },
+    {
+      icon: Smartphone,
+      title: "Practical & Offline-First Solutions",
+      subtitle: "Mobile & Real-World Reliability",
+      description:
+        "Engineering cross-platform applications and data synchronization workflows that function dependably even with intermittent network connectivity.",
+      practices: ["React Native Cross-Platform", "Local SQLite Storage", "Data Conflict Handling", "Responsive UI/UX"],
+    },
+  ];
 
   return (
     <section
       id="about"
       className="section-padding relative overflow-hidden bg-[var(--bg-base,#302E2D)] border-t border-white/[0.08]"
     >
-      {/* Subtle Dot Matrix & Ambient Glows */}
+      {/* Background Ambience */}
       <div className="absolute inset-0 dot-matrix-grid opacity-20 pointer-events-none" />
-      <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] ambient-emerald-glow rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-32 w-[500px] h-[500px] ambient-amber-glow rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-[500px] h-[500px] bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-14 text-center lg:text-left"
+          className="mb-12 text-center lg:text-left"
         >
-          <span className="text-[11px] font-mono text-[var(--primary-accent,#FFDD9B)] uppercase tracking-[0.25em] font-bold">
-            Engineering Identity & Leadership
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary,#FFFFFF)] mt-2 mb-3 tracking-tight font-heading">
-            Architectural Focus & Organization
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)] text-xs font-mono font-bold uppercase tracking-wider mb-2">
+            <Terminal size={13} />
+            <span>Core Principles</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-heading">
+            Engineering Approach
           </h2>
-          <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mx-auto lg:mx-0 font-body">
-            Software engineer based in Addis Ababa, Ethiopia, pursuing Software Engineering
-            at Haramaya University. Co-Founder and Technical Lead at Ariiti Tech, building scalable digital platforms, modern software solutions, and enterprise systems.
+          <p className="text-[var(--text-secondary,#FFF1D8)] text-sm sm:text-base max-w-2xl leading-relaxed mt-2 font-body mx-auto lg:mx-0">
+            Core principles and technical standards that guide how I design, construct, and maintain scalable software applications.
           </p>
         </motion.div>
 
-        {/* Refined Bento Grid (4 Primary Content Areas) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 mb-10">
-          {/* Bento Card 1: Full-Stack & Security Engineering (Span 7) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-7 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-accent,#FFDD9B)]/5 rounded-full blur-2xl group-hover:bg-[var(--primary-accent,#FFDD9B)]/10 transition-colors" />
-
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2.5 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)]">
-                  <ShieldCheck size={22} />
-                </div>
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block">
-                    Domain 01 // Core Specialization
-                  </span>
-                  <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
-                    Full-Stack & Security Architecture
-                  </h3>
-                </div>
-              </div>
-
-              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
-                Specialized in architecting hardened REST APIs, token authentication flows (JWT/Bcrypt),
-                and decoupled microservice pipelines. Designing database schemas with MongoDB and PostgreSQL
-                optimized for sub-50ms execution times and strict isolation barriers.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-4 border-t border-white/[0.06] text-xs font-mono">
-              <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04]">
-                <span className="text-[10px] text-[#A8A29E] block">AUTH SPEC</span>
-                <span className="text-[var(--text-primary,#FFFFFF)] font-semibold">JWT + Argon2</span>
-              </div>
-              <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04]">
-                <span className="text-[10px] text-[#A8A29E] block">API STYLE</span>
-                <span className="text-[var(--text-primary,#FFFFFF)] font-semibold">RESTful / RPC</span>
-              </div>
-              <div className="p-2 rounded-lg bg-[var(--bg-base,#302E2D)]/60 border border-white/[0.04] col-span-2 sm:col-span-1">
-                <span className="text-[10px] text-[#A8A29E] block">DEFENSE</span>
-                <span className="text-[var(--primary-accent,#FFDD9B)] font-semibold">CORS & RateLimit</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Bento Card 2: Organization & Venture Development (Span 5) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-5 card-slate card-org-hover rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors" />
-
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                  <Building2 size={22} />
-                </div>
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
-                    Domain 02 // Technology Initiative
-                  </span>
-                  <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
-                    Ariitii Tech
-                  </h3>
-                </div>
-              </div>
-
-              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
-                Ariitii Tech is a technology initiative originating at Haramaya University, established by three co-founders, including me as Co-Founder and Lead. It focuses on developing software products, digital platforms, and technology-driven solutions.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-mono text-[#A8A29E] block">ORGANIZATION ROLE</span>
-                <span className="text-xs font-bold text-[var(--text-primary,#FFFFFF)]">Co-Founder and Lead</span>
-              </div>
-              <a
-                href={orgUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-colors"
-                title={`View @${orgLogin} on GitHub`}
+        {/* 3 Principles Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {principles.map((principle, index) => {
+            const Icon = principle.icon;
+            return (
+              <motion.div
+                key={principle.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="group p-6 sm:p-7 rounded-2xl bg-[var(--card-surface,#403C38)] hover:bg-[var(--card-elevated,#4A4642)] border border-white/[0.08] hover:border-[var(--primary-accent,#FFDD9B)]/35 transition-all duration-300 flex flex-col justify-between shadow-lg"
               >
-                <ExternalLink size={14} />
-              </a>
-            </div>
-          </motion.div>
-
-          {/* Bento Card 3: Offline-First & Mobile Systems (Span 5) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-5 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-2xl group-hover:bg-sky-500/10 transition-colors" />
-
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
-                  <Smartphone size={22} />
-                </div>
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-bold block">
-                    Domain 03 // Edge & Mobile
-                  </span>
-                  <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
-                    Offline-First Systems
-                  </h3>
-                </div>
-              </div>
-
-              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-6">
-                Creating cross-platform mobile experiences with React Native, Expo, and Capacitor.
-                Engineering local SQLite and WatermelonDB synchronization routines to operate seamlessly
-                in intermittent internet environments across East Africa.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2 text-xs font-mono">
-              <span className="px-2.5 py-1 rounded bg-[var(--bg-base,#302E2D)] border border-white/[0.05] text-[var(--text-primary,#FFFFFF)]">
-                SQLite Cache
-              </span>
-              <span className="px-2.5 py-1 rounded bg-[var(--bg-base,#302E2D)] border border-white/[0.05] text-[var(--text-primary,#FFFFFF)]">
-                Conflict Resolution
-              </span>
-              <span className="px-2.5 py-1 rounded bg-[var(--bg-base,#302E2D)] border border-white/[0.05] text-[var(--text-primary,#FFFFFF)]">
-                React Native
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Bento Card 4: Live GitHub Engineering Summary (Span 7) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="lg:col-span-7 card-slate rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/25 text-[var(--primary-accent,#FFDD9B)]">
-                    <Binary size={22} />
+                  {/* Icon & Subtitle */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2.5 rounded-xl bg-[var(--bg-base,#302E2D)] border border-white/[0.06] text-[var(--primary-accent,#FFDD9B)] group-hover:scale-105 transition-transform">
+                      <Icon size={22} />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block">
+                        {principle.subtitle}
+                      </span>
+                      <h3 className="text-lg font-bold text-white font-heading leading-tight">
+                        {principle.title}
+                      </h3>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--primary-accent,#FFDD9B)] font-bold block">
-                      Domain 04 // Provenance & Focus
-                    </span>
-                    <h3 className="text-xl font-bold text-[var(--text-primary,#FFFFFF)]">
-                      Contribution Distinction & Scale
-                    </h3>
-                  </div>
-                </div>
 
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-[var(--text-secondary,#FFF1D8)] border border-white/[0.06]">
-                  ENTERPRISE CODEBASE
-                </span>
-              </div>
-
-              <p className="text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed mb-4">
-                A clear separation between individual engineering research and organization infrastructure.
-                Public activities and organizational contributions reflect verifiable, production-tested delivery:
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-[var(--primary-accent,#FFDD9B)]/25">
-                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[var(--primary-accent,#FFDD9B)] mb-1">
-                    <CheckCircle2 size={13} />
-                    <span>Personal Lab (@{personalLogin})</span>
-                  </div>
-                  <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
-                    100% individual authorship, autonomous prototyping, and dedicated research repositories.
+                  {/* Description */}
+                  <p className="text-xs sm:text-sm text-[var(--text-secondary,#FFF1D8)] leading-relaxed font-body mb-5">
+                    {principle.description}
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[var(--bg-base,#302E2D)]/80 border border-amber-500/20">
-                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400 mb-1">
-                    <CheckCircle2 size={13} />
-                    <span>Ariitii Tech (@{orgLogin})</span>
-                  </div>
-                  <p className="text-xs text-[var(--text-secondary,#FFF1D8)]">
-                    Technology initiative originating at Haramaya University, established by three co-founders, including me as Co-Founder and Lead.
-                  </p>
+                {/* Practices checklist */}
+                <div className="pt-4 border-t border-white/[0.06] space-y-2">
+                  {principle.practices.map((practice) => (
+                    <div
+                      key={practice}
+                      className="flex items-center gap-2 text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/90"
+                    >
+                      <CheckCircle2 size={13} className="text-[var(--primary-accent,#FFDD9B)] flex-shrink-0" />
+                      <span>{practice}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between text-xs font-mono text-[#A8A29E] pt-3 border-t border-white/[0.06]">
-              <span>Verified Production Technology</span>
-              <span className="text-[var(--primary-accent,#FFDD9B)] font-semibold">Live Enterprise Delivery</span>
-            </div>
-          </motion.div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

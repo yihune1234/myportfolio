@@ -24,7 +24,7 @@ import { MessagesManager } from "./MessagesManager";
 import { AdminSettings } from "./AdminSettings";
 import { ThemeSelector } from "./ThemeSelector";
 import { GitHubAccountManager } from "./GitHubAccountManager";
-import ProjectSectionsManager from "./ProjectSectionsManager";
+import { FeaturedReposManager } from "./FeaturedReposManager";
 import { API_ENDPOINTS, apiFetch } from "../../lib/api";
 
 export default function AdminDashboard({ onLogout, onBack }) {
@@ -58,8 +58,8 @@ export default function AdminDashboard({ onLogout, onBack }) {
   const tabs = [
     { id: "overview", label: "Overview", icon: Home },
     { id: "projects", label: "Projects Management", icon: FolderKanban },
-    { id: "technologies", label: "Technologies Behind My Work", icon: Code2 },
-    { id: "sections", label: "Project Sections", icon: FileText },
+    { id: "featured-repos", label: "Featured GitHub Repos", icon: Sparkles },
+    { id: "technologies", label: "Technologies", icon: Code2 },
     { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "github", label: "GitHub Accounts", icon: Github },
     { id: "theme", label: "Theme Selector", icon: Palette },
@@ -72,12 +72,12 @@ export default function AdminDashboard({ onLogout, onBack }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl border border-white/[0.08] bg-[#0E131F]"
+          className="p-6 rounded-2xl border border-white/[0.08] bg-[var(--card-surface,#403C38)]"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[var(--primary-accent,#FFDD9B)]/70 mb-2">
             Projects
           </p>
-          <h3 className="text-3xl font-black text-[#F5F7FA]">
+          <h3 className="text-3xl font-black text-white">
             {stats.projects}
           </h3>
         </motion.div>
@@ -85,12 +85,12 @@ export default function AdminDashboard({ onLogout, onBack }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="p-6 rounded-xl border border-white/[0.08] bg-[#0E131F]"
+          className="p-6 rounded-2xl border border-white/[0.08] bg-[var(--card-surface,#403C38)]"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF8A00]/60 mb-2">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[var(--primary-accent,#FFDD9B)]/70 mb-2">
             Messages
           </p>
-          <h3 className="text-3xl font-black text-[#F5F7FA]">
+          <h3 className="text-3xl font-black text-white">
             {stats.messages}
           </h3>
         </motion.div>
@@ -100,18 +100,18 @@ export default function AdminDashboard({ onLogout, onBack }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="p-6 sm:p-8 rounded-xl border border-white/[0.08] bg-[#0E131F]"
+        className="p-6 sm:p-8 rounded-2xl border border-white/[0.08] bg-[var(--card-surface,#403C38)]"
       >
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
-            <Sparkles className="w-5 h-5 text-[#07090E]" />
+          <div className="w-10 h-10 rounded-xl bg-[var(--primary-accent,#FFDD9B)]/10 border border-[var(--primary-accent,#FFDD9B)]/30 flex items-center justify-center text-[var(--primary-accent,#FFDD9B)] shadow-lg shadow-[#FFDD9B]/10">
+            <Sparkles className="w-5 h-5 text-[var(--primary-accent,#FFDD9B)]" />
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-[#F5F7FA]">
+            <h2 className="text-lg sm:text-xl font-heading font-black text-white">
               Welcome back, Yihune
             </h2>
-            <p className="text-sm text-[#B7C0D1]">
-              Manage your portfolio from here
+            <p className="text-xs font-mono text-[var(--text-secondary,#FFF1D8)]/70">
+              Manage your software engineering portfolio and content
             </p>
           </div>
         </div>
@@ -119,9 +119,9 @@ export default function AdminDashboard({ onLogout, onBack }) {
           onClick={() => setShowAddProject(true)}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-[#07090E] rounded-lg font-bold text-sm hover:shadow-[0_0_25px_rgba(255,138,0,0.25)] transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] text-[#302E2D] rounded-xl font-bold font-mono text-xs shadow-md shadow-[#FFDD9B]/20 transition-all"
         >
-          <Plus size={16} />
+          <Plus size={15} />
           New Project
         </motion.button>
       </motion.div>
@@ -129,25 +129,25 @@ export default function AdminDashboard({ onLogout, onBack }) {
   );
 
   return (
-    <div className="min-h-screen bg-[#07090E]">
-      {/* Top blur glow */}
-      <div className="fixed top-0 left-0 right-0 h-[300px] bg-gradient-to-b from-[#FF8A00]/[0.03] to-transparent pointer-events-none" />
+    <div className="min-h-screen bg-[var(--bg-base,#302E2D)]">
+      {/* Top ambient glow */}
+      <div className="fixed top-0 left-0 right-0 h-[300px] bg-gradient-to-b from-[var(--primary-accent,#FFDD9B)]/[0.02] to-transparent pointer-events-none" />
 
-      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#07090E]/80 backdrop-blur-2xl">
+      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-[var(--bg-base,#302E2D)]/80 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF8A00] to-[#FF6B00] flex items-center justify-center shadow-lg shadow-[#FF8A00]/20">
-              <LayoutDashboard className="w-4 h-4 text-[#07090E]" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[var(--primary-accent,#FFDD9B)] to-[#FFE8B8] flex items-center justify-center shadow-md shadow-[#FFDD9B]/20">
+              <LayoutDashboard className="w-4 h-4 text-[#302E2D]" />
             </div>
-            <h1 className="text-lg sm:text-xl font-black text-[#F5F7FA]">
-              Admin Panel
+            <h1 className="text-base sm:text-lg font-heading font-black text-white">
+              Portfolio Admin
             </h1>
           </div>
           <div className="flex items-center gap-2">
             <motion.button
               onClick={onBack}
               whileHover={{ scale: 1.05 }}
-              className="p-2 hover:bg-white/[0.06] rounded-lg transition-colors text-[#B7C0D1] hover:text-[#F5F7FA]"
+              className="p-2 hover:bg-white/[0.06] rounded-lg transition-colors text-[var(--text-secondary,#FFF1D8)]/80 hover:text-white"
               title="View Website"
             >
               <Globe size={18} />
@@ -162,7 +162,7 @@ export default function AdminDashboard({ onLogout, onBack }) {
             </motion.button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-white/[0.06] rounded-lg transition-colors text-[#B7C0D1]"
+              className="lg:hidden p-2 hover:bg-white/[0.06] rounded-lg transition-colors text-[var(--text-secondary,#FFF1D8)]/80"
             >
               {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -185,10 +185,10 @@ export default function AdminDashboard({ onLogout, onBack }) {
                     setMobileMenuOpen(false);
                   }}
                   whileHover={{ x: 4 }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
                     activeTab === tab.id
                       ? "bg-gradient-to-r from-[#FFDD9B] to-[#FFE8B8] text-[#302E2D] shadow-lg shadow-[#FFDD9B]/20"
-                      : "text-[#B7C0D1] hover:text-[#F5F7FA] hover:bg-white/[0.04]"
+                      : "text-[var(--text-secondary,#FFF1D8)]/75 hover:text-white hover:bg-white/[0.04]"
                   }`}
                 >
                   <tab.icon size={18} />
@@ -218,8 +218,8 @@ export default function AdminDashboard({ onLogout, onBack }) {
                     setShowAddProject={setShowAddProject}
                   />
                 )}
+                {activeTab === "featured-repos" && <FeaturedReposManager />}
                 {activeTab === "technologies" && <TechnologiesManager />}
-                {activeTab === "sections" && <ProjectSectionsManager />}
                 {activeTab === "messages" && <MessagesManager />}
                 {activeTab === "github" && <GitHubAccountManager />}
                 {activeTab === "theme" && <ThemeSelector />}
